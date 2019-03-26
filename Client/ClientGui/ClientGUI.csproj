@@ -49,15 +49,6 @@
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <ItemGroup>
-    <Reference Include="DependencyGraph">
-      <HintPath>..\Resources\Library\DependencyGraph.dll</HintPath>
-    </Reference>
-    <Reference Include="Formula">
-      <HintPath>..\Resources\Library\Formula.dll</HintPath>
-    </Reference>
-    <Reference Include="Spreadsheet">
-      <HintPath>..\Resources\Library\Spreadsheet.dll</HintPath>
-    </Reference>
     <Reference Include="SpreadsheetPanel">
       <HintPath>..\..\..\Examples\PS6Skeleton\SpreadsheetPanel\bin\Debug\SpreadsheetPanel.dll</HintPath>
     </Reference>
@@ -122,6 +113,12 @@
       <ProductName>.NET Framework 3.5 SP1</ProductName>
       <Install>false</Install>
     </BootstrapperPackage>
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\Spreadsheet\Spreadsheet.csproj">
+      <Project>{9b385f80-b332-425a-ab8a-a032567f1ac5}</Project>
+      <Name>Spreadsheet</Name>
+    </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>
