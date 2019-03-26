@@ -1,9 +1,0 @@
-C:\Users\jkub6\Documents\Dev\repos\u1010401\PS6\Resources\bin\Debug\Resources.exe.config
-C:\Users\jkub6\Documents\Dev\repos\u1010401\PS6\Resources\bin\Debug\Resources.exe
-C:\Users\jkub6\Documents\Dev\repos\u1010401\PS6\Resources\bin\Debug\Resources.pdb
-C:\Users\jkub6\Documents\Dev\repos\u1010401\PS6\Resources\obj\Debug\Resources.csprojAssemblyReference.cache
-C:\Users\jkub6\Documents\Dev\repos\u1010401\PS6\Resources\obj\Debug\Resources.Properties.Resources.resources
-C:\Users\jkub6\Documents\Dev\repos\u1010401\PS6\Resources\obj\Debug\Resources.csproj.GenerateResource.cache
-C:\Users\jkub6\Documents\Dev\repos\u1010401\PS6\Resources\obj\Debug\Resources.csproj.CoreCompileInputs.cache
-C:\Users\jkub6\Documents\Dev\repos\u1010401\PS6\Resources\obj\Debug\Resources.exe
-C:\Users\jkub6\Documents\Dev\repos\u1010401\PS6\Resources\obj\Debug\Resources.pdb
