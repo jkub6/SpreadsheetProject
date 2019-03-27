@@ -6,7 +6,7 @@
 #include <netinet/in.h>
 #include <iostream>
 #include <string.h> 
-#define PORT 8080 
+#define PORT 2112 
 int main(int argc, char const *argv[]) 
 { 
   int socketID, new_socket, valread; 
