@@ -13,7 +13,8 @@ int main(int argc, char const *argv[])
   struct sockaddr_in address; 
   int opt = 1; 
   int addrlen = sizeof(address); 
-  char buffer[1024] = {0};
+  int bufferLength = 1024;
+  char buffer[bufferLength] = {0};
   char *hello = (char*)"Hello from server";
   
   // Creating socket file descriptor
@@ -63,9 +64,10 @@ int main(int argc, char const *argv[])
   std::cout<<"Connection Established..."<<std::endl;
 
   for(;;){
-  valread = read( new_socket , buffer, 1024); 
+  valread = read( new_socket , buffer, bufferLength);
+  std::cout<<"Message Received"<<std::endl;
   std::cout<<buffer<<std::endl;
-  send(new_socket , buffer , 50 , 0 );
+  send(new_socket , buffer , bufferLength , 0 );
   std::cout<<"sent: "<<buffer<<std::endl;
   }
   return 0; 
