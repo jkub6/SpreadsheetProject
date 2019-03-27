@@ -1,0 +1,15 @@
+C:\Users\jkub6\Documents\Dev\repos\SpreadsheetProject\SpreadsheetProject\Client\ClientGui\obj\Debug\ClientGUI.csprojAssemblyReference.cache
+C:\Users\jkub6\Documents\Dev\repos\SpreadsheetProject\SpreadsheetProject\Client\ClientGui\obj\Debug\ClientGui.Form1.resources
+C:\Users\jkub6\Documents\Dev\repos\SpreadsheetProject\SpreadsheetProject\Client\ClientGui\obj\Debug\ClientGui.Properties.Resources.resources
+C:\Users\jkub6\Documents\Dev\repos\SpreadsheetProject\SpreadsheetProject\Client\ClientGui\obj\Debug\ClientGUI.csproj.GenerateResource.cache
+C:\Users\jkub6\Documents\Dev\repos\SpreadsheetProject\SpreadsheetProject\Client\ClientGui\obj\Debug\ClientGUI.csproj.CoreCompileInputs.cache
+C:\Users\jkub6\Documents\Dev\repos\SpreadsheetProject\SpreadsheetProject\Client\ClientGui\bin\Debug\ClientGui.exe.config
+C:\Users\jkub6\Documents\Dev\repos\SpreadsheetProject\SpreadsheetProject\Client\ClientGui\bin\Debug\ClientGui.exe
+C:\Users\jkub6\Documents\Dev\repos\SpreadsheetProject\SpreadsheetProject\Client\ClientGui\bin\Debug\ClientGui.pdb
+C:\Users\jkub6\Documents\Dev\repos\SpreadsheetProject\SpreadsheetProject\Client\ClientGui\bin\Debug\Spreadsheet.dll
+C:\Users\jkub6\Documents\Dev\repos\SpreadsheetProject\SpreadsheetProject\Client\ClientGui\bin\Debug\Spreadsheet.pdb
+C:\Users\jkub6\Documents\Dev\repos\SpreadsheetProject\SpreadsheetProject\Client\ClientGui\bin\Debug\SpreadsheetPanel.pdb
+C:\Users\jkub6\Documents\Dev\repos\SpreadsheetProject\SpreadsheetProject\Client\ClientGui\bin\Debug\SpreadsheetPanel.xml
+C:\Users\jkub6\Documents\Dev\repos\SpreadsheetProject\SpreadsheetProject\Client\ClientGui\obj\Debug\ClientGUI.csproj.CopyComplete
+C:\Users\jkub6\Documents\Dev\repos\SpreadsheetProject\SpreadsheetProject\Client\ClientGui\obj\Debug\ClientGui.exe
+C:\Users\jkub6\Documents\Dev\repos\SpreadsheetProject\SpreadsheetProject\Client\ClientGui\obj\Debug\ClientGui.pdb

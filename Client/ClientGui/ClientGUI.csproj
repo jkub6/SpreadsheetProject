@@ -116,7 +116,7 @@
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\Spreadsheet\Spreadsheet.csproj">
-      <Project>{9b385f80-b332-425a-ab8a-a032567f1ac5}</Project>
+      <Project>{e57428ac-aa6a-458f-851e-7ce4b80ca78b}</Project>
       <Name>Spreadsheet</Name>
     </ProjectReference>
   </ItemGroup>
