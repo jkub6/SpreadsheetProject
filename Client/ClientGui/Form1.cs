@@ -380,7 +380,7 @@ namespace ClientGui
         /// </summary>
         private void playSimpleSound()
         {
-            SoundPlayer audio = new SoundPlayer(ClientGui.Properties.Resources._1_person_cheering_Jett_Rifkin_1851518140); 
+            SoundPlayer audio = new SoundPlayer(global::ClientGui.Properties.Resources._1_person_cheering_Jett_Rifkin_1851518140); 
             audio.Play();
         }
     }

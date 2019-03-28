@@ -1,0 +1,9 @@
+C:\Users\jkub6\Documents\Dev\repos\SpreadsheetProject\SpreadsheetProject\Client\Client\bin\Debug\Client.dll
+C:\Users\jkub6\Documents\Dev\repos\SpreadsheetProject\SpreadsheetProject\Client\Client\bin\Debug\Client.pdb
+C:\Users\jkub6\Documents\Dev\repos\SpreadsheetProject\SpreadsheetProject\Client\Client\bin\Debug\Spreadsheet.dll
+C:\Users\jkub6\Documents\Dev\repos\SpreadsheetProject\SpreadsheetProject\Client\Client\bin\Debug\Spreadsheet.pdb
+C:\Users\jkub6\Documents\Dev\repos\SpreadsheetProject\SpreadsheetProject\Client\Client\obj\Debug\Client.csprojAssemblyReference.cache
+C:\Users\jkub6\Documents\Dev\repos\SpreadsheetProject\SpreadsheetProject\Client\Client\obj\Debug\Client.csproj.CoreCompileInputs.cache
+C:\Users\jkub6\Documents\Dev\repos\SpreadsheetProject\SpreadsheetProject\Client\Client\obj\Debug\Client.csproj.CopyComplete
+C:\Users\jkub6\Documents\Dev\repos\SpreadsheetProject\SpreadsheetProject\Client\Client\obj\Debug\Client.dll
+C:\Users\jkub6\Documents\Dev\repos\SpreadsheetProject\SpreadsheetProject\Client\Client\obj\Debug\Client.pdb

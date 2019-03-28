@@ -115,6 +115,10 @@
     </BootstrapperPackage>
   </ItemGroup>
   <ItemGroup>
+    <ProjectReference Include="..\Client\Client.csproj">
+      <Project>{3b7a2829-c7e8-4bc5-8b4a-dc116c6f386b}</Project>
+      <Name>Client</Name>
+    </ProjectReference>
     <ProjectReference Include="..\Spreadsheet\Spreadsheet.csproj">
       <Project>{e57428ac-aa6a-458f-851e-7ce4b80ca78b}</Project>
       <Name>Spreadsheet</Name>

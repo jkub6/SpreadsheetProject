@@ -54,7 +54,7 @@
     <Compile Include="FormulaTests.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Spreadsheet2ProvidedTests.cs" />
-    <Compile Include="PS4Tests.cs" />
+    <Compile Include="Spreadsheet2Tests.cs" />
     <Compile Include="SpreadsheetProvidedTests.cs" />
     <Compile Include="Spreadsheet3Tests.cs" />
   </ItemGroup>

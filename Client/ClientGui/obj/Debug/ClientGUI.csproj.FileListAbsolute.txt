@@ -13,3 +13,5 @@ C:\Users\jkub6\Documents\Dev\repos\SpreadsheetProject\SpreadsheetProject\Client\
 C:\Users\jkub6\Documents\Dev\repos\SpreadsheetProject\SpreadsheetProject\Client\ClientGui\obj\Debug\ClientGUI.csproj.CopyComplete
 C:\Users\jkub6\Documents\Dev\repos\SpreadsheetProject\SpreadsheetProject\Client\ClientGui\obj\Debug\ClientGui.exe
 C:\Users\jkub6\Documents\Dev\repos\SpreadsheetProject\SpreadsheetProject\Client\ClientGui\obj\Debug\ClientGui.pdb
+C:\Users\jkub6\Documents\Dev\repos\SpreadsheetProject\SpreadsheetProject\Client\ClientGui\bin\Debug\Client.dll
+C:\Users\jkub6\Documents\Dev\repos\SpreadsheetProject\SpreadsheetProject\Client\ClientGui\bin\Debug\Client.pdb
