@@ -177,6 +177,7 @@
             this.cellContentBox.Name = "cellContentBox";
             this.cellContentBox.Size = new System.Drawing.Size(266, 31);
             this.cellContentBox.TabIndex = 0;
+            this.cellContentBox.TextChanged += new System.EventHandler(this.cellContentBox_TextChanged);
             // 
             // cellValueBox
             // 

@@ -13,26 +13,21 @@ using System.Diagnostics;
 using System.IO;
 using System.Media;
 
+
 namespace ClientGui
 {
     public partial class Form1 : Form
     {
+        Client.Client client;
+
         /// <summary>
         /// Keeps track of the current column 
         /// </summary>
         private int column = 0;
-        /// <summary>
-        /// Keeps track of the current row
-        /// </summary>
         private int row = 0;
-        /// <summary>
-        /// Creates a new spreadsheet
-        /// </summary>
         private Spreadsheet spreadsheet;
-        /// <summary>
-        /// Keeps track of the current or future file name. 
-        /// </summary>
         private string fileName;
+
         /// <summary>
         /// This constructor initializes a form as well as allows command line arguements 
         /// and run it as an executable. This also updates the cells in the new form if 
@@ -101,6 +96,7 @@ namespace ClientGui
 
             spreadsheetPanel.GetValue(column, row, out string t);
             cellValueBox.Text = t;
+            cellContentBox.SelectAll();
         }
         /// <summary>
         /// Converst the column and row to the variable name
@@ -108,7 +104,7 @@ namespace ClientGui
         /// <returns></returns>
         private string GetSelectedCellName()
         {
-            return (char)(column + 65) + (row + 1).ToString();
+            return ((char)(column + 65)) + (row + 1).ToString();
         }
 
         /// <summary>
@@ -135,22 +131,34 @@ namespace ClientGui
                     spreadsheetPanel.SetSelection((column+1)%26, row);
                     SelectCell();
                     return true;
+                //Shifts selection left when Shift Tab is pressed
+                case Keys.Tab | Keys.Shift:
+                    SubmitText();
+                    spreadsheetPanel.SetSelection((column - 1) % 26, row);
+                    SelectCell();
+                    return true;
                 //Shifts selection left when Left arrow is pressed
                 case Keys.Left:
                     SubmitText();
                     spreadsheetPanel.SetSelection((column-1)%26, row);
                     SelectCell();
                     return true;
-                //Shifts selection down up when enter is pressed
+                //Shifts selection down when enter is pressed
                 case Keys.Enter:
                     SubmitText();
                     spreadsheetPanel.SetSelection(column, (row+1)%99);
                     SelectCell();
                     return true;
-                //Shifts selection down up when down is pressed
+                //Shifts selection down when down is pressed
                 case Keys.Down:
                     SubmitText();
                     spreadsheetPanel.SetSelection(column, (row + 1) % 99);
+                    SelectCell();
+                    return true;
+                //Shifts selection up when shift enter is pressed
+                case Keys.Enter | Keys.Shift:
+                    SubmitText();
+                    spreadsheetPanel.SetSelection(column, (row - 1) % 99);
                     SelectCell();
                     return true;
                 //Shifts Selection up when up is pressed
@@ -210,16 +218,19 @@ namespace ClientGui
         /// spreadsheet to update all cell values resulting from changes. 
         /// </summary>
         /// <param InputString="name"></param>
-        private void UpdateCellByName(string name)
+        private void UpdateCellByName(string name, string tempText=null)
         {
             //Converts the column and row to the Cell name
             int col = name[0] - 65;
-            int row = int.Parse(name[1].ToString()) - 1;
+            int row = int.Parse(name.Substring(1).ToString()) - 1;
 
             object value = spreadsheet.GetCellValue(name);
             string text = value.ToString();
             if (value is FormulaError f)
                 text = f.Reason;
+
+            if (tempText != null)
+                text = tempText;
 
             spreadsheetPanel.SetValue(col, row, text);
         }
@@ -382,6 +393,11 @@ namespace ClientGui
         {
             SoundPlayer audio = new SoundPlayer(global::ClientGui.Properties.Resources._1_person_cheering_Jett_Rifkin_1851518140); 
             audio.Play();
+        }
+
+        private void cellContentBox_TextChanged(object sender, EventArgs e)
+        {
+            UpdateCellByName(GetSelectedCellName(), cellContentBox.Text);
         }
     }
 }
