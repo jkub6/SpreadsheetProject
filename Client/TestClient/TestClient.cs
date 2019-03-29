@@ -33,7 +33,7 @@ namespace TestClient
             Console.ReadLine();
         }
 
-        static void printText(string text)
+        static void printText(object sender, string text)
         {
             Console.WriteLine("IN: " + text);
         }

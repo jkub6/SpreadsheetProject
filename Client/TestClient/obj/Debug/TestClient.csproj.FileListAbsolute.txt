@@ -10,3 +10,6 @@ C:\Users\jkub6\Documents\Dev\repos\SpreadsheetProject\SpreadsheetProject\Client\
 C:\Users\jkub6\Documents\Dev\repos\SpreadsheetProject\SpreadsheetProject\Client\TestClient\bin\Debug\Client.pdb
 C:\Users\jkub6\Documents\Dev\repos\SpreadsheetProject\SpreadsheetProject\Client\TestClient\bin\Debug\Spreadsheet.pdb
 C:\Users\jkub6\Documents\Dev\repos\SpreadsheetProject\SpreadsheetProject\Client\TestClient\obj\Debug\TestClient.csproj.CopyComplete
+C:\Users\jkub6\Documents\Dev\repos\SpreadsheetProject\SpreadsheetProject\Client\TestClient\bin\Debug\Newtonsoft.Json.dll
+C:\Users\jkub6\Documents\Dev\repos\SpreadsheetProject\SpreadsheetProject\Client\TestClient\bin\Debug\Newtonsoft.Json.pdb
+C:\Users\jkub6\Documents\Dev\repos\SpreadsheetProject\SpreadsheetProject\Client\TestClient\bin\Debug\Newtonsoft.Json.xml

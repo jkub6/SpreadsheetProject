@@ -11,7 +11,11 @@ using System.Timers;
 
 using SS;
 using System.IO;
-using System.Threading;
+using System.Threading; 
+
+using SpreadsheetUtilities;
+using Newtonsoft.Json.Linq;
+using Newtonsoft.Json;
 
 namespace Client
 {
@@ -24,8 +28,9 @@ namespace Client
         private int port;
 
         private TcpClient tcpClient;
-        public delegate void TextHandler(string text);
-        public event TextHandler NetworkMessageRecieved;
+        public event EventHandler<string> NetworkMessageRecieved;
+        public event EventHandler<int> ErrorRecieved;
+        public event EventHandler<Spreadsheet> FullSendRecieved;
 
         System.Timers.Timer pingTimer;
         public event PingCompletedEventHandler PingCompleted;
@@ -54,11 +59,39 @@ namespace Client
             pingTimer.Enabled = true;
         }
 
+        public void SendOpen(string spreadsheet, string username, string password)
+        {
+            SendNetworkMessage($"{{\"type\": \"open\",\"name\": \"{spreadsheet}\",\"username\": \"{username}\",\"password\": \"{password}\"}}");
+        }
+
+        public void SendEdit(string cell)
+        {
+            string v = spreadsheet.GetCellValue(cell).ToString();
+
+            List<string> deps = new List<string>();
+            if (spreadsheet.GetCellContents(cell) is Formula f)
+                deps = new List<string>(f.GetVariables());
+
+            string d = "[" + string.Join("\",\"", deps.ToArray()) + "]";
+
+            SendNetworkMessage($"{{\"type\": \"edit\",\"cell\": \"{cell}\",\"value\": \"={v}\",\"dependencies\":{d}}}");
+        }
+
+        public void SendUndo()
+        {
+            SendNetworkMessage("{\"type\": \"undo\"}");
+        }
+
+        public void SendRevert(string cell)
+        {
+           SendNetworkMessage($"{{\"type\": \"revert\",\"cell\": \"{cell}\"}}");
+        }
+
         public void SendNetworkMessage(string message)
         {
             Stream stm = tcpClient.GetStream();
             ASCIIEncoding asen = new ASCIIEncoding();
-            byte[] ba = asen.GetBytes(message);
+            byte[] ba = asen.GetBytes(message + "\n\n");
 
             stm.Write(ba, 0, ba.Length);
         }
@@ -71,7 +104,30 @@ namespace Client
             {
                 var bytesRead = await ns.ReadAsync(buffer, 0, buffer.Length);
                 if (bytesRead == 0) return; // Stream was closed
-                NetworkMessageRecieved(Encoding.ASCII.GetString(buffer, 0, bytesRead));
+                string message = Encoding.ASCII.GetString(buffer, 0, bytesRead);
+                NetworkMessageRecieved(this, message);
+
+
+                try
+                {
+                    JObject o = JObject.Parse(message);
+                    string type = (string)o["type"];
+
+                    if (type == "error")
+                        ErrorRecieved(this, (int)o["code"]);
+                    else if (type == "full send")
+                    {
+                        Spreadsheet newSpreadsheet = new Spreadsheet();
+                        JToken cells = o["cells"];
+                        foreach (JObject ob in cells.Children<JObject>())
+                            foreach (JProperty p in ob.Properties())
+                                newSpreadsheet.SetContentsOfCell(p.Name, (string)p.Value);
+                        spreadsheet = newSpreadsheet;
+                        FullSendRecieved(this, newSpreadsheet);
+                    }
+
+                }
+                catch (Exception) { }
             }
         }
 
