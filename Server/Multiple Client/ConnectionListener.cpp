@@ -16,22 +16,32 @@ void newClientConnectedLoop(int socketID,std::vector<int> * socket_list)
 
 
   int bufferLength = 1024;
-  int buffer[bufferLength];
+  char buffer[bufferLength];
+
   int valread;
   
   while(true)
     {
+      //clear buffer
+      for(int i = 0;i<bufferLength;i++)
+	{
+	  buffer[i]=0;
+	}
+      
       valread = read( socketID , buffer, bufferLength);
       std::cout<<"Message Received from socketID "<<socketID<<std::endl;
       std::cout<<buffer<<std::endl;
 
       for(int i = 0;i<socket_list->size();i++)
 	{
+	  //Skip sending it to ourselves
+	  if((*socket_list)[i]==socketID)
+	    {
+	      send((*socket_list)[i], "" ,1 , 0 );//ping to make sure still alive
+	      continue;
+	    }
 	  send((*socket_list)[i], buffer , bufferLength , 0 );
 	}
-      
-
-      std::cout<<"sent: "<<buffer<<std::endl;
     }
   
 }
