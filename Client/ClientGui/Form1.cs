@@ -64,6 +64,7 @@ namespace ClientGui
         {
             spreadsheetPanel.GetSelection(out column, out row);
         }
+
         /// <summary>
         /// Submits text when the selection is changed and executes the function 
         /// that refocuses.
@@ -74,6 +75,7 @@ namespace ClientGui
             SubmitText();
             SelectCell();
         }
+
         /// <summary>
         /// The select cell function finds the current cell and column and 
         /// focuses in on it, as well as updates the coordinates for other functions to use. 
@@ -94,10 +96,11 @@ namespace ClientGui
             if (cellContents is Formula f)
                 cellContentBox.Text = "=" + cellContentBox.Text;
 
-            spreadsheetPanel.GetValue(column, row, out string t);
-            cellValueBox.Text = t;
+            cellValueBox.Text = spreadsheet.GetCellValue(cellName).ToString();
+
             cellContentBox.SelectAll();
         }
+
         /// <summary>
         /// Converst the column and row to the variable name
         /// </summary>
@@ -119,49 +122,29 @@ namespace ClientGui
 
             switch (keyData)
             {
-                //Shifts selection right when Tab is pressed
+                //Shifts selection right when Tab/Right is pressed
                 case Keys.Tab:
-                    SubmitText();
-                    spreadsheetPanel.SetSelection((column + 1) % 26, row);
-                    SelectCell();
-                    return true;
-                //Shifts selection right when right arrow is pressed
                 case Keys.Right:
                     SubmitText();
                     spreadsheetPanel.SetSelection((column+1)%26, row);
                     SelectCell();
                     return true;
-                //Shifts selection left when Shift Tab is pressed
+                //Shifts selection left when Shift Tab/Left is pressed
                 case Keys.Tab | Keys.Shift:
-                    SubmitText();
-                    spreadsheetPanel.SetSelection((column - 1) % 26, row);
-                    SelectCell();
-                    return true;
-                //Shifts selection left when Left arrow is pressed
                 case Keys.Left:
                     SubmitText();
                     spreadsheetPanel.SetSelection((column-1)%26, row);
                     SelectCell();
                     return true;
-                //Shifts selection down when enter is pressed
+                //Shifts selection down when Enter/Down is pressed
                 case Keys.Enter:
-                    SubmitText();
-                    spreadsheetPanel.SetSelection(column, (row+1)%99);
-                    SelectCell();
-                    return true;
-                //Shifts selection down when down is pressed
                 case Keys.Down:
                     SubmitText();
                     spreadsheetPanel.SetSelection(column, (row + 1) % 99);
                     SelectCell();
                     return true;
-                //Shifts selection up when shift enter is pressed
+                //Shifts selection up when Shift Enter/Up is pressed
                 case Keys.Enter | Keys.Shift:
-                    SubmitText();
-                    spreadsheetPanel.SetSelection(column, (row - 1) % 99);
-                    SelectCell();
-                    return true;
-                //Shifts Selection up when up is pressed
                 case Keys.Up:
                     SubmitText();
                     spreadsheetPanel.SetSelection(column, (row-1)%99);
@@ -171,6 +154,7 @@ namespace ClientGui
             }
             return base.ProcessCmdKey(ref msg, keyData);
         }
+
         /// <summary>
         /// This event occurs when the entry button is clicked. 
         /// </summary>
@@ -180,6 +164,7 @@ namespace ClientGui
         {
             SubmitText();
         }
+
         /// <summary>
         /// Calculates values of cells. 
         /// This function catches exceptions when calculating values of cells. 
@@ -200,7 +185,6 @@ namespace ClientGui
 
                 if (spreadsheet.Changed)
                     Text = "*" + fileName;
-
             }
             catch (FormulaFormatException e)
             {
@@ -212,6 +196,7 @@ namespace ClientGui
             }
 
         }
+
         /// <summary>
         /// Updates cell by the name 
         /// Allows for use of GetListofNonEmpty cells from 
@@ -234,6 +219,7 @@ namespace ClientGui
 
             spreadsheetPanel.SetValue(col, row, text);
         }
+
         /// <summary>
         /// Displays how to use Spreadsheet 
         /// </summary>
@@ -241,22 +227,7 @@ namespace ClientGui
         /// <param name="e"></param>
         private void AboutToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            MessageBox.Show("Spreadsheet program by Alexis Koopmann and Jacob Larkin" 
-                             + "\n" + "©BlippityBlahInc"
-                             + "\n" + "Select different cells with arrow keys, enter, tab, or the mouse"
-                             + "\n" + "Added Functionality:"
-                             + "\n\t" + "You can change the color of the spreadsheet with the View."
-                             + "\n\t" + "Pressing the Enter key calculates value."
-                             + "\n\t" + "Exiting a cell will automatically calculate the value."
-                             + "\n\t" + "Selecting a cell allows you to enter it's contents."
-                             + "\n\t" + "Spreadsheet can be called from the command line"
-                             + "\n\t" + "Tab calculates the value of a cell as well and moves right."
-                             + "\n\t" + "Shift calculates the value of the cell and moves left."
-                             + "\n\t" + "If a file is unsaved an asterisk is displayed next to its name"
-                             + "\n\t" + "The default file name is Untitled.sprd."
-                             + "\n\t" + "You can change the color of the Top Part of the spreadsheet."
-                             + "\n\t" + "You can clear all the cells in the spreadsheet."
-                             + "\n\t" + "Our spreadsheet cheers for you when you save!", "About");
+            MessageBox.Show("Dis is the about window", "About");
         }
 
         private void Form1_FormClosing(object sender, FormClosingEventArgs e)
@@ -282,6 +253,7 @@ namespace ClientGui
         {
             Application.Exit();
         }
+
         /// <summary>
         /// Saves button event to save the file. 
         /// </summary>
@@ -371,6 +343,7 @@ namespace ClientGui
             if (c.ShowDialog() == DialogResult.OK)
                 spreadsheetPanel.BackColor = c.Color;
         }
+
         /// <summary>
         /// Clears all cells
         /// </summary>
@@ -386,6 +359,7 @@ namespace ClientGui
 
             SelectCell();
         }
+
         /// <summary>
         /// Makes a sound when you save successfully!
         /// </summary>
@@ -398,6 +372,11 @@ namespace ClientGui
         private void cellContentBox_TextChanged(object sender, EventArgs e)
         {
             UpdateCellByName(GetSelectedCellName(), cellContentBox.Text);
+        }
+
+        private void redoNetworkToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+
         }
     }
 }
