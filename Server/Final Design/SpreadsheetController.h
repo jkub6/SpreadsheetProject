@@ -1,0 +1,32 @@
+
+#ifndef SPREADSHEET_CONTROLLER_H
+#define SPREADSHEET_CONTROLLER_H
+
+#include "SpreadsheetInstance.h"
+#include "Utilities.h"
+#include <string>
+#include <vector>
+
+class SpreadsheetController
+{
+ public:
+  SpreadsheetController(std::string pathToSaveDirectory);
+  ~SpreadsheetController();
+
+  std::vector<SpreadsheetInstance*> spreadSheets;
+
+  void connectedClient(int socketID);
+  void shutdown();
+
+  
+ private:
+
+  std::vector<std::string> *spreadSheetNameList;
+  std::string pathToSaveDirectory;
+
+  void loadSpreadsheet();
+  
+};
+
+
+#endif

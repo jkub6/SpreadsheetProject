@@ -1,0 +1,23 @@
+
+#ifndef DEPENDENCY_GRAPH_H
+#define DEPENDENCY_GRAPH_H
+
+#include <string>
+#include <map>
+
+
+class DependencyGraph
+{
+ public:
+  DependencyGraph();
+  ~DependencyGraph();
+
+  std::map<std::string,std::string> *dependencies;
+
+  //other methods add here
+  
+ private:
+};
+
+
+#endif

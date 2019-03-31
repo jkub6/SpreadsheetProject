@@ -1,0 +1,40 @@
+
+#include "MasterController.h"
+#include "ConnectionListener.h"
+#include "SpreadsheetController.h"
+#include "Utilities.h"
+
+
+MasterController::MasterController(int port, string pathToSaveDirectory)
+{
+  this->port = port;
+  this->pathToSaveDirectory = pathToSaveDirectory;
+}
+~MasterController::MasterController()
+{
+  //TODO
+}
+
+void MasterController::startServer(int const port)
+{
+  //TODO
+}
+void MasterController::shutdown(){
+  //TODO
+}
+void MasterController::newClientConnected(int socketID)
+{
+  //TODO
+}
+
+//ENTRY POINT
+
+int main(int argc, char ** argv)
+{
+
+
+  
+  return 0;
+}
+
+ 
