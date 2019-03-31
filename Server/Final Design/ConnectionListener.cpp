@@ -32,7 +32,7 @@ void ConnectionListener::beginListeningForClients()
   int opt = 1; 
   int addrlen = sizeof(address); 
   int bufferLength = 1024;
-  char buffer[bufferLength] = {0};
+  char buffer[bufferLength];
   char *hello = (char*)"Hello from server";
   
   // Creating socket file descriptor
