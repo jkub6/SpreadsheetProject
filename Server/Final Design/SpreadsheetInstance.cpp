@@ -6,6 +6,7 @@
 SpreadsheetInstance::SpreadsheetInstance(std::string pathToSaveFile)
   {
     this->pathToSaveFile = pathToSaveFile;
+    dependencyGraph = new DependencyGraph();
   }
 SpreadsheetInstance::~SpreadsheetInstance()
 {
