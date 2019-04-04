@@ -4,8 +4,6 @@
 //Use this command to compile
 // g++ -std=c++11 -I /home/ludwig/cs3505_assignments/finalSpreadsheet/SpreadsheetProject/Server/Server/json/include jsonTester.cpp
 
-//EDIT: Actually use: g++ -std=c++11 -I Server/json jsonTester.cpp
-
 
 using json = nlohmann::json;
 
