@@ -3,7 +3,6 @@
 #define SPREADSHEET_INSTANCE_H
 
 #include "DependencyGraph.h"
-#include "Utilities.h"
 #include <string>
 #include <map>
 #include <thread>

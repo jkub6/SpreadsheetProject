@@ -1,5 +1,6 @@
 #include <nlohmann/json.hpp>
 #include <iostream>
+#include <exception>
 
 //Use this command to compile
 // g++ -std=c++11 -I /home/ludwig/cs3505_assignments/finalSpreadsheet/SpreadsheetProject/Server/Server/json/include jsonTester.cpp
@@ -11,7 +12,16 @@ using json = nlohmann::json;
 
 int main()
 {
-     //Creation of a JSON object
+
+  try
+    {
+      json bad = json::parse("{\"hi\":5}");
+    }
+  catch(nlohmann::detail::parse_error e)
+    {
+      std::cout<<"EXCEPTION "<<e.what()<<std::endl;
+    }
+  //Creation of a JSON object
      json openObject =
      {
          {"type", "open"},

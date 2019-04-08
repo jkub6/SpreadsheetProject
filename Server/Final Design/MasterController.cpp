@@ -5,6 +5,8 @@
 #include "Utilities.h"
 #include <string>
 #include <thread>
+#include <iostream>
+#include <vector>
 
 MasterController::MasterController(int port, std::string pathToSaveDirectory)
 {
@@ -30,9 +32,25 @@ void MasterController::startServer()
 void MasterController::shutdown(){
   //TODO
 }
+
+
 void MasterController::newClientConnected(int socketID)
 {
-  //TODO
+
+  
+  while(true)
+    {
+      std::string *remainingMessage = new std::string();
+      int bytesread = 0;
+      
+      std::vector<std::string> *vec = Utilities::receiveMessage(socketID, &bytesread,remainingMessage);
+      
+      std::cout<<"RECEIVED: "<<vec->size()<<std::endl;
+      std::cout<<"BYTESREAD: "<<bytesread<<std::endl;
+      //bool a = Utilities::checkConnectionState(socketID);
+      
+      std::cout<<(*remainingMessage)<<std::endl;
+    }
 }
 
 //ENTRY POINT
