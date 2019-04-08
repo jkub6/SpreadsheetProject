@@ -65,11 +65,3 @@ std::vector<std::string>* Utilities::Tokenize(std::string * input)
     return tokens;
     
   }
-
-
-//Returns true if connection is still active, false otherwise
-bool Utilities::checkConnectionState(int socketID)
-{
-  return false;
-}
-

@@ -26,9 +26,6 @@ class Utilities{
 
 
 
-//Returns true if connection is still active, false otherwise
- static bool checkConnectionState(int socketID);
-
 };
 
 #endif

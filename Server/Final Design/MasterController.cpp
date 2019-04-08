@@ -36,20 +36,33 @@ void MasterController::shutdown(){
 
 void MasterController::newClientConnected(int socketID)
 {
-
+  bool connected = true;
   
-  while(true)
+  while(connected)
     {
+      
+      
       std::string *remainingMessage = new std::string();
       int bytesread = 0;
       
       std::vector<std::string> *vec = Utilities::receiveMessage(socketID, &bytesread,remainingMessage);
+
+
+      if(bytesread == 0)//socket disconnected
+	{
+	  std::cout<<"Socket ID: "<<socketID<<" disconnected."<<std::endl;
+	  connected = false;
+	  return;
+	}
+
+      std::cout<<std::endl<<"Message from: "<<socketID<<" Full commands: "<<std::endl;
+      for(int i = 0;i<vec->size();i++)
+	{
+	  std::cout<<"["<<(*vec)[i]<<"]"<<std::endl;
+	}
       
-      std::cout<<"RECEIVED: "<<vec->size()<<std::endl;
-      std::cout<<"BYTESREAD: "<<bytesread<<std::endl;
-      //bool a = Utilities::checkConnectionState(socketID);
       
-      std::cout<<(*remainingMessage)<<std::endl;
+      std::cout<<"Remaining Message: "<<std::endl<<(*remainingMessage)<<std::endl;
     }
 }
 
