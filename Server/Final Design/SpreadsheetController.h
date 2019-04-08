@@ -10,7 +10,7 @@
 class SpreadsheetController
 {
  public:
-  SpreadsheetController(std::string pathToSaveDirectory);
+  SpreadsheetController();
   ~SpreadsheetController();
 
   std::vector<SpreadsheetInstance*> spreadSheets;
@@ -22,7 +22,6 @@ class SpreadsheetController
  private:
 
   std::vector<std::string> *spreadSheetNameList;
-  std::string pathToSaveDirectory;
 
   void loadSpreadsheet();
   

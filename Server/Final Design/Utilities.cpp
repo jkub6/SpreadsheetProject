@@ -8,10 +8,17 @@
 #include <netinet/in.h>
 #include <vector>
 #include <iostream>
+#include <fstream>
+#include <mutex>
+
+
+std::vector<std::string> *Utilities::spreadsheetList;
+
+std::mutex * Utilities::spreadSheetListMtx;
 
 void Utilities::sendMessage(int socketID, std::string message)
 {
-  //TODO
+  send(socketID, message.c_str() , message.length() , 0 );  
 }
 
 std::vector<std::string>* Utilities::receiveMessage(int socketID, int *bytesRead, std::string * remainingMessage)
@@ -65,3 +72,45 @@ std::vector<std::string>* Utilities::Tokenize(std::string * input)
     return tokens;
     
   }
+
+
+//singleton
+std::vector<std::string>* Utilities::getSpreadsheetList()
+{
+  if(Utilities::spreadsheetList == NULL)
+    {
+     
+      Utilities::spreadsheetList = new std::vector<std::string>();
+      Utilities::spreadSheetListMtx = new std::mutex();
+      
+      std::ifstream stream("./save/spreadsheetList");
+      std::string line;
+
+      Utilities::spreadSheetListMtx->lock();
+      while(getline(stream,line))
+	{
+	  Utilities::spreadsheetList->push_back(line);
+	}
+      Utilities::spreadSheetListMtx->unlock();
+
+      stream.close();
+      
+      return Utilities::spreadsheetList;
+    }
+
+        return Utilities::spreadsheetList;
+}
+
+
+void Utilities::newSpreadsheetInList(std::string name)
+{
+  if(Utilities::spreadsheetList==NULL)
+    Utilities::getSpreadsheetList();
+
+  
+  Utilities::spreadSheetListMtx->lock();
+
+  Utilities::spreadsheetList->push_back(name);
+  
+  Utilities::spreadSheetListMtx->unlock();
+}
