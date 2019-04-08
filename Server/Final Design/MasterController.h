@@ -22,9 +22,7 @@ class MasterController
   ConnectionListener *connectionListener;
   SpreadsheetController *spreadsheetController;
   int port;
-  std::string pathToSaveDirectory;
-
-  
+  std::string pathToSaveDirectory;  
 };
 
 
