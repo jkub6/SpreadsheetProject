@@ -9,7 +9,7 @@
 #include <list>
 #include <vector>
 
-ConnectionListener::ConnectionListener(int port,   void (*callBack)(int))
+ConnectionListener::ConnectionListener(int port,   int (*callBack)(int))
 {
   this->port = port;
   this->callBack = callBack;
@@ -26,7 +26,7 @@ void ConnectionListener::shutdown()
 
 void ConnectionListener::beginListeningForClients()
 {
-   
+  
   int genesisSocket, new_socket, valread; 
   struct sockaddr_in address; 
   int opt = 1; 
@@ -65,30 +65,31 @@ void ConnectionListener::beginListeningForClients()
       std::cout<<"bind failed"<<std::endl;
       exit(EXIT_FAILURE); 
     }
-
+  
   std::cout<<"Awaiting Connection on port "<<port<<std::endl;
   //NON blocking, genesisSocket is never used for sending/receiving, is used only by server as a way to get new sockets
-
-      if (listen(genesisSocket, 20) < 0) //20 is number of active participants that can "wait" for a connection
-	{
-	  exit(EXIT_FAILURE); 
-	}
-
+  
+  if (listen(genesisSocket, 20) < 0) //20 is number of active participants that can "wait" for a connection
+    {
+      exit(EXIT_FAILURE); 
+    }
+  
+  std::thread *t;
   
   while(true)
     {   
-    
+      
       //blocking
-    if ((new_socket = accept(genesisSocket, (struct sockaddr *)&address, (socklen_t*)&addrlen))<0) 
-      {
-	std::cout<<"accept"<<std::endl;
-	exit(EXIT_FAILURE); 
-      }
-
-    
-    std::cout<<"Connection Established. ClientID: "<<new_socket<<std::endl;
-    callBack(new_socket);//call the callback
-  }
+      if ((new_socket = accept(genesisSocket, (struct sockaddr *)&address, (socklen_t*)&addrlen))<0) 
+	{
+	  std::cout<<"accept"<<std::endl;
+	  exit(EXIT_FAILURE); 
+	}
+      
+      
+      std::cout<<"Connection Established. ClientID: "<<new_socket<<std::endl;
+      t= new std::thread(callBack,new_socket);//call the callback
+    }
   
 }
 

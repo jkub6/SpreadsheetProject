@@ -10,21 +10,18 @@
 class MasterController
 {
  public:
-  MasterController(int port, std::string pathToSaveDirectory);
+  MasterController(int port);
   ~MasterController();
   
   void startServer();
   void shutdown();
-  static void newClientConnected(int socketID);
+  static int newClientConnected(int socketID);
 
   
  private:
   ConnectionListener *connectionListener;
   SpreadsheetController *spreadsheetController;
   int port;
-  std::string pathToSaveDirectory;
-
-  
 };
 
 

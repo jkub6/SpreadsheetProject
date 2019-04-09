@@ -6,9 +6,8 @@
 
 
 
-SpreadsheetController::SpreadsheetController(std::string pathToSaveDirectory)
+SpreadsheetController::SpreadsheetController()
 {
-  this->pathToSaveDirectory = pathToSaveDirectory;
 }
 SpreadsheetController::~SpreadsheetController()
 {
