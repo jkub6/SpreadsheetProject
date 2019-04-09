@@ -37,7 +37,8 @@ namespace ServerAdmin.Controllers
                 {
                     IpAddress = ipAddress,
                     Username = username,
-                    Password = password
+                    Password = password,
+                    Request = "Login"
                 };
 
                 //Sends the JSON Request to the server
