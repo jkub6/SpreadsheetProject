@@ -1,0 +1,55 @@
+﻿@section Head {
+    <link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/1.10.15/css/jquery.dataTables.min.css">
+    <link href="~/css/chosen.css" rel="stylesheet" />
+}
+
+@section Scripts {
+    <link rel="stylesheet" href="//code.jquery.com/ui/1.11.4/themes/smoothness/jquery-ui.css">
+    <script src="//code.jquery.com/jquery-1.10.2.js"></script>
+    <script type="text/javascript" charset="utf8" src="https://cdn.datatables.net/1.10.15/js/jquery.dataTables.min.js"></script>
+    <script type="text/javascript">
+        $(document).ready(function () {
+            var table = $("#spreadsheet-table").DataTable({
+                responsive: true
+            });
+        });
+    </script>
+}
+
+<div class="col-lg-10">
+    <h1 class='page-title'>Spreadsheets</h1>
+    <table id="spreadsheet-table" class="display" cellspacing="0">
+        <thead>
+            <tr>
+                <th>Spreadsheet Name</th>
+                <th>Author</th>
+                <th>Last Edited</th>
+                <th>Delete</th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var Items in Model)
+            {
+                <tr>
+                    <td>@Items.Name</td>
+                    <td>@Items.Author</td>
+                    <td>@Items.LastEdited</td>
+                    <td>
+                        <button class="btn btn-danger deleteButton" onclick="confirmDelete(this, '@ViewBag.propertyScrapeId', '@Items.UnitScrapeId', '@ViewBag.parentUnitScrapeId')"><i class="glyphicon glyphicon-trash"></i></button>
+                    </td>
+                </tr>
+            }
+        </tbody>
+    </table>
+</div>
+
+<div style="clear:both"></div>
+<hr />
+<div class="form-group">
+    <div style="display: inline-block">
+        <form>
+            <a class="btn btn-primary"><i class="glyphicon glyphicon-plus"></i> Add New Spreadsheet</a>
+        </form>
+    </div>
+</div>
+
