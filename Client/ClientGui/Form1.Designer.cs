@@ -66,6 +66,8 @@
             this.label2 = new System.Windows.Forms.Label();
             this.newNetworkFileToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.toolStripSeparator6 = new System.Windows.Forms.ToolStripSeparator();
+            this.toolsToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.serverAdminToolToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.menuStrip1.SuspendLayout();
             this.SuspendLayout();
             // 
@@ -88,11 +90,12 @@
             this.fileToolStripMenuItem,
             this.editToolStripMenuItem,
             this.viewToolStripMenuItem,
+            this.toolsToolStripMenuItem,
             this.helpToolStripMenuItem,
             this.highLightToolStripMenuItem});
             this.menuStrip1.Location = new System.Drawing.Point(0, 0);
             this.menuStrip1.Name = "menuStrip1";
-            this.menuStrip1.Size = new System.Drawing.Size(800, 42);
+            this.menuStrip1.Size = new System.Drawing.Size(800, 40);
             this.menuStrip1.TabIndex = 1;
             this.menuStrip1.Text = "menuStrip1";
             // 
@@ -136,6 +139,7 @@
             | System.Windows.Forms.Keys.O)));
             this.openNetworkFileToolStripMenuItem.Size = new System.Drawing.Size(465, 38);
             this.openNetworkFileToolStripMenuItem.Text = "Open Network File";
+            this.openNetworkFileToolStripMenuItem.Click += new System.EventHandler(this.openNetworkFileToolStripMenuItem_Click);
             // 
             // toolStripSeparator2
             // 
@@ -378,11 +382,26 @@
             | System.Windows.Forms.Keys.N)));
             this.newNetworkFileToolStripMenuItem.Size = new System.Drawing.Size(465, 38);
             this.newNetworkFileToolStripMenuItem.Text = "New Network File";
+            this.newNetworkFileToolStripMenuItem.Click += new System.EventHandler(this.newNetworkFileToolStripMenuItem_Click);
             // 
             // toolStripSeparator6
             // 
             this.toolStripSeparator6.Name = "toolStripSeparator6";
             this.toolStripSeparator6.Size = new System.Drawing.Size(462, 6);
+            // 
+            // toolsToolStripMenuItem
+            // 
+            this.toolsToolStripMenuItem.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
+            this.serverAdminToolToolStripMenuItem});
+            this.toolsToolStripMenuItem.Name = "toolsToolStripMenuItem";
+            this.toolsToolStripMenuItem.Size = new System.Drawing.Size(82, 36);
+            this.toolsToolStripMenuItem.Text = "Tools";
+            // 
+            // serverAdminToolToolStripMenuItem
+            // 
+            this.serverAdminToolToolStripMenuItem.Name = "serverAdminToolToolStripMenuItem";
+            this.serverAdminToolToolStripMenuItem.Size = new System.Drawing.Size(324, 38);
+            this.serverAdminToolToolStripMenuItem.Text = "Server Admin Tool";
             // 
             // Form1
             // 
@@ -449,6 +468,8 @@
         private System.Windows.Forms.ToolStripMenuItem fullScreenToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem newNetworkFileToolStripMenuItem;
         private System.Windows.Forms.ToolStripSeparator toolStripSeparator6;
+        private System.Windows.Forms.ToolStripMenuItem toolsToolStripMenuItem;
+        private System.Windows.Forms.ToolStripMenuItem serverAdminToolToolStripMenuItem;
     }
 }
 
