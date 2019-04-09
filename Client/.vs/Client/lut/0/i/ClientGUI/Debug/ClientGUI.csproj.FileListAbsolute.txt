@@ -2,4 +2,3 @@ C:\Users\jkub6\Documents\Dev\repos\SpreadsheetProject\SpreadsheetProject\Client\
 C:\Users\jkub6\Documents\Dev\repos\SpreadsheetProject\SpreadsheetProject\Client\.vs\Client\lut\0\i\ClientGUI\Debug\ClientGui.Properties.Resources.resources
 C:\Users\jkub6\Documents\Dev\repos\SpreadsheetProject\SpreadsheetProject\Client\.vs\Client\lut\0\i\ClientGUI\Debug\ClientGUI.csproj.GenerateResource.cache
 C:\Users\jkub6\Documents\Dev\repos\SpreadsheetProject\SpreadsheetProject\Client\.vs\Client\lut\0\i\ClientGUI\Debug\ClientGUI.csproj.CoreCompileInputs.cache
-C:\Users\jkub6\Documents\Dev\repos\SpreadsheetProject\SpreadsheetProject\Client\.vs\Client\lut\0\i\ClientGUI\Debug\ClientGUI.csprojAssemblyReference.cache

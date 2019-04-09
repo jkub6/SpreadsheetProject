@@ -378,6 +378,46 @@ namespace ClientGui
         {
 
         }
+
+        private void cutToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            cellContentBox.Cut();
+        }
+
+        private void copySelectedTextToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            cellContentBox.Copy();
+        }
+
+        private void pasteToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            cellContentBox.Paste();
+        }
+
+        private void selectAllToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            cellContentBox.SelectAll();
+        }
+
+        private void deleteToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            cellContentBox.SelectedText = "";
+        }
+
+        private void fullScreenToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            bool fullscreen = (WindowState == FormWindowState.Maximized);
+            if (fullscreen)
+            {
+                WindowState = FormWindowState.Normal;
+                this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.Sizable;
+            }
+            else
+            {
+                WindowState = FormWindowState.Maximized;
+                FormBorderStyle = System.Windows.Forms.FormBorderStyle.None;
+            }
+        }
     }
 }
 
