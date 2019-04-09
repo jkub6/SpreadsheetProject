@@ -10,27 +10,26 @@
 #include "Utilities.h"
 #include <mutex>
 #include <sys/socket.h>
+#include "SocketState.h"
 
 
 class Utilities{
 
  public:
   
-  static void sendMessage(int socketID, std::string message);
+  static void sendMessage(SocketState * sstate, std::string message);
   
   static std::vector<std::string>* Tokenize(std::string *input);
   
   
-  static std::vector<std::string>* receiveMessage(int socketID, int *bytesRead, std::string * remainingMessage);
+  static std::string receiveMessage(SocketState * sstate);
   
   static std::vector<std::string> *getSpreadsheetList();
 
-    static void newSpreadsheetInList(std::string name);
+  static void newSpreadsheetInList(std::string name);
  private:
   static std::vector<std::string> *spreadsheetList;
-  static std::mutex *spreadSheetListMtx;
-
-  
+  static std::mutex *spreadSheetListMtx;  
 };
 
 #endif
