@@ -8,6 +8,7 @@ using System.Text;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
 using ServerAdmin.Models;
+using Newtonsoft.Json;
 
 namespace ServerAdmin.Controllers
 {
@@ -15,11 +16,13 @@ namespace ServerAdmin.Controllers
     {
         public IActionResult Index(String username, String password, String ipAddress)
         {
-            ConnectToServer(ipAddress);
+            if (ipAddress != null && ipAddress != "")
+                ConnectToServer(ipAddress, username, password);
+
             return View();
         }
 
-        public void ConnectToServer(String ipAddress)
+        public void ConnectToServer(String ipAddress, String username, String password)
         {
             try
             {
@@ -30,24 +33,38 @@ namespace ServerAdmin.Controllers
 
                 // use the ipaddress as in the server program
                 Console.WriteLine("Connected");
-                Console.Write("Enter the string to be transmitted : ");
+                UserLoginRequest ulr = new UserLoginRequest
+                {
+                    IpAddress = ipAddress,
+                    Username = username,
+                    Password = password
+                };
 
-                String str = Console.ReadLine();
-                Stream stm = tcpclnt.GetStream();
+                //Sends the JSON Request to the server
+                string message = JsonConvert.SerializeObject(ulr);
 
-                UTF8Encoding asen = new UTF8Encoding();
-                byte[] ba = asen.GetBytes(str);
+                // Translate the passed message into ASCII and store it as a Byte array.
+                Byte[] data = System.Text.Encoding.ASCII.GetBytes(message);
+
+                // Get a client stream for reading and writing. 
+                NetworkStream stream = tcpclnt.GetStream();
+
+                // Send the message to the connected TcpServer. 
+                stream.Write(data, 0, data.Length); //(**This is to send data using the byte method**) 
                 Console.WriteLine("Transmitting.....");
 
-                stm.Write(ba, 0, ba.Length);
+                // Buffer to store the response bytes.
+                data = new Byte[256];
 
-                byte[] bb = new byte[100];
-                int k = stm.Read(bb, 0, 100);
+                // String to store the response ASCII representation.
+                String responseData = String.Empty;
 
-                for (int i = 0; i < k; i++)
-                    Console.Write(Convert.ToChar(bb[i]));
+                // Read the first batch of the TcpServer response bytes.
+                Int32 bytes = stream.Read(data, 0, data.Length); //(**This receives the data using the byte method**)
+                responseData = System.Text.Encoding.ASCII.GetString(data, 0, bytes); //(**This converts it to string**)
 
-                tcpclnt.Close();
+                string value = "5";
+                //tcpclnt.Close();
             }
 
             catch (Exception e)
