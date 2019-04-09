@@ -10,9 +10,6 @@
 #include "nlohmann/json.hpp"
 #include "SocketState.h"
 
-
-
-
 MasterController::MasterController(int port)
 {
   this->port = port;
@@ -31,9 +28,6 @@ MasterController::~MasterController()
 void MasterController::startServer()
 {
   this->connectionListener->beginListeningForClients();
-
-  
-  //TODO
 }
 void MasterController::shutdown(){
   //TODO
@@ -42,8 +36,6 @@ void MasterController::shutdown(){
 
 int MasterController::newClientConnected(int socketID)
 {
-
-  std::cout<<"NEW CLIENTS:DLKFJD:L"<<std::endl;
   //***************************
   //send list of spreadsheets:
   //******************************
@@ -51,6 +43,7 @@ int MasterController::newClientConnected(int socketID)
   
   nlohmann::json jsonObject;
 
+  SocketState * sstate = new SocketState(socketID);
 
   jsonObject["type"]="list";
 
@@ -60,7 +53,8 @@ int MasterController::newClientConnected(int socketID)
     };
 
 
-  Utilities::sendMessage(socketID, jsonObject.dump(0));
+  sstate->socketSendData(jsonObject.dump(0));
+  //  Utilities::sendMessage(socketID, jsonObject.dump(0));
 
   //***********************
   //AWAIT RESPONSE
@@ -68,27 +62,29 @@ int MasterController::newClientConnected(int socketID)
   
   std::cout<<"JSON SENT: \n"<<jsonObject.dump(0)<<std::endl;;//jsonObject.dump();
 
-  SocketState * sstate = new SocketState(socketID);
+
 
 
   while(sstate->isConnected())
     {
+      std::cout<<"AWAITING"<<std::endl;
       sstate->socketAwaitData();
 
       if(!sstate->isConnected())
 	break;
       
       std::vector<std::string> * sdata = sstate->getCommandsToProcess();
-      std::string remaining = sstate->getRemainingMessage();
+      std::string remaining = sstate->getBuffer();
+
+      nlohmann::json newCommand;
       
+      if(sdata->size()>0)
+	newCommand = nlohmann::json::parse((*sdata)[0]);
+
+      std::cout<<"HI: "<<newCommand["hi"]<<std::endl;
       
-      std::cout<<"\nNew message from: "<<socketID<<std::endl;
-      for(int i = 0;i<sdata->size();i++)
-	{
-	  std::cout<<(*sdata)[i]<<std::endl;
-	}
-      std::cout<<"REMAINING\n"<<remaining<<std::endl;
     }
+  std::cout<<"Client: "<<sstate->getID()<<" disconnected."<<std::endl;
   
   return 0;
 }

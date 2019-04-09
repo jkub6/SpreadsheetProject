@@ -6,6 +6,7 @@
 
 #include <vector>
 #include <string>
+#include <mutex>
 
 class SocketState
 {
@@ -13,19 +14,23 @@ class SocketState
   SocketState(int socketID);
   ~SocketState();
 
-  std::string getRemainingMessage();
+  std::string getBuffer();
+  void appendMessage(std::string message);
   std::vector<std::string> * getCommandsToProcess();
-
+  
   void socketAwaitData();
   void socketSendData(std::string msg);
   bool isConnected();
+  void setConnected(bool con);
+  
+  int getID();
   
  private:
   bool connected;
   int socketID;
-  std::string *remainingMessage;
-  std::vector<std::string> *commandsToProcess;
-  
+  std::string *buffer;
+  std::vector<std::string> * tokenize();
+  std::mutex *bufferMtx;
 };
 
 
