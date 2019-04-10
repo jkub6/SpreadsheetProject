@@ -142,7 +142,7 @@ void DependencyGraph::RemoveDependency(string s, string t)
     }
 }
 
-
+/*
 int main()
 {
   DependencyGraph *DG = new DependencyGraph();
@@ -170,4 +170,5 @@ int main()
   
   
 }
+*/
 
