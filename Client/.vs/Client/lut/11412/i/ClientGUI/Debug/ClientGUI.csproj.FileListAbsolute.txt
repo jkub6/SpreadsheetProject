@@ -1,7 +1,0 @@
-C:\Users\jkub6\Documents\Dev\repos\SpreadsheetProject\SpreadsheetProject\Client\.vs\Client\lut\0\i\ClientGUI\Debug\ClientGui.AboutBox1.resources
-C:\Users\jkub6\Documents\Dev\repos\SpreadsheetProject\SpreadsheetProject\Client\.vs\Client\lut\0\i\ClientGUI\Debug\ClientGui.Form1.resources
-C:\Users\jkub6\Documents\Dev\repos\SpreadsheetProject\SpreadsheetProject\Client\.vs\Client\lut\0\i\ClientGUI\Debug\ClientGui.LoginForm.resources
-C:\Users\jkub6\Documents\Dev\repos\SpreadsheetProject\SpreadsheetProject\Client\.vs\Client\lut\0\i\ClientGUI\Debug\ClientGui.OpenNetworkFileForm.resources
-C:\Users\jkub6\Documents\Dev\repos\SpreadsheetProject\SpreadsheetProject\Client\.vs\Client\lut\0\i\ClientGUI\Debug\ClientGui.Properties.Resources.resources
-C:\Users\jkub6\Documents\Dev\repos\SpreadsheetProject\SpreadsheetProject\Client\.vs\Client\lut\0\i\ClientGUI\Debug\ClientGUI.csproj.GenerateResource.cache
-C:\Users\jkub6\Documents\Dev\repos\SpreadsheetProject\SpreadsheetProject\Client\.vs\Client\lut\0\i\ClientGUI\Debug\ClientGUI.csproj.CoreCompileInputs.cache
