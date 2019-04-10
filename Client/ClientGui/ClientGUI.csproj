@@ -83,6 +83,12 @@
     <Compile Include="LoginForm.Designer.cs">
       <DependentUpon>LoginForm.cs</DependentUpon>
     </Compile>
+    <Compile Include="NetworkConsoleForm.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="NetworkConsoleForm.Designer.cs">
+      <DependentUpon>NetworkConsoleForm.cs</DependentUpon>
+    </Compile>
     <Compile Include="OpenNetworkFileForm.cs">
       <SubType>Form</SubType>
     </Compile>
@@ -99,6 +105,9 @@
     </EmbeddedResource>
     <EmbeddedResource Include="LoginForm.resx">
       <DependentUpon>LoginForm.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="NetworkConsoleForm.resx">
+      <DependentUpon>NetworkConsoleForm.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="OpenNetworkFileForm.resx">
       <DependentUpon>OpenNetworkFileForm.cs</DependentUpon>

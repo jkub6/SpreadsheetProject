@@ -21,7 +21,7 @@ namespace ClientGui
 
         public LoginForm()
         {
-            InitializeComponent();   
+            InitializeComponent();
         }
 
         public LoginForm(Client.Client client) : this()

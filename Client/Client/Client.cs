@@ -91,7 +91,7 @@ namespace Client
         {
             Stream stm = tcpClient.GetStream();
             ASCIIEncoding asen = new ASCIIEncoding();
-            byte[] ba = asen.GetBytes(message + "\n\n");
+            byte[] ba = asen.GetBytes(message);
 
             stm.Write(ba, 0, ba.Length);
         }
@@ -105,7 +105,7 @@ namespace Client
                 var bytesRead = await ns.ReadAsync(buffer, 0, buffer.Length);
                 if (bytesRead == 0) return; // Stream was closed
                 string message = Encoding.ASCII.GetString(buffer, 0, bytesRead);
-                NetworkMessageRecieved(this, message);
+                NetworkMessageRecieved?.Invoke(this, message);
 
 
                 try
@@ -114,7 +114,7 @@ namespace Client
                     string type = (string)o["type"];
 
                     if (type == "error")
-                        ErrorRecieved(this, (int)o["code"]);
+                        ErrorRecieved?.Invoke(this, (int)o["code"]);
                     else if (type == "full send")
                     {
                         Spreadsheet newSpreadsheet = new Spreadsheet();
@@ -123,7 +123,7 @@ namespace Client
                             foreach (JProperty p in ob.Properties())
                                 newSpreadsheet.SetContentsOfCell(p.Name, (string)p.Value);
                         spreadsheet = newSpreadsheet;
-                        FullSendRecieved(this, newSpreadsheet);
+                        FullSendRecieved?.Invoke(this, newSpreadsheet);
                     }
 
                 }
