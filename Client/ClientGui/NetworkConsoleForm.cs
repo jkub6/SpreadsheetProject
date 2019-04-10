@@ -38,12 +38,14 @@ namespace ClientGui
         public void sendText(string text)
         {
             if (newLineCheckbox.Checked)
-                text = text.Replace("\\n", "\r\n");
+                text = text.Replace("\\n", "\n");
 
             SendingText?.Invoke(this, text);
 
             if (inOutCheckbox.Checked)
                 text = "<-" + text;
+            if (showLineCheckbox.Checked)
+                text = text.Replace("\n", "\r\n");
             textBox1.AppendText(text);
         }
 
@@ -51,6 +53,8 @@ namespace ClientGui
         {
             if (inOutCheckbox.Checked)
                 text = "->" + text;
+            if (showLineCheckbox.Checked)
+                text = text.Replace("\n", "\r\n");
 
             MethodInvoker methodInvokerDelegate = delegate () { textBox1.AppendText(text); };
 
@@ -58,7 +62,6 @@ namespace ClientGui
                 Invoke(methodInvokerDelegate);
             else
                 methodInvokerDelegate();
-            
         }
 
         private void textBox1_TextChanged(object sender, EventArgs e)

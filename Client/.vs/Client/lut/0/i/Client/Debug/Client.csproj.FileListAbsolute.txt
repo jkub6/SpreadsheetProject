@@ -2,3 +2,4 @@ C:\Users\jkub6\Documents\Dev\repos\SpreadsheetProject\SpreadsheetProject\Client\
 C:\Users\jkub6\Documents\Dev\repos\SpreadsheetProject\SpreadsheetProject\Client\.vs\Client\lut\0\i\Client\Debug\Client.csproj.CoreCompileInputs.cache
 C:\Users\jkub6\Documents\Dev\repos\SpreadsheetProject\SpreadsheetProject\Client\.vs\Client\lut\0\i\Client\Debug\Client.csproj.CopyComplete
 C:\Users\jkub6\Documents\Dev\repos\SpreadsheetProject\SpreadsheetProject\Client\.vs\Client\lut\0\i\Client\Debug\Client.dll
+C:\Users\jkub6\Documents\Dev\repos\SpreadsheetProject\SpreadsheetProject\Client\.vs\Client\lut\0\i\Client\Debug\Client.csprojAssemblyReference.cache

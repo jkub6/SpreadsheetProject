@@ -34,6 +34,7 @@
             this.autoScrollCheckbox = new System.Windows.Forms.CheckBox();
             this.newLineCheckbox = new System.Windows.Forms.CheckBox();
             this.inOutCheckbox = new System.Windows.Forms.CheckBox();
+            this.showLineCheckbox = new System.Windows.Forms.CheckBox();
             this.SuspendLayout();
             // 
             // textBox1
@@ -49,7 +50,7 @@
             this.textBox1.Name = "textBox1";
             this.textBox1.ReadOnly = true;
             this.textBox1.ScrollBars = System.Windows.Forms.ScrollBars.Vertical;
-            this.textBox1.Size = new System.Drawing.Size(776, 453);
+            this.textBox1.Size = new System.Drawing.Size(800, 453);
             this.textBox1.TabIndex = 0;
             this.textBox1.TextChanged += new System.EventHandler(this.textBox1_TextChanged);
             // 
@@ -59,14 +60,14 @@
             | System.Windows.Forms.AnchorStyles.Right)));
             this.textBox2.Location = new System.Drawing.Point(12, 12);
             this.textBox2.Name = "textBox2";
-            this.textBox2.Size = new System.Drawing.Size(623, 31);
+            this.textBox2.Size = new System.Drawing.Size(647, 31);
             this.textBox2.TabIndex = 1;
             // 
             // sendButton
             // 
             this.sendButton.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
             this.sendButton.Enabled = false;
-            this.sendButton.Location = new System.Drawing.Point(653, 10);
+            this.sendButton.Location = new System.Drawing.Point(677, 10);
             this.sendButton.Name = "sendButton";
             this.sendButton.Size = new System.Drawing.Size(135, 42);
             this.sendButton.TabIndex = 2;
@@ -95,9 +96,9 @@
             this.newLineCheckbox.CheckState = System.Windows.Forms.CheckState.Checked;
             this.newLineCheckbox.Location = new System.Drawing.Point(166, 517);
             this.newLineCheckbox.Name = "newLineCheckbox";
-            this.newLineCheckbox.Size = new System.Drawing.Size(246, 29);
+            this.newLineCheckbox.Size = new System.Drawing.Size(185, 29);
             this.newLineCheckbox.TabIndex = 4;
-            this.newLineCheckbox.Text = "Send \"\\n\" as new line";
+            this.newLineCheckbox.Text = "Send \"\\n\" as \\n";
             this.newLineCheckbox.UseVisualStyleBackColor = true;
             // 
             // inOutCheckbox
@@ -106,18 +107,32 @@
             this.inOutCheckbox.AutoSize = true;
             this.inOutCheckbox.Checked = true;
             this.inOutCheckbox.CheckState = System.Windows.Forms.CheckState.Checked;
-            this.inOutCheckbox.Location = new System.Drawing.Point(424, 517);
+            this.inOutCheckbox.Location = new System.Drawing.Point(378, 517);
             this.inOutCheckbox.Name = "inOutCheckbox";
             this.inOutCheckbox.Size = new System.Drawing.Size(220, 29);
             this.inOutCheckbox.TabIndex = 5;
             this.inOutCheckbox.Text = "Show in/out (->/<-)";
             this.inOutCheckbox.UseVisualStyleBackColor = true;
             // 
+            // showLineCheckbox
+            // 
+            this.showLineCheckbox.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
+            this.showLineCheckbox.AutoSize = true;
+            this.showLineCheckbox.Checked = true;
+            this.showLineCheckbox.CheckState = System.Windows.Forms.CheckState.Checked;
+            this.showLineCheckbox.Location = new System.Drawing.Point(609, 517);
+            this.showLineCheckbox.Name = "showLineCheckbox";
+            this.showLineCheckbox.Size = new System.Drawing.Size(187, 29);
+            this.showLineCheckbox.TabIndex = 6;
+            this.showLineCheckbox.Text = "Show \\n as \\r\\n";
+            this.showLineCheckbox.UseVisualStyleBackColor = true;
+            // 
             // NetworkConsoleForm
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(12F, 25F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(800, 558);
+            this.ClientSize = new System.Drawing.Size(824, 558);
+            this.Controls.Add(this.showLineCheckbox);
             this.Controls.Add(this.inOutCheckbox);
             this.Controls.Add(this.newLineCheckbox);
             this.Controls.Add(this.autoScrollCheckbox);
@@ -139,5 +154,6 @@
         private System.Windows.Forms.CheckBox autoScrollCheckbox;
         private System.Windows.Forms.CheckBox newLineCheckbox;
         private System.Windows.Forms.CheckBox inOutCheckbox;
+        private System.Windows.Forms.CheckBox showLineCheckbox;
     }
 }
