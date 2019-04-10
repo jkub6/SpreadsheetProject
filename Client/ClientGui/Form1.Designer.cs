@@ -96,7 +96,7 @@
             this.highLightToolStripMenuItem});
             this.menuStrip1.Location = new System.Drawing.Point(0, 0);
             this.menuStrip1.Name = "menuStrip1";
-            this.menuStrip1.Size = new System.Drawing.Size(800, 40);
+            this.menuStrip1.Size = new System.Drawing.Size(800, 42);
             this.menuStrip1.TabIndex = 1;
             this.menuStrip1.Text = "menuStrip1";
             // 
@@ -203,7 +203,7 @@
             this.toolStripSeparator1,
             this.clearAllCellsToolStripMenuItem});
             this.editToolStripMenuItem.Name = "editToolStripMenuItem";
-            this.editToolStripMenuItem.Size = new System.Drawing.Size(67, 36);
+            this.editToolStripMenuItem.Size = new System.Drawing.Size(67, 38);
             this.editToolStripMenuItem.Text = "Edit";
             // 
             // cutToolStripMenuItem
@@ -263,6 +263,7 @@
             this.undoNetworkToolStripMenuItem.ShortcutKeys = ((System.Windows.Forms.Keys)((System.Windows.Forms.Keys.Control | System.Windows.Forms.Keys.U)));
             this.undoNetworkToolStripMenuItem.Size = new System.Drawing.Size(421, 38);
             this.undoNetworkToolStripMenuItem.Text = "Undo (Network)";
+            this.undoNetworkToolStripMenuItem.Click += new System.EventHandler(this.undoNetworkToolStripMenuItem_Click);
             // 
             // revertNetworkToolStripMenuItem
             // 
@@ -272,7 +273,7 @@
             | System.Windows.Forms.Keys.U)));
             this.revertNetworkToolStripMenuItem.Size = new System.Drawing.Size(421, 38);
             this.revertNetworkToolStripMenuItem.Text = "Revert (Network)";
-            this.revertNetworkToolStripMenuItem.Click += new System.EventHandler(this.redoNetworkToolStripMenuItem_Click);
+            this.revertNetworkToolStripMenuItem.Click += new System.EventHandler(this.revertNetworkToolStripMenuItem_Click);
             // 
             // toolStripSeparator1
             // 

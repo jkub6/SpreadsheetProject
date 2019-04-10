@@ -28,6 +28,8 @@ namespace ClientGui
         private Spreadsheet spreadsheet;
         private string fileName;
 
+        private NetworkConsoleForm networkConsoleForm;
+
         /// <summary>
         /// This constructor initializes a form as well as allows command line arguements 
         /// and run it as an executable. This also updates the cells in the new form if 
@@ -59,6 +61,10 @@ namespace ClientGui
 
             client = new Client.Client();
             client.PingCompleted += PingCompletedCallback;
+
+            networkConsoleForm = new NetworkConsoleForm();
+            client.NetworkMessageRecieved += networkConsoleForm.getText;
+            networkConsoleForm.SendingText += SendText;
         }
         /// <summary>
         /// Updates the current coordinates of the spreadsheet. 
@@ -378,35 +384,12 @@ namespace ClientGui
             UpdateCellByName(GetSelectedCellName(), cellContentBox.Text);
         }
 
-        private void redoNetworkToolStripMenuItem_Click(object sender, EventArgs e)
-        {
-
-        }
-
-        private void cutToolStripMenuItem_Click(object sender, EventArgs e)
-        {
-            cellContentBox.Cut();
-        }
-
-        private void copySelectedTextToolStripMenuItem_Click(object sender, EventArgs e)
-        {
-            cellContentBox.Copy();
-        }
-
-        private void pasteToolStripMenuItem_Click(object sender, EventArgs e)
-        {
-            cellContentBox.Paste();
-        }
-
-        private void selectAllToolStripMenuItem_Click(object sender, EventArgs e)
-        {
-            cellContentBox.SelectAll();
-        }
-
-        private void deleteToolStripMenuItem_Click(object sender, EventArgs e)
-        {
-            cellContentBox.SelectedText = "";
-        }
+        //edit buttons
+        private void cutToolStripMenuItem_Click(object sender, EventArgs e) => cellContentBox.Cut();
+        private void copySelectedTextToolStripMenuItem_Click(object sender, EventArgs e) => cellContentBox.Copy();
+        private void pasteToolStripMenuItem_Click(object sender, EventArgs e) => cellContentBox.Paste();
+        private void selectAllToolStripMenuItem_Click(object sender, EventArgs e) => cellContentBox.SelectAll();
+        private void deleteToolStripMenuItem_Click(object sender, EventArgs e) => cellContentBox.SelectedText = "";
 
         private void fullScreenToolStripMenuItem_Click(object sender, EventArgs e)
         {
@@ -440,6 +423,7 @@ namespace ClientGui
             pingLabel.Visible = true;
             undoNetworkToolStripMenuItem.Enabled = true;
             revertNetworkToolStripMenuItem.Enabled = true;
+            networkConsoleForm.SetConnectedState(true);
 
             OpenNetworkFileForm openNetworkFileForm = new OpenNetworkFileForm();
             openNetworkFileForm.ShowDialog();
@@ -464,8 +448,22 @@ namespace ClientGui
 
         private void networkConsoleToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            NetworkConsoleForm networkConsoleForm = new NetworkConsoleForm();
             networkConsoleForm.Show();
+        }
+
+        private void undoNetworkToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+
+        }
+
+        private void revertNetworkToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+
+        }
+
+        private void SendText(object sender, string text)
+        {
+            client.SendNetworkMessage(text);
         }
     }
 }

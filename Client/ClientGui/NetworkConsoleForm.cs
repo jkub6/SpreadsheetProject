@@ -12,9 +12,63 @@ namespace ClientGui
 {
     public partial class NetworkConsoleForm : Form
     {
+        public event EventHandler<string> SendingText;
+
         public NetworkConsoleForm()
         {
             InitializeComponent();
+        }
+
+        public void SetConnectedState(bool state)
+        {
+            MethodInvoker methodInvokerDelegate = delegate () { sendButton.Enabled = state; };
+
+            if (InvokeRequired)
+                Invoke(methodInvokerDelegate);
+            else
+                methodInvokerDelegate();
+        }
+
+        private void sendButton_Click(object sender, EventArgs e)
+        {
+            sendText(textBox2.Text);
+            textBox2.Clear();
+        }
+
+        public void sendText(string text)
+        {
+            if (newLineCheckbox.Checked)
+                text = text.Replace("\\n", "\r\n");
+
+            SendingText?.Invoke(this, text);
+
+            if (inOutCheckbox.Checked)
+                text = "<-" + text;
+            textBox1.AppendText(text);
+        }
+
+        public void getText(object sender, string text)
+        {
+            if (inOutCheckbox.Checked)
+                text = "->" + text;
+
+            MethodInvoker methodInvokerDelegate = delegate () { textBox1.AppendText(text); };
+
+            if (InvokeRequired)
+                Invoke(methodInvokerDelegate);
+            else
+                methodInvokerDelegate();
+            
+        }
+
+        private void textBox1_TextChanged(object sender, EventArgs e)
+        {
+            if (autoScrollCheckbox.Checked)
+            {
+                textBox1.SelectionStart = textBox1.Text.Length;
+                textBox1.ScrollToCaret();
+                textBox1.Refresh();
+            }
         }
     }
 }

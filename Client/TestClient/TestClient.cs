@@ -28,7 +28,7 @@ namespace TestClient
             client.Connect(host, port);
             Console.WriteLine("Connected to " + host);
             client.SendNetworkMessage(message);
-            Console.WriteLine("OUT: " + message);
+            Console.WriteLine("OUT: " + message + "\n\n");
 
             Console.ReadLine();
         }
