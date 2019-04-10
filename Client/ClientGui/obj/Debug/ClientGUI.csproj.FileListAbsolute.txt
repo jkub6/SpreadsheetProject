@@ -21,3 +21,4 @@ C:\Users\jkub6\Documents\Dev\repos\SpreadsheetProject\SpreadsheetProject\Client\
 C:\Users\jkub6\Documents\Dev\repos\SpreadsheetProject\SpreadsheetProject\Client\ClientGui\obj\Debug\ClientGui.AboutBox1.resources
 C:\Users\jkub6\Documents\Dev\repos\SpreadsheetProject\SpreadsheetProject\Client\ClientGui\obj\Debug\ClientGui.LoginForm.resources
 C:\Users\jkub6\Documents\Dev\repos\SpreadsheetProject\SpreadsheetProject\Client\ClientGui\obj\Debug\ClientGui.OpenNetworkFileForm.resources
+C:\Users\jkub6\Documents\Dev\repos\SpreadsheetProject\SpreadsheetProject\Client\ClientGui\obj\Debug\ClientGui.NetworkConsoleForm.resources

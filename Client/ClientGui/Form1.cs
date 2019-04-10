@@ -410,7 +410,7 @@ namespace ClientGui
 
         private void fullScreenToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            bool fullscreen = (WindowState == FormWindowState.Maximized);
+            bool fullscreen = (FormBorderStyle == System.Windows.Forms.FormBorderStyle.None);
             if (fullscreen)
             {
                 WindowState = FormWindowState.Normal;
@@ -462,9 +462,10 @@ namespace ClientGui
                 methodInvokerDelegate();
         }
 
-        private void viewNetworkConsoleToolStripMenuItem_Click(object sender, EventArgs e)
+        private void networkConsoleToolStripMenuItem_Click(object sender, EventArgs e)
         {
-
+            NetworkConsoleForm networkConsoleForm = new NetworkConsoleForm();
+            networkConsoleForm.Show();
         }
     }
 }

@@ -60,7 +60,6 @@
             this.serverAdminToolToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.helpToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.AboutToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-            this.viewNetworkConsoleToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.highLightToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.cellContentBox = new System.Windows.Forms.TextBox();
             this.cellValueBox = new System.Windows.Forms.TextBox();
@@ -69,6 +68,7 @@
             this.label1 = new System.Windows.Forms.Label();
             this.label2 = new System.Windows.Forms.Label();
             this.pingLabel = new System.Windows.Forms.Label();
+            this.networkConsoleToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.menuStrip1.SuspendLayout();
             this.SuspendLayout();
             // 
@@ -96,7 +96,7 @@
             this.highLightToolStripMenuItem});
             this.menuStrip1.Location = new System.Drawing.Point(0, 0);
             this.menuStrip1.Name = "menuStrip1";
-            this.menuStrip1.Size = new System.Drawing.Size(800, 42);
+            this.menuStrip1.Size = new System.Drawing.Size(800, 40);
             this.menuStrip1.TabIndex = 1;
             this.menuStrip1.Text = "menuStrip1";
             // 
@@ -203,7 +203,7 @@
             this.toolStripSeparator1,
             this.clearAllCellsToolStripMenuItem});
             this.editToolStripMenuItem.Name = "editToolStripMenuItem";
-            this.editToolStripMenuItem.Size = new System.Drawing.Size(67, 38);
+            this.editToolStripMenuItem.Size = new System.Drawing.Size(67, 36);
             this.editToolStripMenuItem.Text = "Edit";
             // 
             // cutToolStripMenuItem
@@ -313,9 +313,10 @@
             // toolsToolStripMenuItem
             // 
             this.toolsToolStripMenuItem.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
-            this.serverAdminToolToolStripMenuItem});
+            this.serverAdminToolToolStripMenuItem,
+            this.networkConsoleToolStripMenuItem});
             this.toolsToolStripMenuItem.Name = "toolsToolStripMenuItem";
-            this.toolsToolStripMenuItem.Size = new System.Drawing.Size(82, 38);
+            this.toolsToolStripMenuItem.Size = new System.Drawing.Size(82, 36);
             this.toolsToolStripMenuItem.Text = "Tools";
             // 
             // serverAdminToolToolStripMenuItem
@@ -327,10 +328,9 @@
             // helpToolStripMenuItem
             // 
             this.helpToolStripMenuItem.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
-            this.AboutToolStripMenuItem,
-            this.viewNetworkConsoleToolStripMenuItem});
+            this.AboutToolStripMenuItem});
             this.helpToolStripMenuItem.Name = "helpToolStripMenuItem";
-            this.helpToolStripMenuItem.Size = new System.Drawing.Size(77, 38);
+            this.helpToolStripMenuItem.Size = new System.Drawing.Size(77, 36);
             this.helpToolStripMenuItem.Text = "Help";
             // 
             // AboutToolStripMenuItem
@@ -339,13 +339,6 @@
             this.AboutToolStripMenuItem.Size = new System.Drawing.Size(355, 38);
             this.AboutToolStripMenuItem.Text = "About";
             this.AboutToolStripMenuItem.Click += new System.EventHandler(this.AboutToolStripMenuItem_Click);
-            // 
-            // viewNetworkConsoleToolStripMenuItem
-            // 
-            this.viewNetworkConsoleToolStripMenuItem.Name = "viewNetworkConsoleToolStripMenuItem";
-            this.viewNetworkConsoleToolStripMenuItem.Size = new System.Drawing.Size(355, 38);
-            this.viewNetworkConsoleToolStripMenuItem.Text = "View Network Console";
-            this.viewNetworkConsoleToolStripMenuItem.Click += new System.EventHandler(this.viewNetworkConsoleToolStripMenuItem_Click);
             // 
             // highLightToolStripMenuItem
             // 
@@ -416,6 +409,14 @@
             this.pingLabel.Size = new System.Drawing.Size(148, 25);
             this.pingLabel.TabIndex = 8;
             this.pingLabel.Text = "Ping: [num]ms";
+            this.pingLabel.Visible = false;
+            // 
+            // networkConsoleToolStripMenuItem
+            // 
+            this.networkConsoleToolStripMenuItem.Name = "networkConsoleToolStripMenuItem";
+            this.networkConsoleToolStripMenuItem.Size = new System.Drawing.Size(310, 38);
+            this.networkConsoleToolStripMenuItem.Text = "Network Console";
+            this.networkConsoleToolStripMenuItem.Click += new System.EventHandler(this.networkConsoleToolStripMenuItem_Click);
             // 
             // Form1
             // 
@@ -434,7 +435,7 @@
             this.KeyPreview = true;
             this.Name = "Form1";
             this.Padding = new System.Windows.Forms.Padding(0, 0, 0, 50);
-            this.Text = "Text";
+            this.Text = "Title";
             this.FormClosing += new System.Windows.Forms.FormClosingEventHandler(this.Form1_FormClosing);
             this.menuStrip1.ResumeLayout(false);
             this.menuStrip1.PerformLayout();
@@ -472,7 +473,6 @@
         private System.Windows.Forms.ToolStripMenuItem saveFileAsToolStripMenuItem;
         private System.Windows.Forms.ToolStripSeparator toolStripSeparator3;
         private System.Windows.Forms.ToolStripMenuItem revertNetworkToolStripMenuItem;
-        private System.Windows.Forms.ToolStripMenuItem viewNetworkConsoleToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem cutToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem copySelectedTextToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem pasteToolStripMenuItem;
@@ -486,6 +486,7 @@
         private System.Windows.Forms.ToolStripMenuItem toolsToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem serverAdminToolToolStripMenuItem;
         private System.Windows.Forms.Label pingLabel;
+        private System.Windows.Forms.ToolStripMenuItem networkConsoleToolStripMenuItem;
     }
 }
 
