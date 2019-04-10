@@ -14,6 +14,7 @@ MasterController::MasterController(int port)
 {
   this->port = port;
 
+  
   this->connectionListener = new ConnectionListener(port, newClientConnected);
   this->spreadsheetController = new SpreadsheetController();
 
