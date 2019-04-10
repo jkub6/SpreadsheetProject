@@ -114,10 +114,60 @@ vector<string> *DependencyGraph::GetDependees(string s)
     return toReturn;
 }
 
-/*
+void DependencyGraph::RemoveDependency(string s, string t)
+{
+  if(!HasDependents(s))
+    {
+    return;
+    }
+  
+  std::vector<std::string> *dep = (*dependents)[s];
+  std::vector<std::string> *dee = (*dependees)[t];
+
+  
+  if((std::find(dep->begin(),dep->end(),s)==dep->end())&&(std::find(dee->begin(),dee->end(),t)==dee->end()))
+    {
+      //Finds the position of t and deletes it from dependents
+      std::vector<string>::iterator position = std::find(dep->begin(), dep->end(), t);
+      if (position != dep->end()) // == myVector.end() means the element was not found
+	dep->erase(position);
+
+      //Finds the position of s and deletes it from dependees
+      position = std::find(dee->begin(), dee->end(), s);
+      if (position != dee->end()) // == myVector.end() means the element was not found
+	dee->erase(position);
+
+      size--;
+      return;
+    }
+}
+
+
 int main()
 {
-  DependencyGraph DG();
+  DependencyGraph *DG = new DependencyGraph();
   std::cout<<"DependencyGraph is working \n";
+  if(DG->Size() == 0)
+    cout<<"SUCCESS"<<endl;
+  DG->AddDependency("a", "b");
+  if(DG->Size() == 1)
+    cout<<"SUCCESS"<<endl;
+  DG->AddDependency("b", "c");
+  if(DG->Size() == 2)
+    cout<<"SUCCESS"<<endl;
+  DG->AddDependency("a", "b");//Test adding a duplicate
+  if(DG->Size() == 2)
+    cout<<"SUCCESS"<<endl;
+
+  //Test RemoveDependency
+  DG->RemoveDependency("a", "b");
+  if(DG->Size() == 1)
+    cout<<"SUCCESS"<<endl;
+  //Remove Something that was already removed
+  DG->RemoveDependency("a", "b");
+  if(DG->Size() == 1)
+    cout<<"SUCCESS"<<endl;
+  
+  
 }
-*/
+
