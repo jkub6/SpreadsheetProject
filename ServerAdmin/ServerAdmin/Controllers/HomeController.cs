@@ -9,13 +9,49 @@ using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
 using ServerAdmin.Models;
 using Newtonsoft.Json;
+using Microsoft.AspNetCore.Authorization;
 
 namespace ServerAdmin.Controllers
 {
     public class HomeController : Controller
     {
-        private TcpClient tcpClient;
+        private TcpClient tcpClient = new TcpClient();
+        private SpreadsheetList spreadsheetList = new SpreadsheetList();
+
+        [HttpGet]
+        [AllowAnonymous]
+        public IActionResult Index()
+        {
+            return View();
+        }
+
+        [HttpPost]
+        [AllowAnonymous]
         public IActionResult Index(String username, String password, String ipAddress)
+        {
+            //IP Address: 24.10.184.57
+            //Port: 2112
+
+            bool authenticated = false;
+
+            //TODO:
+            //Send protocal JSON for type
+            //What is in each message for what needs to be implemented in the JSON
+            if (ipAddress != null && ipAddress != "")
+            {
+                ConnectToServer(ipAddress, username, password, out authenticated);
+            }
+
+            if (authenticated)
+                return RedirectToAction("SpreadsheetList", new { username, password, ipAddress });
+            else
+            {
+                ViewBag.Failed = true;
+                return View();
+            }
+        }
+
+        public IActionResult SpreadsheetList(String username, String password, String ipAddress, bool authenticated)
         {
             //IP Address: 24.10.184.57
             //Port: 2112
@@ -24,18 +60,15 @@ namespace ServerAdmin.Controllers
             //Send protocal JSON for type
             //What is in each message for what needs to be implemented in the JSON
             if (ipAddress != null && ipAddress != "")
-                ConnectToServer(ipAddress, username, password);
+                ConnectToServer(ipAddress, username, password, out authenticated);
 
-            bool authenticated = false;
-            if (authenticated)
-                Task.Run(() => Read());
-
-            return View();
+            return View(spreadsheetList);
         }
 
         //TODO: Ping to the server
-        public void ConnectToServer(String ipAddress, String username, String password)
+        public void ConnectToServer(String ipAddress, String username, String password, out bool authenticated)
         {
+            authenticated = false;
             try
             {
                 Console.WriteLine("Connecting.....");
@@ -43,7 +76,7 @@ namespace ServerAdmin.Controllers
 
                 // use the ipaddress as in the server program
                 Console.WriteLine("Connected");
-                UserRequest ulr = new UserRequest
+                UserRequest ur = new UserRequest
                 {
                     IpAddress = ipAddress,
                     Username = username,
@@ -52,7 +85,7 @@ namespace ServerAdmin.Controllers
                 };
 
                 //Sends the JSON Request to the server
-                string message = JsonConvert.SerializeObject(ulr) + '\n' + '\n';
+                string message = JsonConvert.SerializeObject(ur) + '\n' + '\n';
 
                 // Translate the passed message into ASCII and store it as a Byte array.
                 Byte[] data = System.Text.Encoding.ASCII.GetBytes(message);
@@ -72,49 +105,39 @@ namespace ServerAdmin.Controllers
                 // Read the first batch of the TcpServer response bytes.
                 Int32 bytes = stream.Read(data, 0, data.Length); //(**This receives the data using the byte method**)
                 responseData = System.Text.Encoding.ASCII.GetString(data, 0, bytes); //(**This converts it to string**)
+                if (responseData != null && responseData != "")
+                    authenticated = true;
 
+                Read(responseData);
                 string value = "5";
                 //tcpclnt.Close();
             }
-
             catch (Exception e)
             {
-                Console.WriteLine("Error..... " + e.StackTrace);
+                authenticated = false;
+                ViewBag.Error = "Error..... " + e.StackTrace;
             }
         }
 
-        private async Task Read()
+        private void Read(String json)
         {
-            var buffer = new byte[4096];
-            var ns = tcpClient.GetStream();
-            while (true)
+            try
+            //Parse message here
             {
-                var bytesRead = await ns.ReadAsync(buffer, 0, buffer.Length);
-                if (bytesRead == 0) return; // Stream was closed
-                string message = Encoding.ASCII.GetString(buffer, 0, bytesRead);
-                NetworkMessageRecieved(this, message);
-
-
-                try
+                SpreadsheetList value = JsonConvert.DeserializeObject<SpreadsheetList>(json);
+                if (value.type == "list")
                 {
-                    JObject o = JObject.Parse(message);
-                    string type = (string)o["type"];
-
-                    if (type == "error")
-                        ErrorRecieved(this, (int)o["code"]);
-                    else if (type == "full send")
-                    {
-                        Spreadsheet newSpreadsheet = new Spreadsheet();
-                        JToken cells = o["cells"];
-                        foreach (JObject ob in cells.Children<JObject>())
-                            foreach (JProperty p in ob.Properties())
-                                newSpreadsheet.SetContentsOfCell(p.Name, (string)p.Value);
-                        spreadsheet = newSpreadsheet;
-                        FullSendRecieved(this, newSpreadsheet);
-                    }
-
+                    if (value.Equals(spreadsheetList))
+                        return;
+                    else
+                        spreadsheetList = value;
                 }
-                catch (Exception) { }
+                else
+                    throw new Exception();
+            }
+            catch (Exception)
+            {
+
             }
         }
 

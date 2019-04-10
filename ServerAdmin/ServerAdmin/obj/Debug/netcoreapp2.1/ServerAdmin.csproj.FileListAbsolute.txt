@@ -27,3 +27,4 @@ C:\Users\aaron\Documents\CodeDirectories\Spreadsheet\ServerAdmin\ServerAdmin\obj
 C:\Users\aaron\Documents\CodeDirectories\Spreadsheet\ServerAdmin\ServerAdmin\obj\Debug\netcoreapp2.1\ServerAdmin.dll
 C:\Users\aaron\Documents\CodeDirectories\Spreadsheet\ServerAdmin\ServerAdmin\obj\Debug\netcoreapp2.1\ServerAdmin.pdb
 C:\Users\aaron\Documents\CodeDirectories\Spreadsheet\ServerAdmin\ServerAdmin\obj\Debug\netcoreapp2.1\ServerAdmin.csproj.CopyComplete
+C:\Users\aaron\Documents\CodeDirectories\Spreadsheet\ServerAdmin\ServerAdmin\obj\Debug\netcoreapp2.1\Razor\Views\Home\SpreadsheetList.g.cshtml.cs

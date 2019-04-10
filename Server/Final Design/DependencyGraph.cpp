@@ -10,7 +10,6 @@ using namespace std;
  */
 DependencyGraph::DependencyGraph()
 {
-  //TODO
   dependents = new std::map<std::string,std::vector<string>* >;
   dependees = new std::map<std::string,std::vector<string>* >;
   size = 0;
@@ -21,7 +20,6 @@ DependencyGraph::DependencyGraph()
  */
 DependencyGraph::~DependencyGraph()
 {
-  //TODO
   delete dependents;
   delete dependees;
 }
@@ -142,6 +140,44 @@ void DependencyGraph::RemoveDependency(string s, string t)
     }
 }
 
+void DependencyGraph::ReplaceDependents(string s, vector<string> *newDependents)
+{
+  if(HasDependents(s))
+    {
+      //Create a copy so that we can iterate through the copy and remove from original
+      vector<string> *newVector = new vector<string>();
+      *newVector = *(*dependents)[s];
+      for(string t: *newVector)
+	{
+	  RemoveDependency(s,t);
+	}
+      for(string t: *newDependents)
+	{
+	  AddDependency(s,t);
+	}
+    }
+}
+
+void DependencyGraph::ReplaceDependees(string s, vector<string> *newDependees)
+{
+  if(HasDependees(s))
+    {
+      //Create a copy so that we can iterate through the copy and remove from original
+      vector<string> *newVector = new vector<string>();
+      *newVector = *(*dependees)[s];
+      for(string t: *newVector)
+	{
+	  RemoveDependency(t,s);
+	}
+      for(string t: *newDependees)
+	{
+	  AddDependency(t,s);
+	}
+    }
+}
+
+
+
 /*
 int main()
 {
@@ -152,6 +188,11 @@ int main()
   DG->AddDependency("a", "b");
   if(DG->Size() == 1)
     cout<<"SUCCESS"<<endl;
+  DG->RemoveDependency("b","a");
+    if(DG->Size() == 1)
+    cout<<"SUCCESS"<<endl;
+    else
+      cout<<"Fail"<<endl;
   DG->AddDependency("b", "c");
   if(DG->Size() == 2)
     cout<<"SUCCESS"<<endl;
@@ -167,8 +208,11 @@ int main()
   DG->RemoveDependency("a", "b");
   if(DG->Size() == 1)
     cout<<"SUCCESS"<<endl;
+
+  //TODO:Test ReplaceDependents and ReplaceDependees
   
   
 }
 */
+
 

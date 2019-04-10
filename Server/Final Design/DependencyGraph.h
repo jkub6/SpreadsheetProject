@@ -22,6 +22,8 @@ bool HasDependees(std::string);
 std::vector<std::string> *GetDependents(std::string s);
 std::vector<std::string> *GetDependees(std::string s);
 void RemoveDependency(std::string s, std::string t);
+ void ReplaceDependents(std::string s, std::vector<std::string> *newDependents);
+ void ReplaceDependees(std::string s, std::vector<std::string> *newDependees);
   
 private:
 int size;
