@@ -10,69 +10,39 @@
 #include <iostream>
 #include <fstream>
 #include <mutex>
+#include "SocketState.h"
 
 
 std::vector<std::string> *Utilities::spreadsheetList;
 
 std::mutex * Utilities::spreadSheetListMtx;
 
-void Utilities::sendMessage(int socketID, std::string message)
+void Utilities::sendMessage(SocketState * sstate, std::string message)
 {
+  int socketID = sstate->getID();
   send(socketID, message.c_str() , message.length() , 0 );  
 }
 
-std::vector<std::string>* Utilities::receiveMessage(int socketID, int *bytesRead, std::string * remainingMessage)
+std::string Utilities::receiveMessage(SocketState * sstate)
 {
-
+  int socketID = sstate->getID();
   int bufferLength = 1024;
   char receiveBuffer[bufferLength];
 
+  int bytesRead = read(socketID,receiveBuffer,bufferLength);
 
-  *bytesRead = read(socketID,receiveBuffer,bufferLength);
 
-
-  
-
-  
-  std::string *rawString = new std::string((char*)receiveBuffer,*bytesRead);
-
-  
-  //*bytesRead = a;
-  
-  std::string * remain;
-
-  std::vector<std::string> *tokens = Tokenize(rawString);
-
+  if(bytesRead==0)//client disconnected
+    {
+      sstate->setConnected(false);
+      return "";
+    }
 
   
-  *remainingMessage = *rawString;
-
-  delete rawString;
-
+  std::string rawString((char*)receiveBuffer,bytesRead);
   
-  return tokens;
+  return rawString;
 }
-
-std::vector<std::string>* Utilities::Tokenize(std::string * input)
-  {
-    std::vector<std::string> *tokens = new std::vector<std::string>();
-    
-    std::string delimiter = "\n\n";
-
-    for(int index = input->find(delimiter);index>0;)
-      {
-	std::string subString = input->substr(0,index);
-	tokens->push_back(subString);
-	index+=2;
-
-	*input = input->erase(0,index);
-	index = input->find(delimiter);
-      }
-    
-    return tokens;
-    
-  }
-
 
 //singleton
 std::vector<std::string>* Utilities::getSpreadsheetList()

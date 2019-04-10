@@ -12,27 +12,24 @@ using SpreadsheetUtilities;
 using System.Diagnostics;
 using System.IO;
 using System.Media;
+using System.Net.NetworkInformation;
 
 namespace ClientGui
 {
     public partial class Form1 : Form
     {
+        Client.Client client;
+
         /// <summary>
         /// Keeps track of the current column 
         /// </summary>
         private int column = 0;
-        /// <summary>
-        /// Keeps track of the current row
-        /// </summary>
         private int row = 0;
-        /// <summary>
-        /// Creates a new spreadsheet
-        /// </summary>
         private Spreadsheet spreadsheet;
-        /// <summary>
-        /// Keeps track of the current or future file name. 
-        /// </summary>
         private string fileName;
+
+        private NetworkConsoleForm networkConsoleForm;
+
         /// <summary>
         /// This constructor initializes a form as well as allows command line arguements 
         /// and run it as an executable. This also updates the cells in the new form if 
@@ -61,6 +58,13 @@ namespace ClientGui
 
             SelectCell();
             spreadsheetPanel.SelectionChanged += CellSelectedEvent;
+
+            client = new Client.Client();
+            client.PingCompleted += PingCompletedCallback;
+
+            networkConsoleForm = new NetworkConsoleForm();
+            client.NetworkMessageRecieved += networkConsoleForm.getText;
+            networkConsoleForm.SendingText += SendText;
         }
         /// <summary>
         /// Updates the current coordinates of the spreadsheet. 
@@ -69,6 +73,7 @@ namespace ClientGui
         {
             spreadsheetPanel.GetSelection(out column, out row);
         }
+
         /// <summary>
         /// Submits text when the selection is changed and executes the function 
         /// that refocuses.
@@ -79,6 +84,7 @@ namespace ClientGui
             SubmitText();
             SelectCell();
         }
+
         /// <summary>
         /// The select cell function finds the current cell and column and 
         /// focuses in on it, as well as updates the coordinates for other functions to use. 
@@ -99,16 +105,18 @@ namespace ClientGui
             if (cellContents is Formula f)
                 cellContentBox.Text = "=" + cellContentBox.Text;
 
-            spreadsheetPanel.GetValue(column, row, out string t);
-            cellValueBox.Text = t;
+            cellValueBox.Text = spreadsheet.GetCellValue(cellName).ToString();
+
+            cellContentBox.SelectAll();
         }
+
         /// <summary>
         /// Converst the column and row to the variable name
         /// </summary>
         /// <returns></returns>
         private string GetSelectedCellName()
         {
-            return (char)(column + 65) + (row + 1).ToString();
+            return ((char)(column + 65)) + (row + 1).ToString();
         }
 
         /// <summary>
@@ -123,37 +131,29 @@ namespace ClientGui
 
             switch (keyData)
             {
-                //Shifts selection right when Tab is pressed
+                //Shifts selection right when Tab/Right is pressed
                 case Keys.Tab:
-                    SubmitText();
-                    spreadsheetPanel.SetSelection((column + 1) % 26, row);
-                    SelectCell();
-                    return true;
-                //Shifts selection right when right arrow is pressed
                 case Keys.Right:
                     SubmitText();
                     spreadsheetPanel.SetSelection((column+1)%26, row);
                     SelectCell();
                     return true;
-                //Shifts selection left when Left arrow is pressed
+                //Shifts selection left when Shift Tab/Left is pressed
+                case Keys.Tab | Keys.Shift:
                 case Keys.Left:
                     SubmitText();
                     spreadsheetPanel.SetSelection((column-1)%26, row);
                     SelectCell();
                     return true;
-                //Shifts selection down up when enter is pressed
+                //Shifts selection down when Enter/Down is pressed
                 case Keys.Enter:
-                    SubmitText();
-                    spreadsheetPanel.SetSelection(column, (row+1)%99);
-                    SelectCell();
-                    return true;
-                //Shifts selection down up when down is pressed
                 case Keys.Down:
                     SubmitText();
                     spreadsheetPanel.SetSelection(column, (row + 1) % 99);
                     SelectCell();
                     return true;
-                //Shifts Selection up when up is pressed
+                //Shifts selection up when Shift Enter/Up is pressed
+                case Keys.Enter | Keys.Shift:
                 case Keys.Up:
                     SubmitText();
                     spreadsheetPanel.SetSelection(column, (row-1)%99);
@@ -163,6 +163,7 @@ namespace ClientGui
             }
             return base.ProcessCmdKey(ref msg, keyData);
         }
+
         /// <summary>
         /// This event occurs when the entry button is clicked. 
         /// </summary>
@@ -172,6 +173,7 @@ namespace ClientGui
         {
             SubmitText();
         }
+
         /// <summary>
         /// Calculates values of cells. 
         /// This function catches exceptions when calculating values of cells. 
@@ -192,7 +194,6 @@ namespace ClientGui
 
                 if (spreadsheet.Changed)
                     Text = "*" + fileName;
-
             }
             catch (FormulaFormatException e)
             {
@@ -204,25 +205,30 @@ namespace ClientGui
             }
 
         }
+
         /// <summary>
         /// Updates cell by the name 
         /// Allows for use of GetListofNonEmpty cells from 
         /// spreadsheet to update all cell values resulting from changes. 
         /// </summary>
         /// <param InputString="name"></param>
-        private void UpdateCellByName(string name)
+        private void UpdateCellByName(string name, string tempText=null)
         {
             //Converts the column and row to the Cell name
             int col = name[0] - 65;
-            int row = int.Parse(name[1].ToString()) - 1;
+            int row = int.Parse(name.Substring(1).ToString()) - 1;
 
             object value = spreadsheet.GetCellValue(name);
             string text = value.ToString();
             if (value is FormulaError f)
                 text = f.Reason;
 
+            if (tempText != null)
+                text = tempText;
+
             spreadsheetPanel.SetValue(col, row, text);
         }
+
         /// <summary>
         /// Displays how to use Spreadsheet 
         /// </summary>
@@ -230,22 +236,8 @@ namespace ClientGui
         /// <param name="e"></param>
         private void AboutToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            MessageBox.Show("Spreadsheet program by Alexis Koopmann and Jacob Larkin" 
-                             + "\n" + "©BlippityBlahInc"
-                             + "\n" + "Select different cells with arrow keys, enter, tab, or the mouse"
-                             + "\n" + "Added Functionality:"
-                             + "\n\t" + "You can change the color of the spreadsheet with the View."
-                             + "\n\t" + "Pressing the Enter key calculates value."
-                             + "\n\t" + "Exiting a cell will automatically calculate the value."
-                             + "\n\t" + "Selecting a cell allows you to enter it's contents."
-                             + "\n\t" + "Spreadsheet can be called from the command line"
-                             + "\n\t" + "Tab calculates the value of a cell as well and moves right."
-                             + "\n\t" + "Shift calculates the value of the cell and moves left."
-                             + "\n\t" + "If a file is unsaved an asterisk is displayed next to its name"
-                             + "\n\t" + "The default file name is Untitled.sprd."
-                             + "\n\t" + "You can change the color of the Top Part of the spreadsheet."
-                             + "\n\t" + "You can clear all the cells in the spreadsheet."
-                             + "\n\t" + "Our spreadsheet cheers for you when you save!", "About");
+            AboutBox1 m = new AboutBox1();
+            m.Show();
         }
 
         private void Form1_FormClosing(object sender, FormClosingEventArgs e)
@@ -271,6 +263,7 @@ namespace ClientGui
         {
             Application.Exit();
         }
+
         /// <summary>
         /// Saves button event to save the file. 
         /// </summary>
@@ -360,6 +353,7 @@ namespace ClientGui
             if (c.ShowDialog() == DialogResult.OK)
                 spreadsheetPanel.BackColor = c.Color;
         }
+
         /// <summary>
         /// Clears all cells
         /// </summary>
@@ -375,6 +369,7 @@ namespace ClientGui
 
             SelectCell();
         }
+
         /// <summary>
         /// Makes a sound when you save successfully!
         /// </summary>
@@ -382,6 +377,93 @@ namespace ClientGui
         {
             SoundPlayer audio = new SoundPlayer(global::ClientGui.Properties.Resources._1_person_cheering_Jett_Rifkin_1851518140); 
             audio.Play();
+        }
+
+        private void cellContentBox_TextChanged(object sender, EventArgs e)
+        {
+            UpdateCellByName(GetSelectedCellName(), cellContentBox.Text);
+        }
+
+        //edit buttons
+        private void cutToolStripMenuItem_Click(object sender, EventArgs e) => cellContentBox.Cut();
+        private void copySelectedTextToolStripMenuItem_Click(object sender, EventArgs e) => cellContentBox.Copy();
+        private void pasteToolStripMenuItem_Click(object sender, EventArgs e) => cellContentBox.Paste();
+        private void selectAllToolStripMenuItem_Click(object sender, EventArgs e) => cellContentBox.SelectAll();
+        private void deleteToolStripMenuItem_Click(object sender, EventArgs e) => cellContentBox.SelectedText = "";
+
+        private void fullScreenToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            bool fullscreen = (FormBorderStyle == System.Windows.Forms.FormBorderStyle.None);
+            if (fullscreen)
+            {
+                WindowState = FormWindowState.Normal;
+                this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.Sizable;
+            }
+            else
+            {
+                WindowState = FormWindowState.Maximized;
+                FormBorderStyle = System.Windows.Forms.FormBorderStyle.None;
+            }
+        }
+
+        private void newNetworkFileToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            OpenNetworkFile();
+        }
+
+        private void OpenNetworkFile()
+        {
+            LoginForm loginForm = new LoginForm(client);
+            loginForm.ShowDialog();
+
+            if (!loginForm.connected)
+                return; //return if connection failed.
+
+            //Now connected
+            pingLabel.Visible = true;
+            undoNetworkToolStripMenuItem.Enabled = true;
+            revertNetworkToolStripMenuItem.Enabled = true;
+            networkConsoleForm.SetConnectedState(true);
+
+            OpenNetworkFileForm openNetworkFileForm = new OpenNetworkFileForm();
+            openNetworkFileForm.ShowDialog();
+        }
+
+        private void openNetworkFileToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            OpenNetworkFile();
+        }
+
+        private void PingCompletedCallback(object sender, PingCompletedEventArgs e)
+        {
+            MethodInvoker methodInvokerDelegate = delegate ()
+            { pingLabel.Text = "Ping: " + e.Reply.RoundtripTime + "ms"; };
+
+            //This will be true if Current thread is not UI thread.
+            if (InvokeRequired)
+                Invoke(methodInvokerDelegate);
+            else
+                methodInvokerDelegate();
+        }
+
+        private void networkConsoleToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            networkConsoleForm.Show();
+        }
+
+        private void undoNetworkToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+
+        }
+
+        private void revertNetworkToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+
+        }
+
+        private void SendText(object sender, string text)
+        {
+            client.SendNetworkMessage(text);
         }
     }
 }

@@ -31,6 +31,14 @@ namespace SpreadsheetTests
         }
 
         [TestMethod]
+        public void GetCellValueDoubleNegativeFarCorner()
+        {
+            Spreadsheet s = new Spreadsheet();
+            s.SetContentsOfCell("A99", "-12.556");
+            Assert.AreEqual(-12.556, s.GetCellValue("A99"));
+        }
+
+        [TestMethod]
         public void GetCellValueDoubleZero()
         {
             Spreadsheet s = new Spreadsheet();

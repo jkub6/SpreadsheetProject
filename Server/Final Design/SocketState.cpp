@@ -3,18 +3,24 @@
 #include <string>
 #include "Utilities.h"
 #include <vector>
+#include <mutex>
 
 SocketState::SocketState(int socketID)
 {
   this->socketID = socketID;
-  commandsToProcess = new std::vector<std::string>();
-  remainingMessage = new std::string();
+  this->bufferMtx = new std::mutex();
+  this->buffer = new std::string();
   connected = true;
 }
 SocketState::~SocketState()
 {
-  delete remainingMessage;
-  delete commandsToProcess;
+  delete buffer;
+  delete bufferMtx;
+}
+
+int SocketState::getID()
+{
+  return this->socketID;
 }
 
 bool SocketState::isConnected()
@@ -22,46 +28,75 @@ bool SocketState::isConnected()
   return connected;
 }
 
-std::string SocketState::getRemainingMessage()
+std::string SocketState::getBuffer()
 {
-  return *remainingMessage;
+  return *buffer;
 }
+
+void SocketState::setConnected(bool con)
+{
+  this->connected = con;
+}
+
+void SocketState::appendMessage(std::string message)
+{
+  this->bufferMtx->lock();
+
+  *buffer = buffer->append(message);
+  
+  this->bufferMtx->unlock();
+}
+
 std::vector<std::string> * SocketState::getCommandsToProcess()
 {
-  return this->commandsToProcess;
+  std::vector<std::string> * commands = tokenize();
+
+  return commands;
 }
+
+std::vector<std::string> * SocketState::tokenize()
+{
+  this->bufferMtx->lock();
+  std::vector<std::string> *tokens = new std::vector<std::string>();
+  
+  std::string delimiter = "\n\n";
+
+  
+  
+  for(int index = buffer->find(delimiter);index>0;)
+    {
+      if(index>0||index>=buffer->length())
+	{
+	  break;
+	}
+      
+      std::string subString = buffer->substr(0,index);
+      tokens->push_back(subString);
+      index+=2;
+      
+      *buffer = buffer->erase(0,index);
+      index = buffer->find(delimiter);
+    }
+
+  this->bufferMtx->unlock();
+  return tokens;
+}
+
 
 void SocketState::socketAwaitData()
 {
   
-  std::string previousRemaining = *remainingMessage;
-  int bytesread = 0;
-  std::vector<std::string> * newCommands = Utilities::receiveMessage(this->socketID,&bytesread,remainingMessage);
-  
-  if(bytesread==0)
-    {
-      //client disconnected
-      this->connected = false;
-      return;
-    }
-  //add previous remaining to first command
-  if(newCommands->size()>0)
-    {
-      std::string newStr = previousRemaining + (std::string)(*newCommands)[0];
-      (*newCommands)[0]=newStr;
-    }
-  
-  //add new messages to vector
-  
-  for(int i = 0;i<newCommands->size();i++)
-    {
-      commandsToProcess->push_back((*newCommands)[i]);
-    }
+
+  std::string newData = Utilities::receiveMessage(this);
+
+  this->bufferMtx->lock();
+  *buffer = buffer->append(newData);
+  this->bufferMtx->unlock();
   
 }
 void SocketState::socketSendData(std::string msg)
 {
-  //TODO
+  Utilities::sendMessage(this,msg);
 }
 
     
