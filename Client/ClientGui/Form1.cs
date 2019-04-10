@@ -227,7 +227,8 @@ namespace ClientGui
         /// <param name="e"></param>
         private void AboutToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            MessageBox.Show("Dis is the about window", "About");
+            AboutBox1 m = new AboutBox1();
+            m.Show();
         }
 
         private void Form1_FormClosing(object sender, FormClosingEventArgs e)
@@ -417,6 +418,21 @@ namespace ClientGui
                 WindowState = FormWindowState.Maximized;
                 FormBorderStyle = System.Windows.Forms.FormBorderStyle.None;
             }
+        }
+
+        private void newNetworkFileToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            LoginForm loginForm = new LoginForm();
+            loginForm.Show();
+
+            OpenNetworkFileForm openNetworkFileForm = new OpenNetworkFileForm();
+            openNetworkFileForm.Show();
+        }
+
+        private void openNetworkFileToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            OpenNetworkFileForm openNetworkFileForm = new OpenNetworkFileForm();
+            openNetworkFileForm.Show();
         }
     }
 }
