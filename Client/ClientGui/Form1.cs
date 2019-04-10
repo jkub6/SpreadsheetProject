@@ -436,7 +436,10 @@ namespace ClientGui
             if (!loginForm.connected)
                 return; //return if connection failed.
 
+            //Now connected
             pingLabel.Visible = true;
+            undoNetworkToolStripMenuItem.Enabled = true;
+            revertNetworkToolStripMenuItem.Enabled = true;
 
             OpenNetworkFileForm openNetworkFileForm = new OpenNetworkFileForm();
             openNetworkFileForm.ShowDialog();
@@ -457,6 +460,11 @@ namespace ClientGui
                 Invoke(methodInvokerDelegate);
             else
                 methodInvokerDelegate();
+        }
+
+        private void viewNetworkConsoleToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+
         }
     }
 }
