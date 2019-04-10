@@ -28,14 +28,14 @@
             </tr>
         </thead>
         <tbody>
-            @foreach (var Items in Model)
+            @foreach (var Items in Model.spreadsheets)
             {
                 <tr>
-                    <td>@Items.Name</td>
-                    <td>@Items.Author</td>
-                    <td>@Items.LastEdited</td>
+                    <td>@Items</td>
+                    <td></td>
+                    <td></td>
                     <td>
-                        <button class="btn btn-danger deleteButton" onclick="confirmDelete(this, '@ViewBag.propertyScrapeId', '@Items.UnitScrapeId', '@ViewBag.parentUnitScrapeId')"><i class="glyphicon glyphicon-trash"></i></button>
+                        <button class="btn btn-danger deleteButton"><i class="glyphicon glyphicon-trash"></i></button>
                     </td>
                 </tr>
             }
