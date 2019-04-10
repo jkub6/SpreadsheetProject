@@ -40,13 +40,21 @@ namespace ClientGui
             if (newLineCheckbox.Checked)
                 text = text.Replace("\\n", "\n");
 
-            SendingText?.Invoke(this, text);
+            SendingText?.Invoke(this, text); 
+        }
 
+        public void NetworkMessageSending(object sender, string text)
+        {
             if (inOutCheckbox.Checked)
                 text = "<-" + text;
             if (showLineCheckbox.Checked)
                 text = text.Replace("\n", "\r\n");
-            textBox1.AppendText(text);
+
+            MethodInvoker methodInvokerDelegate = delegate () { textBox1.AppendText(text); };
+            if (InvokeRequired)
+                Invoke(methodInvokerDelegate);
+            else
+                methodInvokerDelegate();
         }
 
         public void getText(object sender, string text)

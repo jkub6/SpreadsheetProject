@@ -10,21 +10,19 @@ using System.Windows.Forms;
 
 namespace ClientGui
 {
-    public partial class LoginForm : Form
+    public partial class ConnectForm : Form
     {
         public string host;
         public int port;
-        public string username;
-        public string password;
         public Client.Client client;
         public bool connected = false;
 
-        public LoginForm()
+        public ConnectForm()
         {
             InitializeComponent();
         }
 
-        public LoginForm(Client.Client client) : this()
+        public ConnectForm(Client.Client client) : this()
         {
             this.client = client;
         }
@@ -33,8 +31,6 @@ namespace ClientGui
         {
             host = hostTextBox.Text;
             port = int.Parse(portTextBox.Text);
-            username = usernameTextBox.Text;
-            password = passwordTextBox.Text;
 
             BackgroundWorker Worker = new BackgroundWorker();
             Worker.RunWorkerCompleted += Done;

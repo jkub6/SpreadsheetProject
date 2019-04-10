@@ -32,11 +32,15 @@
             this.listBox1 = new System.Windows.Forms.ListBox();
             this.button2 = new System.Windows.Forms.Button();
             this.textBox1 = new System.Windows.Forms.TextBox();
+            this.label5 = new System.Windows.Forms.Label();
+            this.passwordTextBox = new System.Windows.Forms.TextBox();
+            this.label2 = new System.Windows.Forms.Label();
+            this.usernameTextBox = new System.Windows.Forms.TextBox();
             this.SuspendLayout();
             // 
             // button1
             // 
-            this.button1.Location = new System.Drawing.Point(175, 493);
+            this.button1.Location = new System.Drawing.Point(131, 557);
             this.button1.Name = "button1";
             this.button1.Size = new System.Drawing.Size(274, 55);
             this.button1.TabIndex = 19;
@@ -48,14 +52,14 @@
             // 
             this.listBox1.FormattingEnabled = true;
             this.listBox1.ItemHeight = 25;
-            this.listBox1.Location = new System.Drawing.Point(27, 22);
+            this.listBox1.Location = new System.Drawing.Point(20, 110);
             this.listBox1.Name = "listBox1";
             this.listBox1.Size = new System.Drawing.Size(534, 354);
             this.listBox1.TabIndex = 22;
             // 
             // button2
             // 
-            this.button2.Location = new System.Drawing.Point(27, 382);
+            this.button2.Location = new System.Drawing.Point(20, 476);
             this.button2.Name = "button2";
             this.button2.Size = new System.Drawing.Size(187, 54);
             this.button2.TabIndex = 24;
@@ -64,16 +68,54 @@
             // 
             // textBox1
             // 
-            this.textBox1.Location = new System.Drawing.Point(229, 393);
+            this.textBox1.Location = new System.Drawing.Point(222, 488);
             this.textBox1.Name = "textBox1";
             this.textBox1.Size = new System.Drawing.Size(332, 31);
             this.textBox1.TabIndex = 25;
+            // 
+            // label5
+            // 
+            this.label5.AutoSize = true;
+            this.label5.Location = new System.Drawing.Point(15, 67);
+            this.label5.Name = "label5";
+            this.label5.Size = new System.Drawing.Size(112, 25);
+            this.label5.TabIndex = 34;
+            this.label5.Text = "Password:";
+            // 
+            // passwordTextBox
+            // 
+            this.passwordTextBox.ImeMode = System.Windows.Forms.ImeMode.NoControl;
+            this.passwordTextBox.Location = new System.Drawing.Point(131, 61);
+            this.passwordTextBox.Name = "passwordTextBox";
+            this.passwordTextBox.Size = new System.Drawing.Size(423, 31);
+            this.passwordTextBox.TabIndex = 33;
+            this.passwordTextBox.UseSystemPasswordChar = true;
+            // 
+            // label2
+            // 
+            this.label2.AutoSize = true;
+            this.label2.Location = new System.Drawing.Point(15, 15);
+            this.label2.Name = "label2";
+            this.label2.Size = new System.Drawing.Size(116, 25);
+            this.label2.TabIndex = 32;
+            this.label2.Text = "Username:";
+            // 
+            // usernameTextBox
+            // 
+            this.usernameTextBox.Location = new System.Drawing.Point(131, 12);
+            this.usernameTextBox.Name = "usernameTextBox";
+            this.usernameTextBox.Size = new System.Drawing.Size(423, 31);
+            this.usernameTextBox.TabIndex = 31;
             // 
             // OpenNetworkFileForm
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(12F, 25F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(591, 600);
+            this.ClientSize = new System.Drawing.Size(575, 646);
+            this.Controls.Add(this.label5);
+            this.Controls.Add(this.passwordTextBox);
+            this.Controls.Add(this.label2);
+            this.Controls.Add(this.usernameTextBox);
             this.Controls.Add(this.textBox1);
             this.Controls.Add(this.button2);
             this.Controls.Add(this.listBox1);
@@ -90,5 +132,9 @@
         private System.Windows.Forms.ListBox listBox1;
         private System.Windows.Forms.Button button2;
         private System.Windows.Forms.TextBox textBox1;
+        private System.Windows.Forms.Label label5;
+        private System.Windows.Forms.TextBox passwordTextBox;
+        private System.Windows.Forms.Label label2;
+        private System.Windows.Forms.TextBox usernameTextBox;
     }
 }

@@ -51,6 +51,7 @@
   <ItemGroup>
     <Reference Include="SpreadsheetPanel">
       <HintPath>..\..\..\Examples\PS6Skeleton\SpreadsheetPanel\bin\Debug\SpreadsheetPanel.dll</HintPath>
+      <EmbedInteropTypes>False</EmbedInteropTypes>
     </Reference>
     <Reference Include="System" />
     <Reference Include="System.Core" />
@@ -77,11 +78,11 @@
     <Compile Include="Form1.Designer.cs">
       <DependentUpon>Form1.cs</DependentUpon>
     </Compile>
-    <Compile Include="LoginForm.cs">
+    <Compile Include="ConnectForm.cs">
       <SubType>Form</SubType>
     </Compile>
-    <Compile Include="LoginForm.Designer.cs">
-      <DependentUpon>LoginForm.cs</DependentUpon>
+    <Compile Include="ConnectForm.Designer.cs">
+      <DependentUpon>ConnectForm.cs</DependentUpon>
     </Compile>
     <Compile Include="NetworkConsoleForm.cs">
       <SubType>Form</SubType>
@@ -103,8 +104,8 @@
     <EmbeddedResource Include="Form1.resx">
       <DependentUpon>Form1.cs</DependentUpon>
     </EmbeddedResource>
-    <EmbeddedResource Include="LoginForm.resx">
-      <DependentUpon>LoginForm.cs</DependentUpon>
+    <EmbeddedResource Include="ConnectForm.resx">
+      <DependentUpon>ConnectForm.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="NetworkConsoleForm.resx">
       <DependentUpon>NetworkConsoleForm.cs</DependentUpon>
@@ -154,10 +155,12 @@
     <ProjectReference Include="..\Client\Client.csproj">
       <Project>{3b7a2829-c7e8-4bc5-8b4a-dc116c6f386b}</Project>
       <Name>Client</Name>
+      <EmbedInteropTypes>False</EmbedInteropTypes>
     </ProjectReference>
     <ProjectReference Include="..\Spreadsheet\Spreadsheet.csproj">
       <Project>{e57428ac-aa6a-458f-851e-7ce4b80ca78b}</Project>
       <Name>Spreadsheet</Name>
+      <EmbedInteropTypes>False</EmbedInteropTypes>
     </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />

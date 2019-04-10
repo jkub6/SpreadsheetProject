@@ -29,6 +29,7 @@ namespace ClientGui
         private string fileName;
 
         private NetworkConsoleForm networkConsoleForm;
+        private OpenNetworkFileForm openNetworkFileForm;
 
         /// <summary>
         /// This constructor initializes a form as well as allows command line arguements 
@@ -65,6 +66,10 @@ namespace ClientGui
             networkConsoleForm = new NetworkConsoleForm();
             client.NetworkMessageRecieved += networkConsoleForm.getText;
             networkConsoleForm.SendingText += SendText;
+            client.SendingText += networkConsoleForm.NetworkMessageSending;
+
+            openNetworkFileForm = new OpenNetworkFileForm();
+            client.SpreadsheetsRecieved += openNetworkFileForm.UpdateList;
         }
         /// <summary>
         /// Updates the current coordinates of the spreadsheet. 
@@ -413,11 +418,13 @@ namespace ClientGui
 
         private void OpenNetworkFile()
         {
-            LoginForm loginForm = new LoginForm(client);
+            ConnectForm loginForm = new ConnectForm(client);
             loginForm.ShowDialog();
 
             if (!loginForm.connected)
                 return; //return if connection failed.
+
+            
 
             //Now connected
             pingLabel.Visible = true;
@@ -425,8 +432,14 @@ namespace ClientGui
             revertNetworkToolStripMenuItem.Enabled = true;
             networkConsoleForm.SetConnectedState(true);
 
-            OpenNetworkFileForm openNetworkFileForm = new OpenNetworkFileForm();
+
             openNetworkFileForm.ShowDialog();
+
+            string spreadsheet = openNetworkFileForm.selectedSpreadsheet;
+            string username = openNetworkFileForm.username;
+            string password = openNetworkFileForm.password;
+
+            client.SendOpen(spreadsheet, username, password);
         }
 
         private void openNetworkFileToolStripMenuItem_Click(object sender, EventArgs e)

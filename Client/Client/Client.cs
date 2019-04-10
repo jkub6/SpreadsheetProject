@@ -31,6 +31,9 @@ namespace Client
         public event EventHandler<string> NetworkMessageRecieved;
         public event EventHandler<int> ErrorRecieved;
         public event EventHandler<Spreadsheet> FullSendRecieved;
+        public event EventHandler<List<string>> SpreadsheetsRecieved;
+
+        public event EventHandler<string> SendingText;
 
         System.Timers.Timer pingTimer;
         public event PingCompletedEventHandler PingCompleted;
@@ -46,7 +49,12 @@ namespace Client
         {
             IPHostEntry ipHostInfo = Dns.GetHostEntry(host);
             IPAddress ipAddress = ipHostInfo.AddressList[0];
-            tcpClient.ConnectAsync(ipAddress, port).Wait();
+
+            var result = tcpClient.ConnectAsync(ipAddress, port);
+            var success = result.Wait(TimeSpan.FromSeconds(5));
+
+            if (!success)
+                throw new Exception("Failed to connect.");
 
             this.host = host;
             this.hostIP = ipAddress;
@@ -61,7 +69,7 @@ namespace Client
 
         public void SendOpen(string spreadsheet, string username, string password)
         {
-            SendNetworkMessage($"{{\"type\": \"open\",\"name\": \"{spreadsheet}\",\"username\": \"{username}\",\"password\": \"{password}\"}}");
+            SendNetworkMessage($"{{\"type\": \"open\",\"name\": \"{spreadsheet}\",\"username\": \"{username}\",\"password\": \"{password}\"}}\n\n");
         }
 
         public void SendEdit(string cell)
@@ -74,17 +82,17 @@ namespace Client
 
             string d = "[" + string.Join("\",\"", deps.ToArray()) + "]";
 
-            SendNetworkMessage($"{{\"type\": \"edit\",\"cell\": \"{cell}\",\"value\": \"={v}\",\"dependencies\":{d}}}");
+            SendNetworkMessage($"{{\"type\": \"edit\",\"cell\": \"{cell}\",\"value\": \"={v}\",\"dependencies\":{d}}}\n\n");
         }
 
         public void SendUndo()
         {
-            SendNetworkMessage("{\"type\": \"undo\"}");
+            SendNetworkMessage("{\"type\": \"undo\"}\n\n");
         }
 
         public void SendRevert(string cell)
         {
-           SendNetworkMessage($"{{\"type\": \"revert\",\"cell\": \"{cell}\"}}");
+           SendNetworkMessage($"{{\"type\": \"revert\",\"cell\": \"{cell}\"}}\n\n");
         }
 
         public void SendNetworkMessage(string message)
@@ -94,6 +102,7 @@ namespace Client
             byte[] ba = asen.GetBytes(message);
 
             stm.Write(ba, 0, ba.Length);
+            SendingText?.Invoke(this, message);
         }
 
         private async Task Read()
@@ -118,14 +127,21 @@ namespace Client
                     else if (type == "full send")
                     {
                         Spreadsheet newSpreadsheet = new Spreadsheet();
-                        JToken cells = o["cells"];
+                        JToken cells = o["spreadsheet"];
                         foreach (JObject ob in cells.Children<JObject>())
                             foreach (JProperty p in ob.Properties())
                                 newSpreadsheet.SetContentsOfCell(p.Name, (string)p.Value);
                         spreadsheet = newSpreadsheet;
                         FullSendRecieved?.Invoke(this, newSpreadsheet);
                     }
-
+                    else if (type == "list")
+                    {
+                        List<string> spreadsheets = new List<string>();
+                        JToken cells = o["spreadsheets"];
+                        foreach (string ob in cells)
+                            spreadsheets.Add(ob.ToString());
+                        SpreadsheetsRecieved?.Invoke(this, spreadsheets);
+                    }
                 }
                 catch (Exception) { }
             }
