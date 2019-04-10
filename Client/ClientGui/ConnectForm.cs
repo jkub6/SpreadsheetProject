@@ -46,11 +46,10 @@ namespace ClientGui
             {
                 client.Connect(host, port);
                 connected = true;
-                //try password next
             }
-            catch
+            catch (Exception ex)
             {
-                System.Windows.Forms.MessageBox.Show("Error connecting to \"" + host + "\" at port " + port.ToString());
+                System.Windows.Forms.MessageBox.Show("Error connecting to \"" + host + "\" at port " + port.ToString() + ": " + ex.Message);
             }
         }
 

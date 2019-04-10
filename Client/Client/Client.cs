@@ -47,14 +47,21 @@ namespace Client
 
         public void Connect(string host, int port)
         {
+            tcpClient = new TcpClient();
+
             IPHostEntry ipHostInfo = Dns.GetHostEntry(host);
             IPAddress ipAddress = ipHostInfo.AddressList[0];
 
-            var result = tcpClient.ConnectAsync(ipAddress, port);
-            var success = result.Wait(TimeSpan.FromSeconds(5));
-
+            //var result = tcpClient.ConnectAsync(ipAddress, port);
+            var result = tcpClient.BeginConnect(ipAddress, port, null, null);
+            bool success = result.AsyncWaitHandle.WaitOne(TimeSpan.FromSeconds(5),false);
+            
             if (!success)
-                throw new Exception("Failed to connect.");
+            {
+                tcpClient.Close();
+                throw new Exception("Connection Timeout");
+            }
+            tcpClient.EndConnect(result);
 
             this.host = host;
             this.hostIP = ipAddress;
