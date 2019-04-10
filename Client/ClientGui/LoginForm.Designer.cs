@@ -29,14 +29,14 @@
         private void InitializeComponent()
         {
             this.label5 = new System.Windows.Forms.Label();
-            this.textBox5 = new System.Windows.Forms.TextBox();
+            this.passwordTextBox = new System.Windows.Forms.TextBox();
             this.button1 = new System.Windows.Forms.Button();
-            this.textBox4 = new System.Windows.Forms.TextBox();
             this.label4 = new System.Windows.Forms.Label();
             this.label2 = new System.Windows.Forms.Label();
             this.label1 = new System.Windows.Forms.Label();
-            this.textBox3 = new System.Windows.Forms.TextBox();
-            this.textBox1 = new System.Windows.Forms.TextBox();
+            this.usernameTextBox = new System.Windows.Forms.TextBox();
+            this.hostTextBox = new System.Windows.Forms.TextBox();
+            this.portTextBox = new System.Windows.Forms.MaskedTextBox();
             this.SuspendLayout();
             // 
             // label5
@@ -48,12 +48,14 @@
             this.label5.TabIndex = 30;
             this.label5.Text = "Password:";
             // 
-            // textBox5
+            // passwordTextBox
             // 
-            this.textBox5.Location = new System.Drawing.Point(124, 117);
-            this.textBox5.Name = "textBox5";
-            this.textBox5.Size = new System.Drawing.Size(294, 31);
-            this.textBox5.TabIndex = 29;
+            this.passwordTextBox.ImeMode = System.Windows.Forms.ImeMode.NoControl;
+            this.passwordTextBox.Location = new System.Drawing.Point(124, 117);
+            this.passwordTextBox.Name = "passwordTextBox";
+            this.passwordTextBox.Size = new System.Drawing.Size(294, 31);
+            this.passwordTextBox.TabIndex = 29;
+            this.passwordTextBox.UseSystemPasswordChar = true;
             // 
             // button1
             // 
@@ -63,13 +65,7 @@
             this.button1.TabIndex = 28;
             this.button1.Text = "Login";
             this.button1.UseVisualStyleBackColor = true;
-            // 
-            // textBox4
-            // 
-            this.textBox4.Location = new System.Drawing.Point(492, 15);
-            this.textBox4.Name = "textBox4";
-            this.textBox4.Size = new System.Drawing.Size(110, 31);
-            this.textBox4.TabIndex = 27;
+            this.button1.Click += new System.EventHandler(this.button1_Click);
             // 
             // label4
             // 
@@ -98,34 +94,43 @@
             this.label1.TabIndex = 24;
             this.label1.Text = "Host:";
             // 
-            // textBox3
+            // usernameTextBox
             // 
-            this.textBox3.Location = new System.Drawing.Point(124, 68);
-            this.textBox3.Name = "textBox3";
-            this.textBox3.Size = new System.Drawing.Size(294, 31);
-            this.textBox3.TabIndex = 23;
+            this.usernameTextBox.Location = new System.Drawing.Point(124, 68);
+            this.usernameTextBox.Name = "usernameTextBox";
+            this.usernameTextBox.Size = new System.Drawing.Size(294, 31);
+            this.usernameTextBox.TabIndex = 23;
             // 
-            // textBox1
+            // hostTextBox
             // 
-            this.textBox1.Location = new System.Drawing.Point(124, 12);
-            this.textBox1.Name = "textBox1";
-            this.textBox1.Size = new System.Drawing.Size(294, 31);
-            this.textBox1.TabIndex = 22;
+            this.hostTextBox.Location = new System.Drawing.Point(124, 12);
+            this.hostTextBox.Name = "hostTextBox";
+            this.hostTextBox.Size = new System.Drawing.Size(294, 31);
+            this.hostTextBox.TabIndex = 22;
+            // 
+            // portTextBox
+            // 
+            this.portTextBox.Location = new System.Drawing.Point(497, 12);
+            this.portTextBox.Mask = "00000";
+            this.portTextBox.Name = "portTextBox";
+            this.portTextBox.Size = new System.Drawing.Size(105, 31);
+            this.portTextBox.TabIndex = 31;
+            this.portTextBox.ValidatingType = typeof(int);
             // 
             // LoginForm
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(12F, 25F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(626, 169);
+            this.Controls.Add(this.portTextBox);
             this.Controls.Add(this.label5);
-            this.Controls.Add(this.textBox5);
+            this.Controls.Add(this.passwordTextBox);
             this.Controls.Add(this.button1);
-            this.Controls.Add(this.textBox4);
             this.Controls.Add(this.label4);
             this.Controls.Add(this.label2);
             this.Controls.Add(this.label1);
-            this.Controls.Add(this.textBox3);
-            this.Controls.Add(this.textBox1);
+            this.Controls.Add(this.usernameTextBox);
+            this.Controls.Add(this.hostTextBox);
             this.Name = "LoginForm";
             this.Text = "Login";
             this.ResumeLayout(false);
@@ -136,13 +141,13 @@
         #endregion
 
         private System.Windows.Forms.Label label5;
-        private System.Windows.Forms.TextBox textBox5;
+        private System.Windows.Forms.TextBox passwordTextBox;
         private System.Windows.Forms.Button button1;
-        private System.Windows.Forms.TextBox textBox4;
         private System.Windows.Forms.Label label4;
         private System.Windows.Forms.Label label2;
         private System.Windows.Forms.Label label1;
-        private System.Windows.Forms.TextBox textBox3;
-        private System.Windows.Forms.TextBox textBox1;
+        private System.Windows.Forms.TextBox usernameTextBox;
+        private System.Windows.Forms.TextBox hostTextBox;
+        private System.Windows.Forms.MaskedTextBox portTextBox;
     }
 }

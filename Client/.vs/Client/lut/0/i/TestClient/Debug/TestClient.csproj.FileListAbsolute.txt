@@ -1,0 +1,6 @@
+C:\Users\jkub6\Documents\Dev\repos\SpreadsheetProject\SpreadsheetProject\Client\.vs\Client\lut\0\b\TestClient\bin\Debug\TestClient.exe.config
+C:\Users\jkub6\Documents\Dev\repos\SpreadsheetProject\SpreadsheetProject\Client\.vs\Client\lut\0\b\TestClient\bin\Debug\TestClient.exe
+C:\Users\jkub6\Documents\Dev\repos\SpreadsheetProject\SpreadsheetProject\Client\.vs\Client\lut\0\i\TestClient\Debug\TestClient.csprojAssemblyReference.cache
+C:\Users\jkub6\Documents\Dev\repos\SpreadsheetProject\SpreadsheetProject\Client\.vs\Client\lut\0\i\TestClient\Debug\TestClient.csproj.CoreCompileInputs.cache
+C:\Users\jkub6\Documents\Dev\repos\SpreadsheetProject\SpreadsheetProject\Client\.vs\Client\lut\0\i\TestClient\Debug\TestClient.csproj.CopyComplete
+C:\Users\jkub6\Documents\Dev\repos\SpreadsheetProject\SpreadsheetProject\Client\.vs\Client\lut\0\i\TestClient\Debug\TestClient.exe

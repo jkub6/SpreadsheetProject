@@ -36,7 +36,7 @@
             // 
             // button1
             // 
-            this.button1.Location = new System.Drawing.Point(86, 493);
+            this.button1.Location = new System.Drawing.Point(175, 493);
             this.button1.Name = "button1";
             this.button1.Size = new System.Drawing.Size(274, 55);
             this.button1.TabIndex = 19;
@@ -48,14 +48,14 @@
             // 
             this.listBox1.FormattingEnabled = true;
             this.listBox1.ItemHeight = 25;
-            this.listBox1.Location = new System.Drawing.Point(25, 22);
+            this.listBox1.Location = new System.Drawing.Point(27, 22);
             this.listBox1.Name = "listBox1";
-            this.listBox1.Size = new System.Drawing.Size(408, 354);
+            this.listBox1.Size = new System.Drawing.Size(534, 354);
             this.listBox1.TabIndex = 22;
             // 
             // button2
             // 
-            this.button2.Location = new System.Drawing.Point(25, 382);
+            this.button2.Location = new System.Drawing.Point(27, 382);
             this.button2.Name = "button2";
             this.button2.Size = new System.Drawing.Size(187, 54);
             this.button2.TabIndex = 24;
@@ -64,16 +64,16 @@
             // 
             // textBox1
             // 
-            this.textBox1.Location = new System.Drawing.Point(227, 393);
+            this.textBox1.Location = new System.Drawing.Point(229, 393);
             this.textBox1.Name = "textBox1";
-            this.textBox1.Size = new System.Drawing.Size(206, 31);
+            this.textBox1.Size = new System.Drawing.Size(332, 31);
             this.textBox1.TabIndex = 25;
             // 
             // OpenNetworkFileForm
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(12F, 25F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(460, 600);
+            this.ClientSize = new System.Drawing.Size(591, 600);
             this.Controls.Add(this.textBox1);
             this.Controls.Add(this.button2);
             this.Controls.Add(this.listBox1);
