@@ -32,6 +32,8 @@
             this.menuStrip1 = new System.Windows.Forms.MenuStrip();
             this.fileToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.newToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.newNetworkFileToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.toolStripSeparator6 = new System.Windows.Forms.ToolStripSeparator();
             this.openFileToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.openNetworkFileToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.toolStripSeparator2 = new System.Windows.Forms.ToolStripSeparator();
@@ -54,6 +56,8 @@
             this.viewToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.fullScreenToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.changeHighlightColorToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.toolsToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.serverAdminToolToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.helpToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.AboutToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.viewNetworkConsoleToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
@@ -64,8 +68,7 @@
             this.button1 = new System.Windows.Forms.Button();
             this.label1 = new System.Windows.Forms.Label();
             this.label2 = new System.Windows.Forms.Label();
-            this.newNetworkFileToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-            this.toolStripSeparator6 = new System.Windows.Forms.ToolStripSeparator();
+            this.pingLabel = new System.Windows.Forms.Label();
             this.menuStrip1.SuspendLayout();
             this.SuspendLayout();
             // 
@@ -88,11 +91,12 @@
             this.fileToolStripMenuItem,
             this.editToolStripMenuItem,
             this.viewToolStripMenuItem,
+            this.toolsToolStripMenuItem,
             this.helpToolStripMenuItem,
             this.highLightToolStripMenuItem});
             this.menuStrip1.Location = new System.Drawing.Point(0, 0);
             this.menuStrip1.Name = "menuStrip1";
-            this.menuStrip1.Size = new System.Drawing.Size(800, 42);
+            this.menuStrip1.Size = new System.Drawing.Size(800, 40);
             this.menuStrip1.TabIndex = 1;
             this.menuStrip1.Text = "menuStrip1";
             // 
@@ -110,7 +114,7 @@
             this.toolStripSeparator3,
             this.exitToolStripMenuItem});
             this.fileToolStripMenuItem.Name = "fileToolStripMenuItem";
-            this.fileToolStripMenuItem.Size = new System.Drawing.Size(64, 38);
+            this.fileToolStripMenuItem.Size = new System.Drawing.Size(64, 36);
             this.fileToolStripMenuItem.Text = "File";
             // 
             // newToolStripMenuItem
@@ -120,6 +124,20 @@
             this.newToolStripMenuItem.Size = new System.Drawing.Size(465, 38);
             this.newToolStripMenuItem.Text = "New File";
             this.newToolStripMenuItem.Click += new System.EventHandler(this.NewToolStripMenuItem_Click);
+            // 
+            // newNetworkFileToolStripMenuItem
+            // 
+            this.newNetworkFileToolStripMenuItem.Name = "newNetworkFileToolStripMenuItem";
+            this.newNetworkFileToolStripMenuItem.ShortcutKeys = ((System.Windows.Forms.Keys)(((System.Windows.Forms.Keys.Control | System.Windows.Forms.Keys.Shift) 
+            | System.Windows.Forms.Keys.N)));
+            this.newNetworkFileToolStripMenuItem.Size = new System.Drawing.Size(465, 38);
+            this.newNetworkFileToolStripMenuItem.Text = "New Network File";
+            this.newNetworkFileToolStripMenuItem.Click += new System.EventHandler(this.newNetworkFileToolStripMenuItem_Click);
+            // 
+            // toolStripSeparator6
+            // 
+            this.toolStripSeparator6.Name = "toolStripSeparator6";
+            this.toolStripSeparator6.Size = new System.Drawing.Size(462, 6);
             // 
             // openFileToolStripMenuItem
             // 
@@ -136,6 +154,7 @@
             | System.Windows.Forms.Keys.O)));
             this.openNetworkFileToolStripMenuItem.Size = new System.Drawing.Size(465, 38);
             this.openNetworkFileToolStripMenuItem.Text = "Open Network File";
+            this.openNetworkFileToolStripMenuItem.Click += new System.EventHandler(this.openNetworkFileToolStripMenuItem_Click);
             // 
             // toolStripSeparator2
             // 
@@ -184,7 +203,7 @@
             this.toolStripSeparator1,
             this.clearAllCellsToolStripMenuItem});
             this.editToolStripMenuItem.Name = "editToolStripMenuItem";
-            this.editToolStripMenuItem.Size = new System.Drawing.Size(67, 38);
+            this.editToolStripMenuItem.Size = new System.Drawing.Size(67, 36);
             this.editToolStripMenuItem.Text = "Edit";
             // 
             // cutToolStripMenuItem
@@ -271,7 +290,7 @@
             this.fullScreenToolStripMenuItem,
             this.changeHighlightColorToolStripMenuItem});
             this.viewToolStripMenuItem.Name = "viewToolStripMenuItem";
-            this.viewToolStripMenuItem.Size = new System.Drawing.Size(78, 38);
+            this.viewToolStripMenuItem.Size = new System.Drawing.Size(78, 36);
             this.viewToolStripMenuItem.Text = "View";
             // 
             // fullScreenToolStripMenuItem
@@ -289,13 +308,27 @@
             this.changeHighlightColorToolStripMenuItem.Text = "Change Highlight Color";
             this.changeHighlightColorToolStripMenuItem.Click += new System.EventHandler(this.ChangeHighlightColorToolStripMenuItem_Click);
             // 
+            // toolsToolStripMenuItem
+            // 
+            this.toolsToolStripMenuItem.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
+            this.serverAdminToolToolStripMenuItem});
+            this.toolsToolStripMenuItem.Name = "toolsToolStripMenuItem";
+            this.toolsToolStripMenuItem.Size = new System.Drawing.Size(82, 36);
+            this.toolsToolStripMenuItem.Text = "Tools";
+            // 
+            // serverAdminToolToolStripMenuItem
+            // 
+            this.serverAdminToolToolStripMenuItem.Name = "serverAdminToolToolStripMenuItem";
+            this.serverAdminToolToolStripMenuItem.Size = new System.Drawing.Size(310, 38);
+            this.serverAdminToolToolStripMenuItem.Text = "Server Admin Tool";
+            // 
             // helpToolStripMenuItem
             // 
             this.helpToolStripMenuItem.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
             this.AboutToolStripMenuItem,
             this.viewNetworkConsoleToolStripMenuItem});
             this.helpToolStripMenuItem.Name = "helpToolStripMenuItem";
-            this.helpToolStripMenuItem.Size = new System.Drawing.Size(77, 38);
+            this.helpToolStripMenuItem.Size = new System.Drawing.Size(77, 36);
             this.helpToolStripMenuItem.Text = "Help";
             // 
             // AboutToolStripMenuItem
@@ -314,7 +347,7 @@
             // highLightToolStripMenuItem
             // 
             this.highLightToolStripMenuItem.Name = "highLightToolStripMenuItem";
-            this.highLightToolStripMenuItem.Size = new System.Drawing.Size(12, 38);
+            this.highLightToolStripMenuItem.Size = new System.Drawing.Size(12, 36);
             // 
             // cellContentBox
             // 
@@ -371,24 +404,22 @@
             this.label2.TabIndex = 7;
             this.label2.Text = "=";
             // 
-            // newNetworkFileToolStripMenuItem
+            // pingLabel
             // 
-            this.newNetworkFileToolStripMenuItem.Name = "newNetworkFileToolStripMenuItem";
-            this.newNetworkFileToolStripMenuItem.ShortcutKeys = ((System.Windows.Forms.Keys)(((System.Windows.Forms.Keys.Control | System.Windows.Forms.Keys.Shift) 
-            | System.Windows.Forms.Keys.N)));
-            this.newNetworkFileToolStripMenuItem.Size = new System.Drawing.Size(465, 38);
-            this.newNetworkFileToolStripMenuItem.Text = "New Network File";
-            // 
-            // toolStripSeparator6
-            // 
-            this.toolStripSeparator6.Name = "toolStripSeparator6";
-            this.toolStripSeparator6.Size = new System.Drawing.Size(462, 6);
+            this.pingLabel.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
+            this.pingLabel.AutoSize = true;
+            this.pingLabel.Location = new System.Drawing.Point(649, 375);
+            this.pingLabel.Name = "pingLabel";
+            this.pingLabel.Size = new System.Drawing.Size(148, 25);
+            this.pingLabel.TabIndex = 8;
+            this.pingLabel.Text = "Ping: [num]ms";
             // 
             // Form1
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(12F, 25F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(800, 410);
+            this.Controls.Add(this.pingLabel);
             this.Controls.Add(this.label2);
             this.Controls.Add(this.label1);
             this.Controls.Add(this.button1);
@@ -449,6 +480,9 @@
         private System.Windows.Forms.ToolStripMenuItem fullScreenToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem newNetworkFileToolStripMenuItem;
         private System.Windows.Forms.ToolStripSeparator toolStripSeparator6;
+        private System.Windows.Forms.ToolStripMenuItem toolsToolStripMenuItem;
+        private System.Windows.Forms.ToolStripMenuItem serverAdminToolToolStripMenuItem;
+        private System.Windows.Forms.Label pingLabel;
     }
 }
 

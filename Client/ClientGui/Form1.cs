@@ -12,7 +12,7 @@ using SpreadsheetUtilities;
 using System.Diagnostics;
 using System.IO;
 using System.Media;
-
+using System.Net.NetworkInformation;
 
 namespace ClientGui
 {
@@ -56,6 +56,9 @@ namespace ClientGui
 
             SelectCell();
             spreadsheetPanel.SelectionChanged += CellSelectedEvent;
+
+            client = new Client.Client();
+            client.PingCompleted += PingCompletedCallback;
         }
         /// <summary>
         /// Updates the current coordinates of the spreadsheet. 
@@ -227,7 +230,8 @@ namespace ClientGui
         /// <param name="e"></param>
         private void AboutToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            MessageBox.Show("Dis is the about window", "About");
+            AboutBox1 m = new AboutBox1();
+            m.Show();
         }
 
         private void Form1_FormClosing(object sender, FormClosingEventArgs e)
@@ -417,6 +421,42 @@ namespace ClientGui
                 WindowState = FormWindowState.Maximized;
                 FormBorderStyle = System.Windows.Forms.FormBorderStyle.None;
             }
+        }
+
+        private void newNetworkFileToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            OpenNetworkFile();
+        }
+
+        private void OpenNetworkFile()
+        {
+            LoginForm loginForm = new LoginForm(client);
+            loginForm.ShowDialog();
+
+            if (!loginForm.connected)
+                return; //return if connection failed.
+
+            pingLabel.Visible = true;
+
+            OpenNetworkFileForm openNetworkFileForm = new OpenNetworkFileForm();
+            openNetworkFileForm.ShowDialog();
+        }
+
+        private void openNetworkFileToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            OpenNetworkFile();
+        }
+
+        private void PingCompletedCallback(object sender, PingCompletedEventArgs e)
+        {
+            MethodInvoker methodInvokerDelegate = delegate ()
+            { pingLabel.Text = "Ping: " + e.Reply.RoundtripTime + "ms"; };
+
+            //This will be true if Current thread is not UI thread.
+            if (InvokeRequired)
+                Invoke(methodInvokerDelegate);
+            else
+                methodInvokerDelegate();
         }
     }
 }
