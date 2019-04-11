@@ -4,6 +4,7 @@
 #include <unistd.h> 
 #include <sys/socket.h> 
 #include <netinet/in.h>
+#include <arpa/inet.h>
 #include <string.h>
 #include <thread>
 #include <list>
@@ -16,24 +17,30 @@ ConnectionListener::ConnectionListener(int port,   int (*callBack)(int))
 }
 ConnectionListener::~ConnectionListener()
 {
+  
   //TODO
 }
 
-void ConnectionListener::shutdown()
+void ConnectionListener::shutdownListener()
 {
-  //TODO
+  if(!running)
+    return;
+  this->running = false;
+  shutdown(genesisSocket,2);
+  close(genesisSocket);
+  std::cout<<"CONNECTION LISTENER SUCCESSFULLY SHUTDOWN"<<std::endl;
 }
 
 void ConnectionListener::beginListeningForClients()
 {
+  this->running = true;
   
-  int genesisSocket, new_socket, valread; 
+  int new_socket, valread; 
   struct sockaddr_in address; 
   int opt = 1; 
   int addrlen = sizeof(address); 
   int bufferLength = 1024;
   char buffer[bufferLength];
-  char *hello = (char*)"Hello from server";
   
   // Creating socket file descriptor
   // genesisSocket is a socket descriptor, an integer (like a file handle)
@@ -74,21 +81,19 @@ void ConnectionListener::beginListeningForClients()
       exit(EXIT_FAILURE); 
     }
   
-  std::thread *t;
+
   
-  while(true)
+  while(this->running)
     {   
-      
       //blocking
       if ((new_socket = accept(genesisSocket, (struct sockaddr *)&address, (socklen_t*)&addrlen))<0) 
 	{
-	  std::cout<<"accept"<<std::endl;
-	  exit(EXIT_FAILURE); 
+	  continue;
 	}
       
       
-      std::cout<<"Connection Established. ClientID: "<<new_socket<<std::endl;
-      t= new std::thread(callBack,new_socket);//call the callback
+      std::cout<<"Connection Established. ClientID: "<<new_socket<<" | IP: "<<inet_ntoa(address.sin_addr)<<std::endl;
+      t = new std::thread(callBack,new_socket);//call the callback
     }
   
 }

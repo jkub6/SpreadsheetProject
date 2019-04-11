@@ -65,7 +65,7 @@ std::vector<std::string> * SocketState::tokenize()
   
   for(int index = buffer->find(delimiter);index>0;)
     {
-      if(index>0||index>=buffer->length())
+      if(index<0||index>=buffer->length())
 	{
 	  break;
 	}

@@ -32,7 +32,7 @@ std::string Utilities::receiveMessage(SocketState * sstate)
   int bytesRead = read(socketID,receiveBuffer,bufferLength);
 
 
-  if(bytesRead==0)//client disconnected
+  if(bytesRead<=0)//client disconnected
     {
       sstate->setConnected(false);
       return "";

@@ -3,7 +3,7 @@
 #include "SpreadsheetController.h"
 #include <vector>
 #include <string>
-
+#include <iostream>
 
 
 SpreadsheetController::SpreadsheetController()
@@ -20,6 +20,7 @@ void SpreadsheetController::connectedClient(int socketID)
 }
 void SpreadsheetController::shutdown()
 {
+  std::cout<<"SPREADSHEETCONTROLLER SUCCESSFULLY SHUTDOWN."<<std::endl;
   //TODO
 }
 

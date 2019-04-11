@@ -9,6 +9,7 @@
 #include <vector>
 #include "nlohmann/json.hpp"
 #include "SocketState.h"
+#include <signal.h>
 
 MasterController::MasterController(int port)
 {
@@ -31,7 +32,9 @@ void MasterController::startServer()
   this->connectionListener->beginListeningForClients();
 }
 void MasterController::shutdown(){
-  //TODO
+  std::cout<<"\n\n********************\n\n"<<"SHUTTING DOWN"<<std::endl;
+  connectionListener->shutdownListener();
+  spreadsheetController->shutdown();
 }
 
 
@@ -50,7 +53,7 @@ int MasterController::newClientConnected(int socketID)
 
   for(int i = 0;i<list->size();i++)
     {
-      jsonObject["spreadsheet"].push_back((*list)[i]);
+      jsonObject["spreadsheets"].push_back((*list)[i]);
     };
 
 
@@ -66,38 +69,76 @@ int MasterController::newClientConnected(int socketID)
 
 
 
-  while(sstate->isConnected())
-    {
-      std::cout<<"AWAITING"<<std::endl;
+    while(sstate->isConnected())
+  {
       sstate->socketAwaitData();
 
       if(!sstate->isConnected())
-	break;
+	break;;
       
       std::vector<std::string> * sdata = sstate->getCommandsToProcess();
       std::string remaining = sstate->getBuffer();
 
-      nlohmann::json newCommand;
-      
+      /*    nlohmann::json newCommand;
+
+      try{
       if(sdata->size()>0)
 	newCommand = nlohmann::json::parse((*sdata)[0]);
 
-      std::cout<<"HI: "<<newCommand["hi"]<<std::endl;
+      }catch (nlohmann::detail::parse_error e){}
       
-    }
+      std::cout<<"HI: "<<newCommand["hi"]<<std::endl;*/
+      std::cout<<"\nNew Message From: "<<sstate->getID()<<".\nFull messages:\n"<<std::endl;
+      for(int i = 0;i<sdata->size();i++)
+	{
+	  std::cout<<"["<<(*sdata)[i]<<"]\n";
+	}
+
+      std::cout<<"Remaining Message:\n\n"<<remaining;
+      
+      
+      }
   std::cout<<"Client: "<<sstate->getID()<<" disconnected."<<std::endl;
   
   return 0;
 }
 
+
+
+MasterController * masterController;
+
+//Handle Ctrl-C
+void sighandler(int sig)
+{
+  //  std::cout<<"SIGNAL "<<sig<<" caught..."<<std::endl;
+  if(sig==2)//ctrl C command
+    masterController->shutdown();
+}
+
+
 //ENTRY POINT
+
+
 
 int main(int argc, char ** argv)
 {
-  MasterController *masterController = new MasterController(2112);
+
+
+  
+  masterController = new MasterController(2112);
+
+  signal(SIGABRT, &sighandler);
+  signal(SIGTERM,&sighandler);
+  signal(SIGINT,&sighandler);
+  signal(SIGPIPE,&sighandler);
+  
   std::thread connectionThread(&MasterController::startServer,masterController);//implicit this parameter
 
+  
+
   connectionThread.join();
+
+  std::cout<<"SERVER SUCCESSFULLY SHUTDOWN"<<std::endl;
   
   return 0;
 }
