@@ -20,7 +20,10 @@ std::mutex * Utilities::spreadSheetListMtx;
 void Utilities::sendMessage(SocketState * sstate, std::string message)
 {
   int socketID = sstate->getID();
-  send(socketID, message.c_str() , message.length() , 0 );  
+
+  std::string newMsg = message+'\n'+'\n';
+
+  send(socketID, newMsg.c_str(), newMsg.length() , 0 );  
 }
 
 std::string Utilities::receiveMessage(SocketState * sstate)

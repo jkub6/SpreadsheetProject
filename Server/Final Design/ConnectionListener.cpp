@@ -93,7 +93,7 @@ void ConnectionListener::beginListeningForClients()
 	}
       
       
-      std::cout<<"Connection Established. ClientID: "<<new_socket<<" | IP: "<<inet_ntoa(address.sin_addr)<<std::endl;
+      std::cout<<"\nConnection Established. ClientID: "<<new_socket<<" | IP: "<<inet_ntoa(address.sin_addr)<<std::endl;
       t = new std::thread(&MasterController::newClientConnected,mc,new_socket);//call the callback
     }
   

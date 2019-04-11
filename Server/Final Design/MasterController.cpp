@@ -56,14 +56,13 @@ int MasterController::newClientConnected(int socketID)
 
 
   sstate->socketSendData(jsonObject.dump(0));
-  //  Utilities::sendMessage(socketID, jsonObject.dump(0));
+
+  std::cout<<"\nSent {SocketID: "<<sstate->getID()<<"} Spreadsheet List Successfully."<<std::endl;
 
   //***********************
   //AWAIT RESPONSE
   //**********************
   
-  std::cout<<"JSON SENT: \n"<<jsonObject.dump(0)<<std::endl;;//jsonObject.dump();
-
 
     while(sstate->isConnected())
   {
@@ -118,9 +117,7 @@ void sighandler(int sig)
 
 int main(int argc, char ** argv)
 {
-
-
-  
+ 
   masterController = new MasterController(2112);
 
   signal(SIGABRT, &sighandler);
@@ -129,7 +126,6 @@ int main(int argc, char ** argv)
   signal(SIGPIPE,&sighandler);
   
   std::thread connectionThread(&MasterController::startServer,masterController);//implicit this parameter
-
   
 
   connectionThread.join();
