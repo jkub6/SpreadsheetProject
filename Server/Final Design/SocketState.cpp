@@ -4,6 +4,7 @@
 #include "Utilities.h"
 #include <vector>
 #include <mutex>
+#include <iostream>
 
 SocketState::SocketState(int socketID)
 {
@@ -12,6 +13,8 @@ SocketState::SocketState(int socketID)
   this->buffer = new std::string();
   connected = true;
 }
+
+
 SocketState::~SocketState()
 {
   delete buffer;
@@ -86,13 +89,16 @@ std::vector<std::string> * SocketState::tokenize()
 void SocketState::socketAwaitData()
 {
   
-
+  while(connected)
+    {
   std::string newData = Utilities::receiveMessage(this);
 
   this->bufferMtx->lock();
   *buffer = buffer->append(newData);
   this->bufferMtx->unlock();
-  
+    }
+
+  std::cout<<"SocketState for SocketID: "<<socketID<<" Disconnected..."<<std::endl;
 }
 void SocketState::socketSendData(std::string msg)
 {

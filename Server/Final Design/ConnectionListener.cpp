@@ -22,6 +22,7 @@ ConnectionListener::~ConnectionListener()
   //TODO
 }
 
+
 void ConnectionListener::shutdownListener()
 {
   if(!running)

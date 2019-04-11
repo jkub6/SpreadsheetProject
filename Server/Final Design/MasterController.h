@@ -6,10 +6,14 @@
 #include "SpreadsheetController.h"
 #include "Utilities.h"
 #include <string>
+#include <map>
+#include <thread>
 
 class MasterController
 {
  public:
+
+  std::map<int,std::thread *> *threadpool;
   MasterController(int port);
   ~MasterController();
   
@@ -22,6 +26,7 @@ class MasterController
   ConnectionListener *connectionListener;
   SpreadsheetController *spreadsheetController;
   int port;
+  bool running;
 };
 
 

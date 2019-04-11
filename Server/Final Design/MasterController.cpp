@@ -10,18 +10,25 @@
 #include "nlohmann/json.hpp"
 #include "SocketState.h"
 #include <signal.h>
+#include <map>
 
 MasterController::MasterController(int port)
 {
   this->port = port;
   this->connectionListener = new ConnectionListener(port,this);
   this->spreadsheetController = new SpreadsheetController();
-
+  this->threadpool = new std::map<int,std::thread*>();
+  this->running = true;
 }
 MasterController::~MasterController()
 {
   delete connectionListener;
   delete spreadsheetController;
+
+ 
+  delete threadpool;
+
+  
 }
 
 
@@ -31,6 +38,7 @@ void MasterController::startServer()
 }
 void MasterController::shutdown(){
   std::cout<<"\n\n********************\n\n"<<"SHUTTING DOWN"<<std::endl;
+  this->running = false;
   connectionListener->shutdownListener();
   spreadsheetController->shutdown();
 }
@@ -63,16 +71,44 @@ int MasterController::newClientConnected(int socketID)
   //AWAIT RESPONSE
   //**********************
   
-
-    while(sstate->isConnected())
+  //start thread for listening:
+  (*threadpool)[socketID]=new std::thread(&SocketState::socketAwaitData,sstate);
+  
+//  threadpool->push_back(new std::thread(&SocketState::socketAwaitData,sstate)
+  
+  
+  /*    while(sstate->isConnected())
   {
       sstate->socketAwaitData();
 
       if(!sstate->isConnected())
-	break;;
+      break;;*/
+
+
+  std::cout<<"THREADPOOL:" <<threadpool->size()<<std::endl;
+  
+  std::vector<std::string> * sdata;
+  
+  while(running)
+    {
+      if(!sstate->isConnected())
+	break;
+
+      sdata = sstate->getCommandsToProcess();
       
-      std::vector<std::string> * sdata = sstate->getCommandsToProcess();
-      std::string remaining = sstate->getBuffer();
+      for(int i = 0;i<sdata->size();i++)
+	{
+	  std::string s = (*sdata)[i];
+	  std::cout<<"New Message: \n["<<s<<"]\n"<<std::endl;
+	}
+      
+      //free sdata MUST CALL
+      delete sdata;
+      
+    }
+  
+
+  //      std::string remaining = sstate->getBuffer();
 
       /*    nlohmann::json newCommand;
 
@@ -83,7 +119,7 @@ int MasterController::newClientConnected(int socketID)
       }catch (nlohmann::detail::parse_error e){}
       
       std::cout<<"HI: "<<newCommand["hi"]<<std::endl;*/
-      std::cout<<"\nNew Message From: "<<sstate->getID()<<".\nFull messages:\n"<<std::endl;
+  /*  std::cout<<"\nNew Message From: "<<sstate->getID()<<".\nFull messages:\n"<<std::endl;
       for(int i = 0;i<sdata->size();i++)
 	{
 	  std::cout<<"["<<(*sdata)[i]<<"]\n";
@@ -92,9 +128,14 @@ int MasterController::newClientConnected(int socketID)
       std::cout<<"Remaining Message:\n\n"<<remaining;
       
       
-      }
+      }*/
   std::cout<<"Client: "<<sstate->getID()<<" disconnected."<<std::endl;
   
+  //delete (*threadpool)[sstate->getID()];
+  
+  threadpool->erase(sstate->getID());
+
+
   return 0;
 }
 
