@@ -15,7 +15,7 @@ class MasterController
   
   void startServer();
   void shutdown();
-  static int newClientConnected(int socketID);
+  int newClientConnected(int socketID);
 
   
  private:

@@ -14,9 +14,7 @@
 MasterController::MasterController(int port)
 {
   this->port = port;
-
-  
-  this->connectionListener = new ConnectionListener(port, newClientConnected);
+  this->connectionListener = new ConnectionListener(port,this);
   this->spreadsheetController = new SpreadsheetController();
 
 }
@@ -65,8 +63,6 @@ int MasterController::newClientConnected(int socketID)
   //**********************
   
   std::cout<<"JSON SENT: \n"<<jsonObject.dump(0)<<std::endl;;//jsonObject.dump();
-
-
 
 
     while(sstate->isConnected())

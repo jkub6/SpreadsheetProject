@@ -1,5 +1,5 @@
 
-all: ConnectionListener.o DependencyGraph.o MasterController.o SocketState.o SpreadsheetController.o SpreadsheetInstance.o Utilities.o
+all: MasterController.o ConnectionListener.o DependencyGraph.o SocketState.o SpreadsheetController.o SpreadsheetInstance.o Utilities.o
 	g++ -g -o server -pthread -std=c++11 -I ./include/json ConnectionListener.o DependencyGraph.o MasterController.o SocketState.o SpreadsheetController.o SpreadsheetInstance.o Utilities.o
 ConnectionListener.o: ConnectionListener.cpp ConnectionListener.h
 	g++ -pthread -std=c++11 -I ./include/json -c -o ConnectionListener.o ConnectionListener.cpp
