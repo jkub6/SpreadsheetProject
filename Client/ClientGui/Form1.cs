@@ -25,8 +25,10 @@ namespace ClientGui
         /// </summary>
         private int column = 0;
         private int row = 0;
-        private Spreadsheet spreadsheet;
+        //private Spreadsheet spreadsheet;
         private string fileName;
+
+        private bool connected = false;
 
         private NetworkConsoleForm networkConsoleForm;
         private OpenNetworkFileForm openNetworkFileForm;
@@ -38,39 +40,40 @@ namespace ClientGui
         /// </summary>
         public Form1()
         {
+            client = new Client.Client();
+            client.PingCompleted += PingCompletedCallback;
+
+            //networkConsoleForm.Show();
+            //networkConsoleForm.Visible = false;
+
+
+            
+            client.FullSendRecieved += FullSendRecieved;
+
+
             InitializeComponent();
 
             string[] args = Environment.GetCommandLineArgs();
             if (args.Length >= 2)
             {
-                spreadsheet = new Spreadsheet(args[1], s => true, s => s.ToUpper(), "ps6");
+                client.spreadsheet = new Spreadsheet(args[1], s => true, s => s.ToUpper(), "ps6");
                 fileName = Path.GetFileName(args[1]);
             }
             else
             {
-                spreadsheet = new Spreadsheet(s => true, s => s.ToUpper(), "ps6");
+                client.spreadsheet = new Spreadsheet(s => true, s => s.ToUpper(), "ps6");
                 fileName = "Untitled.sprd";
             }
 
             Text = fileName;
 
-            foreach (string cellName in spreadsheet.GetNamesOfAllNonemptyCells())
+            foreach (string cellName in client.spreadsheet.GetNamesOfAllNonemptyCells())
                 UpdateCellByName(cellName);
 
             SelectCell();
             spreadsheetPanel.SelectionChanged += CellSelectedEvent;
-
-            client = new Client.Client();
-            client.PingCompleted += PingCompletedCallback;
-
-            networkConsoleForm = new NetworkConsoleForm();
-            client.NetworkMessageRecieved += networkConsoleForm.getText;
-            networkConsoleForm.SendingText += SendText;
-            client.SendingText += networkConsoleForm.NetworkMessageSending;
-
-            openNetworkFileForm = new OpenNetworkFileForm();
-            client.SpreadsheetsRecieved += openNetworkFileForm.UpdateList;
         }
+
         /// <summary>
         /// Updates the current coordinates of the spreadsheet. 
         /// </summary>
@@ -104,13 +107,13 @@ namespace ClientGui
             UpdateCoordinates();
             String cellName = GetSelectedCellName();
             cellNameBox.Text = cellName;
-            object cellContents = spreadsheet.GetCellContents(cellName);
-            cellContentBox.Text = spreadsheet.GetCellContents(cellName).ToString();
+            object cellContents = client.spreadsheet.GetCellContents(cellName);
+            cellContentBox.Text = client.spreadsheet.GetCellContents(cellName).ToString();
 
             if (cellContents is Formula f)
                 cellContentBox.Text = "=" + cellContentBox.Text;
 
-            cellValueBox.Text = spreadsheet.GetCellValue(cellName).ToString();
+            cellValueBox.Text = client.spreadsheet.GetCellValue(cellName).ToString();
 
             cellContentBox.SelectAll();
         }
@@ -138,14 +141,14 @@ namespace ClientGui
             {
                 //Shifts selection right when Tab/Right is pressed
                 case Keys.Tab:
-                case Keys.Right:
+                //case Keys.Right:
                     SubmitText();
                     spreadsheetPanel.SetSelection((column+1)%26, row);
                     SelectCell();
                     return true;
                 //Shifts selection left when Shift Tab/Left is pressed
                 case Keys.Tab | Keys.Shift:
-                case Keys.Left:
+                //case Keys.Left:
                     SubmitText();
                     spreadsheetPanel.SetSelection((column-1)%26, row);
                     SelectCell();
@@ -187,9 +190,27 @@ namespace ClientGui
         private void SubmitText()
         {
             string cellName = GetSelectedCellName();
+
+            string contents = client.spreadsheet.GetCellContents(cellName).ToString();
+            if (client.spreadsheet.GetCellContents(cellName) is Formula f)
+                contents = "=" + contents;
+            if (contents == cellContentBox.Text)
+            {
+                UpdateCellByName(cellName);
+                return;
+            }
+                
+
+            if (connected)
+            {
+                client.SendEdit(cellName, cellContentBox.Text);
+                UpdateCellByName(cellName); //cross out to keep temp value
+                return;
+            }
+
             try
             {
-                ISet<string> toUpdate = spreadsheet.SetContentsOfCell(cellName, cellContentBox.Text);
+                ISet<string> toUpdate = client.spreadsheet.SetContentsOfCell(cellName, cellContentBox.Text);
 
                 foreach (string name in toUpdate)
                     UpdateCellByName(name);
@@ -197,7 +218,7 @@ namespace ClientGui
                 spreadsheetPanel.GetValue(column, row, out string t);
                 cellValueBox.Text = t;
 
-                if (spreadsheet.Changed)
+                if (client.spreadsheet.Changed)
                     Text = "*" + fileName;
             }
             catch (FormulaFormatException e)
@@ -208,7 +229,6 @@ namespace ClientGui
             {
                 MessageBox.Show("There was a circular dependency in this formula. Try changing a variable", "Circular Exception Error");
             }
-
         }
 
         /// <summary>
@@ -223,7 +243,7 @@ namespace ClientGui
             int col = name[0] - 65;
             int row = int.Parse(name.Substring(1).ToString()) - 1;
 
-            object value = spreadsheet.GetCellValue(name);
+            object value = client.spreadsheet.GetCellValue(name);
             string text = value.ToString();
             if (value is FormulaError f)
                 text = f.Reason;
@@ -247,7 +267,7 @@ namespace ClientGui
 
         private void Form1_FormClosing(object sender, FormClosingEventArgs e)
         {
-            if (spreadsheet.Changed)
+            if (client.spreadsheet.Changed)
             {
                 MessageBoxButtons buttons = MessageBoxButtons.YesNoCancel;
                 var result = MessageBox.Show("You have unsaved data. Save file before closing?", "Unsaved Data", buttons);
@@ -294,7 +314,7 @@ namespace ClientGui
                 //s.OverwritePrompt = false;
                 if (s.ShowDialog() == DialogResult.OK)
                 {
-                    spreadsheet.Save(s.FileName);
+                    client.spreadsheet.Save(s.FileName);
                     fileName = Path.GetFileName(s.FileName);
                     Text = fileName;
                     playSimpleSound();
@@ -366,8 +386,8 @@ namespace ClientGui
         /// <param name="e"></param>
         private void ClearAllCellsToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            Spreadsheet old = spreadsheet;
-            spreadsheet = new Spreadsheet(s => true, s => s.ToUpper(), "ps6");
+            Spreadsheet old = client.spreadsheet;
+            client.spreadsheet = new Spreadsheet(s => true, s => s.ToUpper(), "ps6");
 
             foreach (string cellName in old.GetNamesOfAllNonemptyCells())
                 UpdateCellByName(cellName);
@@ -424,22 +444,26 @@ namespace ClientGui
             if (!loginForm.connected)
                 return; //return if connection failed.
 
-            
-
             //Now connected
+            connected = true;
             pingLabel.Visible = true;
             undoNetworkToolStripMenuItem.Enabled = true;
             revertNetworkToolStripMenuItem.Enabled = true;
-            networkConsoleForm.SetConnectedState(true);
 
 
+            openNetworkFileForm = new OpenNetworkFileForm();
+            client.SpreadsheetsRecieved += openNetworkFileForm.UpdateList;
             openNetworkFileForm.ShowDialog();
+
 
             string spreadsheet = openNetworkFileForm.selectedSpreadsheet;
             string username = openNetworkFileForm.username;
             string password = openNetworkFileForm.password;
 
             client.SendOpen(spreadsheet, username, password);
+
+            //save unsaved first
+            client.spreadsheet = new Spreadsheet();
         }
 
         private void openNetworkFileToolStripMenuItem_Click(object sender, EventArgs e)
@@ -461,22 +485,34 @@ namespace ClientGui
 
         private void networkConsoleToolStripMenuItem_Click(object sender, EventArgs e)
         {
+            networkConsoleForm = new NetworkConsoleForm();
+            client.NetworkMessageRecieved += networkConsoleForm.getText;
+            networkConsoleForm.SendingText += SendText;
+            client.SendingText += networkConsoleForm.NetworkMessageSending;
             networkConsoleForm.Show();
         }
 
         private void undoNetworkToolStripMenuItem_Click(object sender, EventArgs e)
         {
-
+            client.SendUndo();
         }
 
         private void revertNetworkToolStripMenuItem_Click(object sender, EventArgs e)
         {
-
+            client.SendRevert(GetSelectedCellName());
         }
 
         private void SendText(object sender, string text)
         {
             client.SendNetworkMessage(text);
+        }
+
+        private void FullSendRecieved(object sender, EventArgs e)
+        {
+            foreach(string cellName in client.spreadsheet.GetNamesOfAllNonemptyCells())
+            {
+                UpdateCellByName(cellName);
+            }
         }
     }
 }

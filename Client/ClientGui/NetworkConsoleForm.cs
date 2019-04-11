@@ -19,16 +19,6 @@ namespace ClientGui
             InitializeComponent();
         }
 
-        public void SetConnectedState(bool state)
-        {
-            MethodInvoker methodInvokerDelegate = delegate () { sendButton.Enabled = state; };
-
-            if (InvokeRequired)
-                Invoke(methodInvokerDelegate);
-            else
-                methodInvokerDelegate();
-        }
-
         private void sendButton_Click(object sender, EventArgs e)
         {
             sendText(textBox2.Text);
@@ -45,6 +35,9 @@ namespace ClientGui
 
         public void NetworkMessageSending(object sender, string text)
         {
+            if (!Visible)
+                return;
+
             if (inOutCheckbox.Checked)
                 text = "<-" + text;
             if (showLineCheckbox.Checked)

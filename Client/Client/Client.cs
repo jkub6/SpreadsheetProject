@@ -21,7 +21,7 @@ namespace Client
 {
     public class Client
     {
-        private Spreadsheet spreadsheet;
+        public Spreadsheet spreadsheet;
 
         private string host;
         private IPAddress hostIP;
@@ -30,7 +30,7 @@ namespace Client
         private TcpClient tcpClient;
         public event EventHandler<string> NetworkMessageRecieved;
         public event EventHandler<int> ErrorRecieved;
-        public event EventHandler<Spreadsheet> FullSendRecieved;
+        public event EventHandler FullSendRecieved;
         public event EventHandler<List<string>> SpreadsheetsRecieved;
 
         public event EventHandler<string> SendingText;
@@ -79,17 +79,25 @@ namespace Client
             SendNetworkMessage($"{{\"type\": \"open\",\"name\": \"{spreadsheet}\",\"username\": \"{username}\",\"password\": \"{password}\"}}\n\n");
         }
 
-        public void SendEdit(string cell)
+        public void SendEdit(string cell, string contents)
         {
-            string v = spreadsheet.GetCellValue(cell).ToString();
+            Spreadsheet s = new Spreadsheet();
+
+            s.SetContentsOfCell(cell, contents);
+
+            string c = s.GetCellContents(cell).ToString();
 
             List<string> deps = new List<string>();
-            if (spreadsheet.GetCellContents(cell) is Formula f)
+            if (s.GetCellContents(cell) is Formula f)
+            {
                 deps = new List<string>(f.GetVariables());
+                c = "=" + c;
+            }
+                
 
             string d = "[" + string.Join("\",\"", deps.ToArray()) + "]";
 
-            SendNetworkMessage($"{{\"type\": \"edit\",\"cell\": \"{cell}\",\"value\": \"={v}\",\"dependencies\":{d}}}\n\n");
+            SendNetworkMessage($"{{\"type\": \"edit\",\"cell\": \"{cell}\",\"value\": \"{c}\",\"dependencies\":{d}}}\n\n");
         }
 
         public void SendUndo()
@@ -104,6 +112,8 @@ namespace Client
 
         public void SendNetworkMessage(string message)
         {
+            if (!tcpClient.Connected)
+                return;
             Stream stm = tcpClient.GetStream();
             ASCIIEncoding asen = new ASCIIEncoding();
             byte[] ba = asen.GetBytes(message);
@@ -138,8 +148,15 @@ namespace Client
                         foreach (JObject ob in cells.Children<JObject>())
                             foreach (JProperty p in ob.Properties())
                                 newSpreadsheet.SetContentsOfCell(p.Name, (string)p.Value);
+                        foreach (string cellName in spreadsheet.GetNamesOfAllNonemptyCells())
+                        {
+                            string contents = spreadsheet.GetCellContents(cellName).ToString();
+                            if (spreadsheet.GetCellContents(cellName) is Formula f)
+                                contents = "=" + contents;
+                            newSpreadsheet.SetContentsOfCell(cellName, contents);
+                        }
                         spreadsheet = newSpreadsheet;
-                        FullSendRecieved?.Invoke(this, newSpreadsheet);
+                        FullSendRecieved?.Invoke(this, new EventArgs());
                     }
                     else if (type == "list")
                     {

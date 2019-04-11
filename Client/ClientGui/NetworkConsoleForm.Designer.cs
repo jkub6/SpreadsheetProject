@@ -66,7 +66,6 @@
             // sendButton
             // 
             this.sendButton.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
-            this.sendButton.Enabled = false;
             this.sendButton.Location = new System.Drawing.Point(677, 10);
             this.sendButton.Name = "sendButton";
             this.sendButton.Size = new System.Drawing.Size(135, 42);
