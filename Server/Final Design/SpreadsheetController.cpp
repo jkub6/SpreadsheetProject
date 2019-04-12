@@ -4,17 +4,18 @@
 #include <vector>
 #include <string>
 #include <iostream>
-
+#include "SocketState.h"
 
 SpreadsheetController::SpreadsheetController()
 {
 }
+
 SpreadsheetController::~SpreadsheetController()
 {
   //TODO
 }
 
-void SpreadsheetController::connectedClient(int socketID)
+void SpreadsheetController::connectedClient(SocketState * sstate, std::string desiredSpreadsheet)
 {
   //TODO
 }

@@ -158,7 +158,6 @@ void sighandler(int sig)
 
 int main(int argc, char ** argv)
 {
- 
   masterController = new MasterController(2112);
 
   signal(SIGABRT, &sighandler);

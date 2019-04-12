@@ -6,6 +6,8 @@
 #include "Utilities.h"
 #include <string>
 #include <vector>
+#include "SocketState.h"
+
 
 class SpreadsheetController
 {
@@ -15,13 +17,11 @@ class SpreadsheetController
 
   std::vector<SpreadsheetInstance*> spreadSheets;
 
-  void connectedClient(int socketID);
+  void connectedClient(SocketState * sstate, std::string desiredSpreadsheet);
   void shutdown();
 
   
  private:
-
-  std::vector<std::string> *spreadSheetNameList;
 
   void loadSpreadsheet();
   

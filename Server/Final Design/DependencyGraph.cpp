@@ -129,12 +129,12 @@ void DependencyGraph::RemoveDependency(string s, string t)
       std::vector<string>::iterator position = std::find(dep->begin(), dep->end(), t);
       if (position != dep->end()) // == myVector.end() means the element was not found
 	dep->erase(position);
-
+      
       //Finds the position of s and deletes it from dependees
       position = std::find(dee->begin(), dee->end(), s);
       if (position != dee->end()) // == myVector.end() means the element was not found
 	dee->erase(position);
-
+      
       size--;
       return;
     }

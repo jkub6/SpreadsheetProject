@@ -16,6 +16,7 @@
 class Utilities{
 
  public:
+  static std::string hash(std::string input);
   
   static void sendMessage(SocketState * sstate, std::string message);
   

@@ -11,11 +11,20 @@
 #include <fstream>
 #include <mutex>
 #include "SocketState.h"
+#include "sha256.h"
 
 
 std::vector<std::string> *Utilities::spreadsheetList;
 
 std::mutex * Utilities::spreadSheetListMtx;
+
+
+std::string Utilities::hash(std::string input)
+{
+  SHA256 sha256;
+
+  return sha256(input);
+}
 
 void Utilities::sendMessage(SocketState * sstate, std::string message)
 {
@@ -56,7 +65,7 @@ std::vector<std::string>* Utilities::getSpreadsheetList()
       Utilities::spreadsheetList = new std::vector<std::string>();
       Utilities::spreadSheetListMtx = new std::mutex();
       
-      std::ifstream stream("./save/spreadsheetList");
+      std::ifstream stream("./data/spreadsheetList");
       std::string line;
 
       Utilities::spreadSheetListMtx->lock();
