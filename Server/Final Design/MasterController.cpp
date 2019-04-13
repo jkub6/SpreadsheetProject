@@ -11,6 +11,7 @@
 #include "SocketState.h"
 #include <signal.h>
 #include <map>
+#include <chrono>
 
 MasterController::MasterController(int port)
 {
@@ -104,7 +105,11 @@ int MasterController::newClientConnected(int socketID)
       
       //free sdata MUST CALL
       delete sdata;
+      //sleep thread
+
+      int delay = 50;
       
+      std::this_thread::sleep_for(std::chrono::milliseconds(50));
     }
   
 

@@ -1,8 +1,0 @@
-JSON Library is nlohmann Json: 
-https://github.com/nlohmann/json
-
-SHA256 Hashing for passwords is taken from:\
-https://create.stephan-brumme.com/hash-library/
-"A portable C++ Hashing Library"
-Example from Website for Reference:
- 
