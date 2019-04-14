@@ -13,11 +13,18 @@
 #include "SocketState.h"
 #include "sha256.h"
 
-
 std::vector<std::string> *Utilities::spreadsheetList;
 
 std::mutex * Utilities::spreadSheetListMtx;
 
+
+void Utilities::shutdown()
+{
+  //TODO
+  if(Utilities::spreadSheetListMtx)
+    delete Utilities::spreadSheetListMtx;
+  std::cout<<"\nUTILITIES SUCCESSFULLY SHUTDOWN"<<std::endl;
+}
 
 std::string Utilities::hash(std::string input)
 {
@@ -67,7 +74,7 @@ std::vector<std::string>* Utilities::getSpreadsheetList()
       
       std::ifstream stream("./data/spreadsheetList");
       std::string line;
-
+      std::cout<<"LOCK LIST"<<std::endl;
       Utilities::spreadSheetListMtx->lock();
       while(getline(stream,line))
 	{

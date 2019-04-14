@@ -38,8 +38,9 @@ void MasterController::startServer()
   this->connectionListener->beginListeningForClients();
 }
 void MasterController::shutdown(){
-  std::cout<<"\n\n********************\n\n"<<"SHUTTING DOWN"<<std::endl;
+    std::cout<<"\n\n********************\n\n"<<"SHUTTING DOWN"<<std::endl;
   this->running = false;
+  Utilities::shutdown();
   connectionListener->shutdownListener();
   spreadsheetController->shutdown();
 }
@@ -65,8 +66,8 @@ int MasterController::newClientConnected(int socketID)
 
 
   sstate->socketSendData(jsonObject.dump(0));
-
-  std::cout<<"\nSent {SocketID: "<<sstate->getID()<<"} Spreadsheet List Successfully."<<std::endl;
+  
+    std::cout<<"\nSent {SocketID: "<<sstate->getID()<<"} Spreadsheet List Successfully."<<std::endl;
 
   //***********************
   //AWAIT RESPONSE

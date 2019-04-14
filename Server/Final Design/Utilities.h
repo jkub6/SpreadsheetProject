@@ -27,10 +27,12 @@ class Utilities{
   
   static std::vector<std::string> *getSpreadsheetList();
 
+  static void shutdown();
+  
   static void newSpreadsheetInList(std::string name);
  private:
   static std::vector<std::string> *spreadsheetList;
-  static std::mutex *spreadSheetListMtx;  
+  static std::mutex *spreadSheetListMtx;
 };
 
 #endif
