@@ -17,7 +17,7 @@ class SocketState
   std::string getBuffer();
   void appendMessage(std::string message);
   std::vector<std::string> * getCommandsToProcess();
-  
+  std::string getSingleMessage();
   void socketAwaitData();
   void socketSendData(std::string msg);
   bool isConnected();

@@ -41,6 +41,23 @@ void SocketState::setConnected(bool con)
   this->connected = con;
 }
 
+std::string SocketState::getSingleMessage()
+{  this->bufferMtx->lock();
+  int index = buffer->find("\n\n");
+  std::string result="";
+  
+  if(index>0&&index<buffer->length())
+    {
+      result = buffer->substr(0,index);
+      index+=2;
+      *buffer = buffer->erase(0,index);
+    }
+  
+  this->bufferMtx->unlock();
+
+  return result;
+}
+
 void SocketState::appendMessage(std::string message)
 {
   this->bufferMtx->lock();
@@ -91,11 +108,12 @@ void SocketState::socketAwaitData()
   
   while(connected)
     {
-  std::string newData = Utilities::receiveMessage(this);
+      std::string newData = Utilities::receiveMessage(this);
 
-  this->bufferMtx->lock();
-  *buffer = buffer->append(newData);
-  this->bufferMtx->unlock();
+      
+      this->bufferMtx->lock();
+      *buffer = buffer->append(newData);
+      this->bufferMtx->unlock();
     }
 
   std::cout<<"SocketState for SocketID: "<<socketID<<" Disconnected..."<<std::endl;

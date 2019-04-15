@@ -48,10 +48,13 @@ void MasterController::shutdown(){
 
 int MasterController::newClientConnected(int socketID)
 {
+  std::cout<<"NEW CONNECT"<<std::endl;
   //***************************
   //send list of spreadsheets:
   //******************************
   std::vector<std::string> *list = Utilities::getSpreadsheetList();
+
+  std::cout<<"SH LIST"<<std::endl;
   
   nlohmann::json jsonObject;
 
@@ -68,6 +71,8 @@ int MasterController::newClientConnected(int socketID)
   sstate->socketSendData(jsonObject.dump(0));
   
     std::cout<<"\nSent {SocketID: "<<sstate->getID()<<"} Spreadsheet List Successfully."<<std::endl;
+    
+    
 
   //***********************
   //AWAIT RESPONSE
@@ -90,8 +95,78 @@ int MasterController::newClientConnected(int socketID)
   std::cout<<"THREADPOOL:" <<threadpool->size()<<std::endl;
   
   std::vector<std::string> * sdata;
+
+  //********************
+  // Get Username and password and validate
+  //*********************
+
+  bool userValidated = false;
+
   
-  while(running)
+  while(!userValidated)
+    {
+      if(!sstate->isConnected())
+	break;
+      
+      std::string userRequest = sstate->getSingleMessage();// getCommandsToProcess();
+
+      nlohmann::json newCommand;
+      
+      if(userRequest!="")
+	{
+	  try{
+	    newCommand = nlohmann::json::parse(userRequest);
+	    if(newCommand.at("type") == "open")
+	      {
+		std::string username = newCommand["username"];
+		std::string password = newCommand["password"];
+
+		if(Utilities::validateUser(username,password))
+		  {
+		    userValidated=true;
+		  }else{
+		  //generate failed response
+		  nlohmann::json badLoginResponse;
+		  badLoginResponse["type"]="error";
+		  badLoginResponse["code"]=1;
+		  badLoginResponse["source"]="";
+		  
+		  sstate->socketSendData(badLoginResponse.dump(0));
+		}
+		
+	      }
+	    
+	  }catch (nlohmann::detail::parse_error e){
+	    //send bad response again. sloppy code
+	    nlohmann::json badLoginResponse;
+	    badLoginResponse["type"]="error";
+	    badLoginResponse["code"]=1;
+	    badLoginResponse["source"]="";
+	    
+	    sstate->socketSendData(badLoginResponse.dump(0));
+	  }
+	}
+      
+      std::this_thread::sleep_for(std::chrono::milliseconds(10));
+    }
+
+  //**********
+  //FAKE FULL SEND TEST DELETE LATER
+  //***************
+  nlohmann::json fullSend;
+
+  fullSend["type"]="full send";
+  fullSend["spreadsheet"]=nlohmann::json::array();
+
+  sstate->socketSendData(fullSend.dump(0));
+  
+  std::cout<<"Full send sent"<<std::endl;
+
+  //**************
+  //FAKE SERVER LOOP
+  //**************
+  
+  while(running && userValidated)
     {
       if(!sstate->isConnected())
 	break;
@@ -101,16 +176,36 @@ int MasterController::newClientConnected(int socketID)
       for(int i = 0;i<sdata->size();i++)
 	{
 	  std::string s = (*sdata)[i];
+	  
 	  std::cout<<"New Message: \n["<<s<<"]\n"<<std::endl;
+
+	  nlohmann::json echoMsg;
+	  
+	  try
+	    {
+	      echoMsg = nlohmann::json::parse(s);
+
+	      if(echoMsg["type"]=="edit")
+		{
+		  nlohmann::json response;
+		  response["type"]="full send";
+		  response["spreadsheet"][(std::string)echoMsg["cell"]]=echoMsg["value"];
+
+		  sstate->socketSendData(response.dump(0));
+		  std::cout<<"\n\nRESPONDED WITH: \n"<<response.dump(1)<<std::endl;
+		}
+	      
+	    }catch (nlohmann::detail::parse_error e){}
+	  
 	}
       
       //free sdata MUST CALL
       delete sdata;
       //sleep thread
 
-      int delay = 50;
-      
-      std::this_thread::sleep_for(std::chrono::milliseconds(50));
+
+      //chrono sleep, prevents 100% processor utilization
+      std::this_thread::sleep_for(std::chrono::milliseconds(1000));
     }
   
 
@@ -136,8 +231,6 @@ int MasterController::newClientConnected(int socketID)
       
       }*/
   std::cout<<"Client: "<<sstate->getID()<<" disconnected."<<std::endl;
-  
-  //delete (*threadpool)[sstate->getID()];
   
   threadpool->erase(sstate->getID());
 
