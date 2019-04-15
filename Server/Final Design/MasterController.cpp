@@ -156,12 +156,11 @@ int MasterController::newClientConnected(int socketID)
   nlohmann::json fullSend;
 
   fullSend["type"]="full send";
-  fullSend["spreadsheet"]=nlohmann::json::array();
+  fullSend["spreadsheet"]=nlohmann::json::object();
 
   sstate->socketSendData(fullSend.dump(0));
   
   std::cout<<"Full send sent"<<std::endl;
-
   //**************
   //FAKE SERVER LOOP
   //**************
