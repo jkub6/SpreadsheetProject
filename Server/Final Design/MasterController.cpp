@@ -121,6 +121,24 @@ int MasterController::newClientConnected(int socketID)
 		std::string username = newCommand["username"];
 		std::string password = newCommand["password"];
 
+				std::cout<<"ABOUT TO"<<std::endl;
+
+		
+		std::string::size_type usernameSpaceLocation = username.find(" ");
+		std::string::size_type passwordSpaceLocation = username.find(" ");
+		
+		if(username=="" || password=="" ||usernameSpaceLocation!=std::string::npos||passwordSpaceLocation!=std::string::npos)
+		  {
+		    nlohmann::json badLoginResponse;
+		    badLoginResponse["type"]="error";
+		    badLoginResponse["code"]=1;
+		    badLoginResponse["source"]="";
+		    
+		    sstate->socketSendData(badLoginResponse.dump(0));
+		    //send error message
+		    continue;
+		  }
+
 		if(Utilities::validateUser(username,password))
 		  {
 		    userValidated=true;
@@ -136,8 +154,15 @@ int MasterController::newClientConnected(int socketID)
 		
 	      }
 	    
-	  }catch (nlohmann::detail::parse_error e){
+	  }catch (nlohmann::detail::parse_error e)  {
 	    //send bad response again. sloppy code
+	    nlohmann::json badLoginResponse;
+	    badLoginResponse["type"]="error";
+	    badLoginResponse["code"]=1;
+	    badLoginResponse["source"]="";
+	    
+	    sstate->socketSendData(badLoginResponse.dump(0));
+	  }	    catch(nlohmann::detail::type_error){
 	    nlohmann::json badLoginResponse;
 	    badLoginResponse["type"]="error";
 	    badLoginResponse["code"]=1;
@@ -195,6 +220,7 @@ int MasterController::newClientConnected(int socketID)
 		}
 	      
 	    }catch (nlohmann::detail::parse_error e){}
+	  catch(nlohmann::detail::type_error){}
 	  
 	}
       

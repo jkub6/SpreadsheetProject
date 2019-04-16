@@ -137,7 +137,6 @@ std::map<std::string,std::string> * Utilities::getUserList()
   
 void Utilities::newUser(std::string name, std::string password)
 {
-  if(!Utilities::userListMtx)
     Utilities::getUserList();
 
 
@@ -154,14 +153,13 @@ void Utilities::newUser(std::string name, std::string password)
 
 void Utilities::saveUsers()
 {
-  if(!Utilities::userListMtx)
     Utilities::getUserList();
 
   std::ofstream stream("./data/users");
   
   for(std::map<std::string,std::string>::iterator it = Utilities::userList->begin();it!=Utilities::userList->end();it++)
     {
-      stream << it->first<<" "<<it->second<<"\n";
+      stream << it->first<<" "<<it->second<<std::endl;
     }
   
   stream.close();
