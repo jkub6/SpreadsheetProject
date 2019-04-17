@@ -18,7 +18,8 @@ ConnectionListener::ConnectionListener(int port, MasterController * const m)
 }
 ConnectionListener::~ConnectionListener()
 {
-  
+
+  std::cout<<"ConnectionListener deconstructed"<<std::endl;
   //TODO
 }
 
@@ -30,7 +31,7 @@ void ConnectionListener::shutdownListener()
   this->running = false;
   shutdown(genesisSocket,2);
   close(genesisSocket);
-  std::cout<<"CONNECTION LISTENER SUCCESSFULLY SHUTDOWN"<<std::endl;
+  std::cout<<"CONNECTION LISTENER SUCCESSFULLY SHUTDOWN...\n"<<std::endl;
 }
 
 void ConnectionListener::beginListeningForClients()

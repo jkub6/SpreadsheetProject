@@ -26,11 +26,8 @@ MasterController::~MasterController()
 {
   delete connectionListener;
   delete spreadsheetController;
-
- 
   delete threadpool;
-
-  
+  std::cout<<"MasterController Deconstructed"<<std::endl;
 }
 
 
@@ -89,8 +86,6 @@ int MasterController::newClientConnected(int socketID)
       if(!sstate->isConnected())
       break;;*/
 
-
-  std::cout<<"THREADPOOL:" <<threadpool->size()<<std::endl;
   
   std::vector<std::string> * sdata;
 
@@ -305,7 +300,9 @@ int main(int argc, char ** argv)
 
   connectionThread.join();
 
-  std::cout<<"SERVER SUCCESSFULLY SHUTDOWN"<<std::endl;
+  delete masterController;
+  
+  std::cout<<"\nSERVER SUCCESSFULLY SHUTDOWN\n-------------------------------\n"<<std::endl;
   
   return 0;
 }

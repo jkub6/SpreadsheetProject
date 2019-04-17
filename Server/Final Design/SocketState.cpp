@@ -19,6 +19,7 @@ SocketState::~SocketState()
 {
   delete buffer;
   delete bufferMtx;
+  std::cout<<"SockeState for socket ID: "<<socketID<<" deconstructed."<<std::endl;
 }
 
 int SocketState::getID()

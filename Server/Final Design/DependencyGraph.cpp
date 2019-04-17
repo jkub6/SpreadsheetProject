@@ -22,6 +22,7 @@ DependencyGraph::~DependencyGraph()
 {
   delete dependents;
   delete dependees;
+  std::cout<<"DependencyGraph Deconstructed"<<std::endl;
 }
 
 /*

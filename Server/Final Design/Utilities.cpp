@@ -39,7 +39,7 @@ void Utilities::shutdown()
   if(Utilities::spreadsheetList)
     delete Utilities::spreadsheetList;
   
-  std::cout<<"\nUTILITIES SUCCESSFULLY SHUTDOWN"<<std::endl;
+  std::cout<<"\nUTILITIES SUCCESSFULLY SHUTDOWN..\n"<<std::endl;
 }
 
 std::string Utilities::hash(std::string input)

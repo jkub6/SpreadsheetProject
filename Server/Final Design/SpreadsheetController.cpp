@@ -1,6 +1,7 @@
 
 
 #include "SpreadsheetController.h"
+#include "SpreadsheetInstance.h"
 #include <vector>
 #include <string>
 #include <iostream>
@@ -8,89 +9,77 @@
 #include <map>
 #include <thread>
 #include "nlohmann/json.hpp"
+#include "Utilities.h"
+
 
 SpreadsheetController::SpreadsheetController(std::map<int,std::thread*> *threadpool)
 {
   this->running = true;
   this->threadpool = threadpool;
+  this->spreadsheets = new std::map<std::string, SpreadsheetInstance*>();
+  this->spreadsheetTitles = Utilities::getSpreadsheetList();
+
+  loadSpreadsheets();
 }
 
 SpreadsheetController::~SpreadsheetController()
 {
+  std::cout<<"SpreadsheetController deconstructed..."<<std::endl;
+  delete this->spreadsheets;
   //TODO
+}
+
+void SpreadsheetController::loadSpreadsheets()
+{
+  for(std::string str : *spreadsheetTitles)
+    (*spreadsheets)[str]=new SpreadsheetInstance("./save/"+str);
 }
 
 void SpreadsheetController::connectedClient(SocketState * sstate, std::string desiredSpreadsheet)
 {
+  //*********
+  //See if spreadsheet requested exists
+  //****************
 
-
-  //**********
-  //FAKE FULL SEND TEST DELETE LATER
-  //***************
-  nlohmann::json fullSend;
-
-  fullSend["type"]="full send";
-  fullSend["spreadsheet"]=nlohmann::json::object();
-
-  sstate->socketSendData(fullSend.dump(0));
+  spreadsheetTitles = Utilities::getSpreadsheetList();
   
-  std::cout<<"Full send sent to: "<<sstate->getID()<<std::endl;
-  //**************
-  //FAKE SERVER LOOP
-  //**************
-  std::vector<std::string> * sdata;
-  while(running)
+  bool exists = false;
+
+  for(std::map<std::string,SpreadsheetInstance *>::iterator it = spreadsheets->begin();it!=spreadsheets->end();it++)
     {
-      if(!sstate->isConnected())
-	break;
-
-      sdata = sstate->getCommandsToProcess();
-      
-      for(int i = 0;i<sdata->size();i++)
+      if(it->first == desiredSpreadsheet)
 	{
-	  std::string s = (*sdata)[i];
-	  
-	  std::cout<<"Message Received: \n["<<s<<"]\n"<<std::endl;
-
-	  nlohmann::json echoMsg;
-	  
-	  try
-	    {
-	      echoMsg = nlohmann::json::parse(s);
-
-	      if(echoMsg["type"]=="edit")
-		{
-		  nlohmann::json response;
-		  response["type"]="full send";
-		  response["spreadsheet"][(std::string)echoMsg["cell"]]=echoMsg["value"];
-
-		  sstate->socketSendData(response.dump(0));
-		  std::cout<<"RESPONDED WITH: \n"<<response.dump(1)<<std::endl;
-		}
-	      
-	    }catch (nlohmann::detail::parse_error e){}
-	  catch(nlohmann::detail::type_error){}
-	  
+	  exists = true;
+	  break;
 	}
-      
-      //free sdata MUST CALL
-      delete sdata;
-      //sleep thread
-
-
-      //chrono sleep, prevents 100% processor utilization
-      std::this_thread::sleep_for(std::chrono::milliseconds(50));
     }
 
-  std::cout<<"Client: "<<sstate->getID()<<" disconnected."<<std::endl;
+  //***********************
+  //Place client in spreadsheet if exists, or create new spreadsheet
+  //**************************
   
-  this->threadpool->erase(sstate->getID());
-  //TODO
+  
+  if(exists)
+    {
+      (*spreadsheets)[desiredSpreadsheet]->newClientConnected(sstate);
+    }else
+    {
+      Utilities::newSpreadsheetInList(desiredSpreadsheet);
+      (*spreadsheets)[desiredSpreadsheet]=new SpreadsheetInstance("./save/"+desiredSpreadsheet);
+      (*spreadsheets)[desiredSpreadsheet]->newClientConnected(sstate);
+    }
 }
 void SpreadsheetController::shutdown()
 {
   running = false;
-  std::cout<<"SPREADSHEETCONTROLLER SUCCESSFULLY SHUTDOWN."<<std::endl;
+
+  for(std::map<std::string,SpreadsheetInstance *>::iterator it = spreadsheets->begin();it!=spreadsheets->end();it++)
+    {
+      it->second->shutdown();
+      delete it->second;
+    }
+
+  std::cout<<"SPREADSHEETCONTROLLER SUCCESSFULLY SHUTDOWN...\n"<<std::endl;
   //TODO
 }
 

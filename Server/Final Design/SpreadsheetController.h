@@ -23,9 +23,14 @@ class SpreadsheetController
 
   
  private:
+  std::vector<std::string> *spreadsheetTitles;
   std::map<int,std::thread*> * threadpool;
+  std::map<std::string,SpreadsheetInstance *> *spreadsheets;
   void loadSpreadsheet();
   bool running;
+  void loadSpreadsheets();
+
+  
 };
 
 
