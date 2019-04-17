@@ -16,9 +16,10 @@
 MasterController::MasterController(int port)
 {
   this->port = port;
-  this->connectionListener = new ConnectionListener(port,this);
-  this->spreadsheetController = new SpreadsheetController();
   this->threadpool = new std::map<int,std::thread*>();
+  this->connectionListener = new ConnectionListener(port,this);
+  this->spreadsheetController = new SpreadsheetController(this->threadpool);
+
   this->running = true;
 }
 MasterController::~MasterController()
@@ -48,13 +49,10 @@ void MasterController::shutdown(){
 
 int MasterController::newClientConnected(int socketID)
 {
-  std::cout<<"NEW CONNECT"<<std::endl;
   //***************************
   //send list of spreadsheets:
   //******************************
   std::vector<std::string> *list = Utilities::getSpreadsheetList();
-
-  std::cout<<"SH LIST"<<std::endl;
   
   nlohmann::json jsonObject;
 
@@ -102,6 +100,8 @@ int MasterController::newClientConnected(int socketID)
 
   bool userValidated = false;
 
+
+  std::string desiredSheet = "";
   
   while(!userValidated)
     {
@@ -120,15 +120,14 @@ int MasterController::newClientConnected(int socketID)
 	      {
 		std::string username = newCommand["username"];
 		std::string password = newCommand["password"];
-
-				std::cout<<"ABOUT TO"<<std::endl;
-
+		desiredSheet= newCommand["name"];
 		
 		std::string::size_type usernameSpaceLocation = username.find(" ");
 		std::string::size_type passwordSpaceLocation = username.find(" ");
 		
 		if(username=="" || password=="" ||usernameSpaceLocation!=std::string::npos||passwordSpaceLocation!=std::string::npos)
 		  {
+		    std::cout<<"Username or Password is empty or contains spaces."<<std::endl;
 		    nlohmann::json badLoginResponse;
 		    badLoginResponse["type"]="error";
 		    badLoginResponse["code"]=1;
@@ -139,17 +138,19 @@ int MasterController::newClientConnected(int socketID)
 		    continue;
 		  }
 
-		if(Utilities::validateUser(username,password))
+		if(Utilities::validateUser(username,password)&&desiredSheet!="")
 		  {
 		    userValidated=true;
 		  }else{
 		  //generate failed response
+		  std::cout<<"Failed to Validate '"<<username<<"'. Sending Error Code...";
 		  nlohmann::json badLoginResponse;
 		  badLoginResponse["type"]="error";
 		  badLoginResponse["code"]=1;
 		  badLoginResponse["source"]="";
 		  
 		  sstate->socketSendData(badLoginResponse.dump(0));
+		  std::cout<<"DONE\n";
 		}
 		
 	      }
@@ -157,12 +158,14 @@ int MasterController::newClientConnected(int socketID)
 	  }catch (nlohmann::detail::parse_error e)  {
 	    //send bad response again. sloppy code
 	    nlohmann::json badLoginResponse;
+	    std::cout<<"BAD PARSE"<<std::endl;
 	    badLoginResponse["type"]="error";
 	    badLoginResponse["code"]=1;
 	    badLoginResponse["source"]="";
 	    
 	    sstate->socketSendData(badLoginResponse.dump(0));
-	  }	    catch(nlohmann::detail::type_error){
+	  }catch(nlohmann::detail::type_error){
+	    std::cout<<"Bad Token in JSON"<<std::endl;
 	    nlohmann::json badLoginResponse;
 	    badLoginResponse["type"]="error";
 	    badLoginResponse["code"]=1;
@@ -171,10 +174,18 @@ int MasterController::newClientConnected(int socketID)
 	    sstate->socketSendData(badLoginResponse.dump(0));
 	  }
 	}
-      
-      std::this_thread::sleep_for(std::chrono::milliseconds(10));
     }
 
+  
+
+  
+  //********************
+  //TRANSFER SOCKETSTATE TO SPREADSHEETCONTROLLER
+  //**************************
+
+  this->spreadsheetController->connectedClient(sstate,desiredSheet);
+
+  /*
   //**********
   //FAKE FULL SEND TEST DELETE LATER
   //***************
@@ -230,7 +241,7 @@ int MasterController::newClientConnected(int socketID)
 
 
       //chrono sleep, prevents 100% processor utilization
-      std::this_thread::sleep_for(std::chrono::milliseconds(1000));
+      std::this_thread::sleep_for(std::chrono::milliseconds(50));
     }
   
 
@@ -254,12 +265,12 @@ int MasterController::newClientConnected(int socketID)
       std::cout<<"Remaining Message:\n\n"<<remaining;
       
       
-      }*/
+      }
   std::cout<<"Client: "<<sstate->getID()<<" disconnected."<<std::endl;
   
   threadpool->erase(sstate->getID());
 
-
+*/
   return 0;
 }
 

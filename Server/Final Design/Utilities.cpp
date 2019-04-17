@@ -94,13 +94,13 @@ bool Utilities::validateUser(std::string username, std::string password)
 
       if((*Utilities::userList)[username]==Utilities::hash(password))
 	{
-	  std::cout<<"CURRENT USER VALIDATED"<<std::endl;
+	  std::cout<<"Existing User: '"<<username<<"' validated."<<std::endl;
 	  validated = true;
 	}
       
     }else//user doesn't exist... create them
     {
-      std::cout<<"NEW USER"<<std::endl;
+      std::cout<<"New User: '"<<username<<"'."<<std::endl;
       Utilities::newUser(username,password);
       validated = true;
     }
@@ -146,9 +146,9 @@ void Utilities::newUser(std::string name, std::string password)
       (*Utilities::userList)[name]=Utilities::hash(password);
     }
 
-  std::cout<<"SAVING USERS"<<std::endl;
+  std::cout<<"Saving user information to disk...";
   Utilities::saveUsers();
-  
+  std::cout<<"DONE!\n";
 }
 
 void Utilities::saveUsers()

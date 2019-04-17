@@ -7,12 +7,13 @@
 #include <string>
 #include <vector>
 #include "SocketState.h"
-
+#include <map>
+#include <thread>
 
 class SpreadsheetController
 {
  public:
-  SpreadsheetController();
+  SpreadsheetController(std::map<int,std::thread*> *threadpool);
   ~SpreadsheetController();
 
   std::vector<SpreadsheetInstance*> spreadSheets;
@@ -22,9 +23,9 @@ class SpreadsheetController
 
   
  private:
-
+  std::map<int,std::thread*> * threadpool;
   void loadSpreadsheet();
-  
+  bool running;
 };
 
 
