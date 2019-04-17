@@ -10,134 +10,317 @@ using Microsoft.AspNetCore.Mvc;
 using ServerAdmin.Models;
 using Newtonsoft.Json;
 using Microsoft.AspNetCore.Authorization;
+using System.Threading;
 
 namespace ServerAdmin.Controllers
 {
     public class HomeController : Controller
     {
         private TcpClient tcpClient = new TcpClient();
-        private SpreadsheetList spreadsheetList = new SpreadsheetList();
+        private User currentUser = new User();
 
+        /// <summary>
+        /// Login Homepage
+        /// </summary>
+        /// <returns></returns>
         [HttpGet]
-        [AllowAnonymous]
         public IActionResult Index()
         {
             return View();
         }
 
+        /// <summary>
+        /// Post call for logging in with user information
+        /// </summary>
+        /// <param name="username"></param>
+        /// <param name="password"></param>
+        /// <param name="ipAddress"></param>
+        /// <returns></returns>
         [HttpPost]
-        [AllowAnonymous]
         public IActionResult Index(String username, String password, String ipAddress)
         {
-            //IP Address: 24.10.184.57
-            //Port: 2112
+            string json = "";
+            currentUser.Username = username;
+            currentUser.Password = password;
+            currentUser.IpAddress = ipAddress;
 
-            bool authenticated = false;
-
-            //TODO:
-            //Send protocal JSON for type
-            //What is in each message for what needs to be implemented in the JSON
+            //Checks that the ipAddress was enterred
             if (ipAddress != null && ipAddress != "")
-            {
-                ConnectToServer(ipAddress, username, password, out authenticated);
-            }
+                json = ConnectToServer(ipAddress, username, password, "Login");
 
-            if (authenticated)
-                return RedirectToAction("SpreadsheetList", new { username, password, ipAddress });
+            //If json is not empty, means that it can go to the spreadsheet list without issue
+            if (json != "")
+                return RedirectToAction("SpreadsheetList", new { currentUser });
+            //Must go back here
             else
-            {
-                ViewBag.Failed = true;
                 return View();
+        }
+
+        /// <summary>
+        /// Initial Get Call to Create User
+        /// </summary>
+        /// <param name="currentUser"></param>
+        /// <returns></returns>
+        [HttpGet]
+        public IActionResult CreateUser(User currentUser)
+        {
+            return View();
+        }
+
+        /// <summary>
+        /// Post Call to Create User
+        /// </summary>
+        /// <param name="currentUser"></param>
+        /// <param name="user"></param>
+        /// <returns></returns>
+        [HttpPost]
+        public IActionResult CreateUser(User currentUser, User user)
+        {
+            String response = ConnectToServer(currentUser.IpAddress, user.Username, user.Password, "CreateUser");
+            if (response == null)
+            {
+                ViewBag.ErrorMessage = "Authentication Error: Redirecting to Login";
+                return RedirectToAction("Index", new { });
             }
+
+            return RedirectToAction("SpreadsheetList", new { currentUser });
         }
 
-        public IActionResult SpreadsheetList(String username, String password, String ipAddress, bool authenticated)
+        /// <summary>
+        /// Initial Get Call to Delete User
+        /// </summary>
+        /// <param name="currentUser"></param>
+        /// <returns></returns>
+        [HttpGet]
+        public IActionResult DeleteUser(User currentUser)
         {
-            //IP Address: 24.10.184.57
-            //Port: 2112
+            return View();
+        }
 
-            //TODO:
-            //Send protocal JSON for type
-            //What is in each message for what needs to be implemented in the JSON
+        /// <summary>
+        /// Post Call to Delete User
+        /// </summary>
+        /// <param name="currentUser"></param>
+        /// <param name="user"></param>
+        /// <returns></returns>
+        [HttpPost]
+        public IActionResult DeleteUser(User currentUser, User user)
+        {
+            String response = ConnectToServer(currentUser.IpAddress, user.Username, user.Password, "DeleteUser");
+            if (response == null)
+            {
+                ViewBag.ErrorMessage = "Authentication Error: Redirecting to Login";
+                return RedirectToAction("Index", new { });
+            }
+
+            return RedirectToAction("SpreadsheetList", new { currentUser });
+        }
+
+        /// <summary>
+        /// Initial Get Call to create a new spreadsheet
+        /// </summary>
+        /// <param name="currentUser"></param>
+        /// <returns></returns>
+        [HttpGet]
+        public IActionResult CreateSpread(User currentUser)
+        {
+            return View();
+        }
+
+        /// <summary>
+        /// Post Call to delete spreadsheet
+        /// </summary>
+        /// <param name="currentUser"></param>
+        /// <param name="spread"></param>
+        /// <returns></returns>
+        [HttpPost]
+        public IActionResult CreateSpread(User currentUser, Spreadsheet spread)
+        {
+            String response = ConnectToServer(currentUser.IpAddress, spread.Name, null, "CreateSpread");
+            if (response == null)
+            {
+                ViewBag.ErrorMessage = "Authentication Error: Redirecting to Login";
+                return RedirectToAction("Index", new { });
+            }
+
+            return RedirectToAction("SpreadsheetList", new { currentUser });
+        }
+
+        /// <summary>
+        /// Initial Get Call to delete spreadsheet
+        /// </summary>
+        /// <param name="currentUser"></param>
+        /// <returns></returns>
+        [HttpGet]
+        public IActionResult DeleteSpread(User currentUser)
+        {
+            return View();
+        }
+
+        /// <summary>
+        /// Post call to delete Spreadsheet
+        /// </summary>
+        /// <param name="currentUser"></param>
+        /// <param name="spread"></param>
+        /// <returns></returns>
+        [HttpPost]
+        public IActionResult DeleteSpread(User currentUser, Spreadsheet spread)
+        {
+            string response = ConnectToServer(currentUser.IpAddress, spread.Name, null, "DeleteSpread");
+            if (response == null)
+            {
+                ViewBag.ErrorMessage = "Authentication Error: Redirecting to Login";
+                return RedirectToAction("Index", new { });
+            }
+            return RedirectToAction("SpreadsheetList", new { currentUser });
+        }
+
+        /// <summary>
+        /// Webpage displaying list of spreadsheet
+        /// </summary>
+        /// <param name="currentUser"></param>
+        /// <returns></returns>
+        public IActionResult SpreadsheetList(User currentUser)
+        {
+            String username = currentUser.Username;
+            String password = currentUser.Password;
+            String ipAddress = currentUser.IpAddress;
+
+            string json = "";
+            SpreadsheetList spreadsheetList;
             if (ipAddress != null && ipAddress != "")
-                ConnectToServer(ipAddress, username, password, out authenticated);
+                json = ConnectToServer(ipAddress, username, password, "Login");
 
-            return View(spreadsheetList);
+            if (json != null && json != "")
+            {
+                //Reads the JSON
+                spreadsheetList = ReadSpreadsheetList(json);
+
+                //If spreadsheet is not null, means successful data parsing
+                if (spreadsheetList != null)
+                    return View(spreadsheetList);
+                //If spreadsheet is null, means server gave the wrong data for gui to read
+                else
+                {
+                    ViewBag.ErrorMessage = "Invalid Data from Server";
+                    return RedirectToAction("Index");
+                }
+            }
+            //If json is null, something went wrong in ConnectingToServer
+            else
+                return RedirectToAction("Index", new { });
         }
 
-        //TODO: Ping to the server
-        public void ConnectToServer(String ipAddress, String username, String password, out bool authenticated)
+
+        /// <summary>
+        /// Connects to the server with the ipAddress, username, and password
+        /// 
+        /// Returns out true for authentication if valid data was returned
+        /// </summary>
+        /// <param name="ipAddress"></param>
+        /// <param name="username"></param>
+        /// <param name="password"></param>
+        /// <param name="authenticated"></param>
+        public string ConnectToServer(String ipAddress, String username, String password, String request)
         {
-            authenticated = false;
             try
             {
-                Console.WriteLine("Connecting.....");
-                tcpClient.Connect(ipAddress, 2112);
-
-                // use the ipaddress as in the server program
-                Console.WriteLine("Connected");
-                UserRequest ur = new UserRequest
                 {
-                    IpAddress = ipAddress,
-                    Username = username,
-                    Password = password,
-                    Request = "Login"
-                };
+                    AutoResetEvent connectDone = new AutoResetEvent(false);
+                    //Port should always be 2112
+                    Console.WriteLine("Connecting.....");
+                    tcpClient.BeginConnect(
+                        ipAddress, 2112,
+                        new AsyncCallback(
+                            delegate (IAsyncResult ar)
+                            {
+                                tcpClient.EndConnect(ar);  
+                                connectDone.Set();
+                            }
+                        ), tcpClient
+                    );
+                    //Fails to connect with 2000 ms
+                    if (!connectDone.WaitOne(2000))
+                    {
+                        ViewBag.ErrorMessage = "Server Connection Timed Out";
+                        return null;
+                    }
+                    //Succesfully connects
+                    else
+                    {
+                        Console.WriteLine("Connected");
+                        NetworkStream stream = this.tcpClient.GetStream();
+                        // use the ipaddress as in the server program
+                        UserRequest ur = new UserRequest
+                        {
+                            IpAddress = ipAddress,
+                            Username = username,
+                            Request = request
+                        };
 
-                //Sends the JSON Request to the server
-                string message = JsonConvert.SerializeObject(ur) + '\n' + '\n';
+                        if (password != null && password != "")
+                            ur.Password = password;
 
-                // Translate the passed message into ASCII and store it as a Byte array.
-                Byte[] data = System.Text.Encoding.ASCII.GetBytes(message);
-                // Get a client stream for reading and writing. 
-                NetworkStream stream = tcpClient.GetStream();
+                        //Sends the JSON Request to the server
+                        string message = JsonConvert.SerializeObject(ur) + '\n' + '\n';
 
-                // Send the message to the connected TcpServer. 
-                stream.Write(data, 0, data.Length); //(**This is to send data using the byte method**) 
-                Console.WriteLine("Transmitting.....");
+                        // Translate the passed message into ASCII and store it as a Byte array.
+                        Byte[] data = System.Text.Encoding.ASCII.GetBytes(message);
+                        // Get a client stream for reading and writing. 
+                        //NetworkStream stream = tcpClient.GetStream();
 
-                // Buffer to store the response bytes.
-                data = new Byte[256];
+                        // Send the message to the connected TcpServer. 
+                        stream.Write(data, 0, data.Length); //(**This is to send data using the byte method**) 
+                        Console.WriteLine("Transmitting.....");
 
-                // String to store the response ASCII representation.
-                String responseData = String.Empty;
+                        // Buffer to store the response bytes.
+                        data = new Byte[256];
 
-                // Read the first batch of the TcpServer response bytes.
-                Int32 bytes = stream.Read(data, 0, data.Length); //(**This receives the data using the byte method**)
-                responseData = System.Text.Encoding.ASCII.GetString(data, 0, bytes); //(**This converts it to string**)
-                if (responseData != null && responseData != "")
-                    authenticated = true;
+                        // String to store the response ASCII representation.
+                        String responseData = String.Empty;
 
-                Read(responseData);
-                string value = "5";
-                //tcpclnt.Close();
+                        // Read the first batch of the TcpServer response bytes.
+                        Int32 bytes = stream.Read(data, 0, data.Length); //(**This receives the data using the byte method**)
+                        responseData = System.Text.Encoding.ASCII.GetString(data, 0, bytes); //(**This converts it to string**)
+                        if (responseData != null && responseData != "")
+                        {
+                            return responseData;
+                        }
+                        else
+                        {
+                            ViewBag.ErrorMessage = "Login Credentials not valid";
+                            return null;
+                        }
+                    }
+                }
             }
             catch (Exception e)
             {
-                authenticated = false;
-                ViewBag.Error = "Error..... " + e.StackTrace;
+                ViewBag.ErrorMessage = "Failed to Connect to Server";
+                return null;
             }
         }
 
-        private void Read(String json)
+
+        /// <summary>
+        /// Parses the json string for the spreadsheet list
+        /// </summary>
+        /// <param name="json"></param>
+        private SpreadsheetList ReadSpreadsheetList(String json)
         {
             try
-            //Parse message here
             {
+                //Parses the json here
                 SpreadsheetList value = JsonConvert.DeserializeObject<SpreadsheetList>(json);
                 if (value.type == "list")
-                {
-                    if (value.Equals(spreadsheetList))
-                        return;
-                    else
-                        spreadsheetList = value;
-                }
+                    return value;
                 else
                     throw new Exception();
             }
             catch (Exception)
             {
-
+                ViewBag.ErrorMessage = "Invalid Message Received";
+                return null;
             }
         }
 
@@ -149,3 +332,4 @@ namespace ServerAdmin.Controllers
         }
     }
 }
+
