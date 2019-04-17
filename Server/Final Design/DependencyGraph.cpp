@@ -22,6 +22,7 @@ DependencyGraph::~DependencyGraph()
 {
   delete dependents;
   delete dependees;
+  std::cout<<"DependencyGraph Deconstructed"<<std::endl;
 }
 
 /*
@@ -83,13 +84,13 @@ bool DependencyGraph::HasDependees(string s)
 /*
  *Enumerates dependents(s)
  */
-vector<string> *DependencyGraph::GetDependents(string s)
+vector<string>* DependencyGraph::GetDependents(string s)
 {
   vector<string> *toReturn = new vector<string>();
   if(HasDependents(s))
     {
-      for(string s: *(*dependents)[s])
-	toReturn->push_back(s);
+      for(string value: *(*dependents)[s])
+	toReturn->push_back(value);
       return toReturn;
     }
   else
@@ -99,13 +100,13 @@ vector<string> *DependencyGraph::GetDependents(string s)
 /*
  *Enumerates dependees(s)
  */
-vector<string> *DependencyGraph::GetDependees(string s)
+vector<string>* DependencyGraph::GetDependees(string s)
 {
   vector<string> *toReturn = new vector<string>();
   if(HasDependees(s))
     {
-      for(string s: *(*dependees)[s])
-	toReturn->push_back(s);
+      for(string value: *(*dependees)[s])
+	toReturn->push_back(value);
       return toReturn;
     }
   else
@@ -139,6 +140,7 @@ void DependencyGraph::RemoveDependency(string s, string t)
       return;
     }
 }
+
 
 void DependencyGraph::ReplaceDependents(string s, vector<string> *newDependents)
 {
@@ -210,9 +212,64 @@ int main()
     cout<<"SUCCESS"<<endl;
 
   //TODO:Test ReplaceDependents and ReplaceDependees
+  vector<string> *testVector = new vector<string>();
+  testVector->push_back("d");
+  testVector->push_back("e");
+  testVector->push_back("f");
+  DG->ReplaceDependents("b", testVector);
+
+   vector<string> *resultVector = new vector<string>();
+   resultVector = DG->GetDependents("b");
+
+   for(string value: *resultVector)
+     {
+       cout<<value<<endl;
+     }
+
+  if(DG->Size() == 3)
+    cout<<"SUCCESS"<<endl;
+  else
+    cout<<"FAIL"<<endl;
+  
+
+  if(DG->HasDependents("b"))
+    cout<<"Success"<<endl;
+  else
+    cout<<"FAIL"<<endl;
+  if(!(DG->HasDependents("a")))
+    cout<<"Success"<<endl;
+  else
+    cout<<"FAIL"<<endl;
+
+  vector<string> *testVector2 = new vector<string>();
+  testVector2->push_back("a");
+  testVector2->push_back("e");
+  testVector2->push_back("f");
+  DG->ReplaceDependees("d", testVector2);
+
+  resultVector = DG->GetDependees("d");
+
+  for(string value: *resultVector)
+    {
+      cout<<value<<endl;
+    }
+
+ if(DG->Size() == 5)
+    cout<<"SUCCESS"<<endl;
+  else
+    cout<<"FAIL"<<endl;
+  
+
+  if(DG->HasDependees("d"))
+    cout<<"Success"<<endl;
+  else
+    cout<<"FAIL"<<endl;
+
+
+
   
   
 }
+
+
 */
-
-

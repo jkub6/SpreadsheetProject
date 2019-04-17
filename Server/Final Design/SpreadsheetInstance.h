@@ -6,7 +6,7 @@
 #include <string>
 #include <map>
 #include <thread>
-
+#include "SocketState.h"
 
 class SpreadsheetInstance
 {
@@ -14,14 +14,15 @@ class SpreadsheetInstance
   SpreadsheetInstance(std::string pathToSaveFile);
   ~SpreadsheetInstance();
 
-  void newClientConnected(int socketID);
+  void newClientConnected(SocketState * sstate);
   void shutdown();
   
  private:
 
-  std::map<int,std::thread> *socketThreads;//Maps socketID's to individual client threads
+  std::map<int,SocketState *> *connectedClients;
   DependencyGraph *dependencyGraph;
   std::string pathToSaveFile;
+  bool running;
   
 };
 
