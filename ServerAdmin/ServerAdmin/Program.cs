@@ -20,5 +20,8 @@ namespace ServerAdmin
         public static IWebHostBuilder CreateWebHostBuilder(string[] args) =>
             WebHost.CreateDefaultBuilder(args)
                 .UseStartup<Startup>();
+
+        public static void StartWithNoArgs() => 
+            WebHost.CreateDefaultBuilder().UseStartup<Startup>();
     }
 }

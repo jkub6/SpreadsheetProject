@@ -36,13 +36,15 @@
             this.passwordTextBox = new System.Windows.Forms.TextBox();
             this.label2 = new System.Windows.Forms.Label();
             this.usernameTextBox = new System.Windows.Forms.TextBox();
+            this.label1 = new System.Windows.Forms.Label();
             this.SuspendLayout();
             // 
             // button1
             // 
-            this.button1.Location = new System.Drawing.Point(131, 557);
+            this.button1.ImageAlign = System.Drawing.ContentAlignment.TopCenter;
+            this.button1.Location = new System.Drawing.Point(15, 482);
             this.button1.Name = "button1";
-            this.button1.Size = new System.Drawing.Size(274, 55);
+            this.button1.Size = new System.Drawing.Size(187, 55);
             this.button1.TabIndex = 19;
             this.button1.Text = "Open Selected File";
             this.button1.UseVisualStyleBackColor = true;
@@ -59,7 +61,7 @@
             // 
             // button2
             // 
-            this.button2.Location = new System.Drawing.Point(20, 476);
+            this.button2.Location = new System.Drawing.Point(15, 642);
             this.button2.Name = "button2";
             this.button2.Size = new System.Drawing.Size(187, 54);
             this.button2.TabIndex = 24;
@@ -68,7 +70,7 @@
             // 
             // textBox1
             // 
-            this.textBox1.Location = new System.Drawing.Point(222, 488);
+            this.textBox1.Location = new System.Drawing.Point(222, 654);
             this.textBox1.Name = "textBox1";
             this.textBox1.Size = new System.Drawing.Size(332, 31);
             this.textBox1.TabIndex = 25;
@@ -107,11 +109,21 @@
             this.usernameTextBox.Size = new System.Drawing.Size(423, 31);
             this.usernameTextBox.TabIndex = 31;
             // 
+            // label1
+            // 
+            this.label1.AutoSize = true;
+            this.label1.Location = new System.Drawing.Point(35, 579);
+            this.label1.Name = "label1";
+            this.label1.Size = new System.Drawing.Size(43, 25);
+            this.label1.TabIndex = 35;
+            this.label1.Text = "OR";
+            // 
             // OpenNetworkFileForm
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(12F, 25F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(575, 646);
+            this.ClientSize = new System.Drawing.Size(575, 739);
+            this.Controls.Add(this.label1);
             this.Controls.Add(this.label5);
             this.Controls.Add(this.passwordTextBox);
             this.Controls.Add(this.label2);
@@ -136,5 +148,6 @@
         private System.Windows.Forms.TextBox passwordTextBox;
         private System.Windows.Forms.Label label2;
         private System.Windows.Forms.TextBox usernameTextBox;
+        private System.Windows.Forms.Label label1;
     }
 }

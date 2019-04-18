@@ -14,6 +14,8 @@ using System.IO;
 using System.Media;
 using System.Net.NetworkInformation;
 
+using ServerAdmin;
+
 namespace ClientGui
 {
     public partial class Form1 : Form
@@ -508,6 +510,11 @@ namespace ClientGui
         {
             foreach (string cellName in client.spreadsheet.GetNamesOfAllNonemptyCells())
                 UpdateCellByName(cellName);
+        }
+
+        private void serverAdminToolToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            ServerAdmin.Program.StartWithNoArgs();
         }
     }
 }
