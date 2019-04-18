@@ -45,9 +45,6 @@ namespace ClientGui
 
             //networkConsoleForm.Show();
             //networkConsoleForm.Visible = false;
-
-
-            
             client.FullSendRecieved += FullSendRecieved;
 
 
@@ -509,10 +506,8 @@ namespace ClientGui
 
         private void FullSendRecieved(object sender, EventArgs e)
         {
-            foreach(string cellName in client.spreadsheet.GetNamesOfAllNonemptyCells())
-            {
+            foreach (string cellName in client.spreadsheet.GetNamesOfAllNonemptyCells())
                 UpdateCellByName(cellName);
-            }
         }
     }
 }
