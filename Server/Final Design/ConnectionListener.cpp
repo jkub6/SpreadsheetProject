@@ -9,17 +9,20 @@
 #include <thread>
 #include <list>
 #include <vector>
+#include "MasterController.h"
 
-ConnectionListener::ConnectionListener(int port,   int (*callBack)(int))
+ConnectionListener::ConnectionListener(int port, MasterController * const m)
 {
+  this->mc = m;
   this->port = port;
-  this->callBack = callBack;
 }
 ConnectionListener::~ConnectionListener()
 {
-  
+
+  std::cout<<"ConnectionListener deconstructed"<<std::endl;
   //TODO
 }
+
 
 void ConnectionListener::shutdownListener()
 {
@@ -28,7 +31,7 @@ void ConnectionListener::shutdownListener()
   this->running = false;
   shutdown(genesisSocket,2);
   close(genesisSocket);
-  std::cout<<"CONNECTION LISTENER SUCCESSFULLY SHUTDOWN"<<std::endl;
+  std::cout<<"CONNECTION LISTENER SUCCESSFULLY SHUTDOWN...\n"<<std::endl;
 }
 
 void ConnectionListener::beginListeningForClients()
@@ -92,8 +95,8 @@ void ConnectionListener::beginListeningForClients()
 	}
       
       
-      std::cout<<"Connection Established. ClientID: "<<new_socket<<" | IP: "<<inet_ntoa(address.sin_addr)<<std::endl;
-      t = new std::thread(callBack,new_socket);//call the callback
+      std::cout<<"\nConnection Established. ClientID: "<<new_socket<<" | IP: "<<inet_ntoa(address.sin_addr)<<std::endl;
+      t = new std::thread(&MasterController::newClientConnected,mc,new_socket);//call the callback
     }
   
 }

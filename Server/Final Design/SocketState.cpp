@@ -4,6 +4,7 @@
 #include "Utilities.h"
 #include <vector>
 #include <mutex>
+#include <iostream>
 
 SocketState::SocketState(int socketID)
 {
@@ -12,10 +13,13 @@ SocketState::SocketState(int socketID)
   this->buffer = new std::string();
   connected = true;
 }
+
+
 SocketState::~SocketState()
 {
   delete buffer;
   delete bufferMtx;
+  std::cout<<"SockeState for socket ID: "<<socketID<<" deconstructed."<<std::endl;
 }
 
 int SocketState::getID()
@@ -36,6 +40,23 @@ std::string SocketState::getBuffer()
 void SocketState::setConnected(bool con)
 {
   this->connected = con;
+}
+
+std::string SocketState::getSingleMessage()
+{  this->bufferMtx->lock();
+  int index = buffer->find("\n\n");
+  std::string result="";
+  
+  if(index>0&&index<buffer->length())
+    {
+      result = buffer->substr(0,index);
+      index+=2;
+      *buffer = buffer->erase(0,index);
+    }
+  
+  this->bufferMtx->unlock();
+
+  return result;
 }
 
 void SocketState::appendMessage(std::string message)
@@ -86,13 +107,17 @@ std::vector<std::string> * SocketState::tokenize()
 void SocketState::socketAwaitData()
 {
   
+  while(connected)
+    {
+      std::string newData = Utilities::receiveMessage(this);
 
-  std::string newData = Utilities::receiveMessage(this);
+      
+      this->bufferMtx->lock();
+      *buffer = buffer->append(newData);
+      this->bufferMtx->unlock();
+    }
 
-  this->bufferMtx->lock();
-  *buffer = buffer->append(newData);
-  this->bufferMtx->unlock();
-  
+  std::cout<<"SocketState for SocketID: "<<socketID<<" Disconnected..."<<std::endl;
 }
 void SocketState::socketSendData(std::string msg)
 {
