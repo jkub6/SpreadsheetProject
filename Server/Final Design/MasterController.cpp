@@ -101,6 +101,9 @@ int MasterController::newClientConnected(int socketID)
   
   while(!userValidated)
     {
+
+
+      
       if(!sstate->isConnected())
 	break;
       
@@ -186,6 +189,10 @@ int MasterController::newClientConnected(int socketID)
 	      
 	    }
 	}
+
+      std::this_thread::sleep_for(std::chrono::milliseconds(50));
+
+      
     }
 
   
