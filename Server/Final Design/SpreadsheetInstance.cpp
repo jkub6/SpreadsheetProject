@@ -18,7 +18,7 @@ SpreadsheetInstance::SpreadsheetInstance(std::string pathToSaveFile)
     connectedClients = new std::map<int,SocketState *>();
     data = new std::map<std::string, std::string>();
     (*data)["hi"]="wow";
-    //    this->usersMtx = new std::mutex();
+    usersMtx = new std::mutex();
     savingMtx = new std::mutex();
     
     running = true;
@@ -32,12 +32,11 @@ SpreadsheetInstance::~SpreadsheetInstance()
   savingMtx->lock();
   running = false;
   savingMtx->unlock();
-    delete connectedClients;
-    //delete dependencyGraph;
-  // delete data;
-  //if(userMtx)
-  // delete usersMtx;
-    delete savingMtx;
+  delete connectedClients;
+  delete dependencyGraph;
+  delete data;
+  delete usersMtx;
+  delete savingMtx;
   
   std::cout<<"SpreadsheetInstance for: "<<this->pathToSaveFile<<" deconstructed."<<std::endl;
   //TODO
@@ -65,8 +64,133 @@ void SpreadsheetInstance::loop()
 	}
       savingMtx->unlock();
       
-      std::this_thread::sleep_for(std::chrono::milliseconds(100));
+      //**************
+      //FAKE SERVER LOOP
+      //**************
+
+      //Iterate through each client, and process commands:
+
+      std::vector<int> toRemove;
+
+      for(std::map<int,SocketState*>::iterator it = connectedClients->begin();
+	  it!=connectedClients->end();
+	  it++)
+	{
+	  SocketState * sstate = it->second;
+
+	  if(!sstate->isConnected())
+	    {
+	      toRemove.push_back(it->first);
+	      continue;
+	    }
+
+	  std::vector<std::string> * commandsToProcess = sstate->getCommandsToProcess();
+
+	  //Loop through all the commands and execute them.
+	  for(std::vector<std::string>::iterator cmdIterator = commandsToProcess->begin();
+	      cmdIterator!=commandsToProcess->end();
+	      cmdIterator++)
+	    {
+
+	      std::string s = *cmdIterator;
+	      std::cout<<"MESSAGE RECEIVED: "<<s<<std::endl;
+	       nlohmann::json echoMsg;
+	  
+	       try
+		 {
+		   echoMsg = nlohmann::json::parse(s);
+		   
+		   if(echoMsg["type"]=="edit")
+		     {
+		       nlohmann::json response;
+		       response["type"]="full send";
+		       response["spreadsheet"][(std::string)echoMsg["cell"]]=echoMsg["value"];
+
+		       //SEND TO ALL CLIENTS
+		       for(std::map<int,SocketState*>::iterator sendIter = connectedClients->begin();
+			   sendIter!=connectedClients->end();
+			   sendIter++)
+			 {
+			   sendIter->second->socketSendData(response.dump(0));
+			 }
+
+		       
+		       //		       sstate->socketSendData(response.dump(0));
+		       std::cout<<"RESPONDED WITH: \n"<<response.dump(1)<<std::endl;
+		     }
+		   
+		 }
+	       catch (nlohmann::detail::parse_error e){}
+	       catch(nlohmann::detail::type_error){}
+	       catch(nlohmann::detail::out_of_range){}
+	       
+	    }
+
+	  delete commandsToProcess;
+	  std::this_thread::sleep_for(std::chrono::milliseconds(50));
+	  
+	}
+
+      //****************
+      //REMOVE SOCKET STATES THAT ARE DISCONNECTED:
+      //*****************
+	
+      for(std::vector<int>::iterator removeIt = toRemove.begin();
+	  removeIt!=toRemove.end();
+	  removeIt++)
+	{
+	  connectedClients->erase(*removeIt);
+	}
+      
+      /*std::vector<std::string> * sdata;
+      
+      
+      //chrono sleep, prevents 100% processor utilization
+      std::this_thread::sleep_for(std::chrono::milliseconds(50));
+      
+      if(!sstate->isConnected())
+	break;
+      
+      sdata = sstate->getCommandsToProcess();
+      
+      for(int i = 0;i<sdata->size();i++)
+	{
+	  std::this_thread::sleep_for(std::chrono::milliseconds(50));
+	  
+	  std::string s = (*sdata)[i];
+	  
+	  std::cout<<"Message Received: \n["<<s<<"]\n"<<std::endl;
+	  
+	  nlohmann::json echoMsg;
+	  
+	  try
+	    {
+	      echoMsg = nlohmann::json::parse(s);
+	      
+	      if(echoMsg["type"]=="edit")
+		{
+		  nlohmann::json response;
+		  response["type"]="full send";
+		  response["spreadsheet"][(std::string)echoMsg["cell"]]=echoMsg["value"];
+		  
+		  sstate->socketSendData(response.dump(0));
+		  std::cout<<"RESPONDED WITH: \n"<<response.dump(1)<<std::endl;
+		}
+	      
+	    }
+	  catch (nlohmann::detail::parse_error e){}
+	  catch(nlohmann::detail::type_error){}
+	  catch(nlohmann::detail::out_of_range){}
+	}
+      
+      //free sdata MUST CALL
+      delete sdata;*/
+      //sleep thread
     }
+  
+      
+   
+    
 }
 
 void SpreadsheetInstance::newClientConnected(SocketState * sstate)
@@ -84,72 +208,18 @@ void SpreadsheetInstance::newClientConnected(SocketState * sstate)
   sstate->socketSendData(fullSend.dump(0));
   
   std::cout<<"Full send sent to: "<<sstate->getID()<<std::endl;
-  //**************
-  //FAKE SERVER LOOP
-  //**************
-  std::vector<std::string> * sdata;
-  while(true)
-    {
-      savingMtx->lock();
-      if(!running){
-	savingMtx->unlock();
-	break;
-      }
-      savingMtx->unlock();
 
-      
-            //chrono sleep, prevents 100% processor utilization
-      std::this_thread::sleep_for(std::chrono::milliseconds(50));
-
-      if(!sstate->isConnected())
-	break;
-
-      sdata = sstate->getCommandsToProcess();
-      
-      for(int i = 0;i<sdata->size();i++)
-	{
-	  std::this_thread::sleep_for(std::chrono::milliseconds(50));
-
-	  std::string s = (*sdata)[i];
-	  
-	  std::cout<<"Message Received: \n["<<s<<"]\n"<<std::endl;
-
-	  nlohmann::json echoMsg;
-	  
-	  try
-	    {
-	      echoMsg = nlohmann::json::parse(s);
-
-	      if(echoMsg["type"]=="edit")
-		{
-		  nlohmann::json response;
-		  response["type"]="full send";
-		  response["spreadsheet"][(std::string)echoMsg["cell"]]=echoMsg["value"];
-
-		  sstate->socketSendData(response.dump(0));
-		  std::cout<<"RESPONDED WITH: \n"<<response.dump(1)<<std::endl;
-		}
-	      
-	    }
-	  catch (nlohmann::detail::parse_error e){}
-	  catch(nlohmann::detail::type_error){}
-	  catch(nlohmann::detail::out_of_range){}
-	}
-      
-      //free sdata MUST CALL
-      delete sdata;
-      //sleep thread
-    }
-
-  std::cout<<"Client: "<<sstate->getID()<<" disconnected."<<std::endl;
-
-    delete sstate;
-  
+  usersMtx->lock();
+  (*connectedClients)[sstate->getID()]=sstate;
+  usersMtx->unlock();
+   
   //TODO
 }
 void SpreadsheetInstance::shutdown()
 {
+  savingMtx->lock();
   running = false;
+  savingMtx->unlock();
 
   sheetThread->join();
   //TODO

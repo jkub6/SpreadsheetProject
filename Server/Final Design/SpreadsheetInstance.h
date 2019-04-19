@@ -21,9 +21,9 @@ class SpreadsheetInstance
   
  private:
   std::mutex *savingMtx;
+  std::mutex *usersMtx;
 
   std::thread * sheetThread;
-  //  std::mutex *usersMtx;
   void saveToDisk();
   void loop();
   void load();
