@@ -94,6 +94,7 @@ int MasterController::newClientConnected(int socketID)
   //*********************
 
   bool userValidated = false;
+  bool isAdmin = false;
 
 
   std::string desiredSheet = "";
@@ -111,8 +112,10 @@ int MasterController::newClientConnected(int socketID)
 	{
 	  try{
 	    newCommand = nlohmann::json::parse(userRequest);
+	    std::cout<<"JSON:\n"<<newCommand.dump()<<std::endl;
 	    if(newCommand.at("type") == "open")
 	      {
+		std::cout<<"TYPE "<<newCommand["type"]<<std::endl;
 		std::string username = newCommand["username"];
 		std::string password = newCommand["password"];
 		desiredSheet= newCommand["name"];
@@ -148,6 +151,12 @@ int MasterController::newClientConnected(int socketID)
 		  std::cout<<"DONE\n";
 		}
 		
+	      }else if(newCommand.at("type")=="Login")
+	      {
+		std::cout<<"ADMIN CONNECTED"<<std::endl;
+		isAdmin = true;
+		
+	    
 	      }
 	    
 	  }catch (nlohmann::detail::parse_error e)  {
@@ -167,7 +176,15 @@ int MasterController::newClientConnected(int socketID)
 	    badLoginResponse["source"]="";
 	    
 	    sstate->socketSendData(badLoginResponse.dump(0));
-	  }
+	  }catch(nlohmann::detail::out_of_range)
+	    {
+	    std::cout<<"Bad Token in JSON"<<std::endl;
+	    nlohmann::json badLoginResponse;
+	    badLoginResponse["type"]="error";
+	    badLoginResponse["code"]=1;
+	    badLoginResponse["source"]="";
+	      
+	    }
 	}
     }
 
@@ -178,8 +195,12 @@ int MasterController::newClientConnected(int socketID)
   //TRANSFER SOCKETSTATE TO SPREADSHEETCONTROLLER
   //**************************
 
-  this->spreadsheetController->connectedClient(sstate,desiredSheet);
-
+  if(!isAdmin){
+    this->spreadsheetController->connectedClient(sstate,desiredSheet);}
+  else
+    {
+      std::cout<<"ADMIN";
+    }
   /*
   //**********
   //FAKE FULL SEND TEST DELETE LATER

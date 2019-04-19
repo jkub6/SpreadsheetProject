@@ -7,21 +7,66 @@
 #include <iostream>
 #include <vector>
 #include <string>
+#include <chrono>
+#include <ostream>
+#include <mutex>
 
 SpreadsheetInstance::SpreadsheetInstance(std::string pathToSaveFile)
   {
-    this->pathToSaveFile = pathToSaveFile;
+    pathToSaveFile = pathToSaveFile;
     dependencyGraph = new DependencyGraph();
     connectedClients = new std::map<int,SocketState *>();
+    data = new std::map<std::string, std::string>();
+    (*data)["hi"]="wow";
+    //    this->usersMtx = new std::mutex();
+    savingMtx = new std::mutex();
+    
     running = true;
+    load();
+    //Start new thread for infinite loop
+
+     this->sheetThread = new std::thread(&SpreadsheetInstance::loop,this);
   }
 SpreadsheetInstance::~SpreadsheetInstance()
 {
+  savingMtx->lock();
   running = false;
-  delete connectedClients;
-  delete dependencyGraph;
+  savingMtx->unlock();
+    delete connectedClients;
+    //delete dependencyGraph;
+  // delete data;
+  //if(userMtx)
+  // delete usersMtx;
+    delete savingMtx;
+  
   std::cout<<"SpreadsheetInstance for: "<<this->pathToSaveFile<<" deconstructed."<<std::endl;
   //TODO
+}
+
+void SpreadsheetInstance::load()
+{
+  
+}
+
+void SpreadsheetInstance::saveToDisk()
+{}
+
+
+//MAster loop of spreadsheet instance
+void SpreadsheetInstance::loop()
+{
+  while(true)
+    {
+      savingMtx->lock();
+      if(!running)
+	{
+	  savingMtx->unlock();
+	  break;
+	}
+      savingMtx->unlock();
+      
+      std::this_thread::sleep_for(std::chrono::milliseconds(100));
+    }
 }
 
 void SpreadsheetInstance::newClientConnected(SocketState * sstate)
@@ -43,8 +88,19 @@ void SpreadsheetInstance::newClientConnected(SocketState * sstate)
   //FAKE SERVER LOOP
   //**************
   std::vector<std::string> * sdata;
-  while(running)
+  while(true)
     {
+      savingMtx->lock();
+      if(!running){
+	savingMtx->unlock();
+	break;
+      }
+      savingMtx->unlock();
+
+      
+            //chrono sleep, prevents 100% processor utilization
+      std::this_thread::sleep_for(std::chrono::milliseconds(50));
+
       if(!sstate->isConnected())
 	break;
 
@@ -52,6 +108,8 @@ void SpreadsheetInstance::newClientConnected(SocketState * sstate)
       
       for(int i = 0;i<sdata->size();i++)
 	{
+	  std::this_thread::sleep_for(std::chrono::milliseconds(50));
+
 	  std::string s = (*sdata)[i];
 	  
 	  std::cout<<"Message Received: \n["<<s<<"]\n"<<std::endl;
@@ -72,18 +130,15 @@ void SpreadsheetInstance::newClientConnected(SocketState * sstate)
 		  std::cout<<"RESPONDED WITH: \n"<<response.dump(1)<<std::endl;
 		}
 	      
-	    }catch (nlohmann::detail::parse_error e){}
+	    }
+	  catch (nlohmann::detail::parse_error e){}
 	  catch(nlohmann::detail::type_error){}
-	  
+	  catch(nlohmann::detail::out_of_range){}
 	}
       
       //free sdata MUST CALL
       delete sdata;
       //sleep thread
-
-
-      //chrono sleep, prevents 100% processor utilization
-      std::this_thread::sleep_for(std::chrono::milliseconds(50));
     }
 
   std::cout<<"Client: "<<sstate->getID()<<" disconnected."<<std::endl;
@@ -95,6 +150,8 @@ void SpreadsheetInstance::newClientConnected(SocketState * sstate)
 void SpreadsheetInstance::shutdown()
 {
   running = false;
+
+  sheetThread->join();
   //TODO
 }
   
