@@ -7,7 +7,7 @@ namespace ServerAdmin.Models
 {
     public class SpreadsheetList
     {
-        public List<Spreadsheet> spreadsheets { get; set; }
+        public List<String> spreadsheets { get; set; }
         public String type { get; set; }
 
         /// <summary>
