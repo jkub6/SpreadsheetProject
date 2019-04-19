@@ -58,6 +58,7 @@
             this.changeHighlightColorToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.toolsToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.serverAdminToolToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.networkConsoleToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.helpToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.AboutToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.highLightToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
@@ -68,7 +69,6 @@
             this.label1 = new System.Windows.Forms.Label();
             this.label2 = new System.Windows.Forms.Label();
             this.pingLabel = new System.Windows.Forms.Label();
-            this.networkConsoleToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.menuStrip1.SuspendLayout();
             this.SuspendLayout();
             // 
@@ -317,7 +317,7 @@
             this.serverAdminToolToolStripMenuItem,
             this.networkConsoleToolStripMenuItem});
             this.toolsToolStripMenuItem.Name = "toolsToolStripMenuItem";
-            this.toolsToolStripMenuItem.Size = new System.Drawing.Size(82, 36);
+            this.toolsToolStripMenuItem.Size = new System.Drawing.Size(82, 38);
             this.toolsToolStripMenuItem.Text = "Tools";
             // 
             // serverAdminToolToolStripMenuItem
@@ -325,19 +325,27 @@
             this.serverAdminToolToolStripMenuItem.Name = "serverAdminToolToolStripMenuItem";
             this.serverAdminToolToolStripMenuItem.Size = new System.Drawing.Size(324, 38);
             this.serverAdminToolToolStripMenuItem.Text = "Server Admin Tool";
+            this.serverAdminToolToolStripMenuItem.Click += new System.EventHandler(this.serverAdminToolToolStripMenuItem_Click);
+            // 
+            // networkConsoleToolStripMenuItem
+            // 
+            this.networkConsoleToolStripMenuItem.Name = "networkConsoleToolStripMenuItem";
+            this.networkConsoleToolStripMenuItem.Size = new System.Drawing.Size(324, 38);
+            this.networkConsoleToolStripMenuItem.Text = "Network Console";
+            this.networkConsoleToolStripMenuItem.Click += new System.EventHandler(this.networkConsoleToolStripMenuItem_Click);
             // 
             // helpToolStripMenuItem
             // 
             this.helpToolStripMenuItem.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
             this.AboutToolStripMenuItem});
             this.helpToolStripMenuItem.Name = "helpToolStripMenuItem";
-            this.helpToolStripMenuItem.Size = new System.Drawing.Size(77, 36);
+            this.helpToolStripMenuItem.Size = new System.Drawing.Size(77, 38);
             this.helpToolStripMenuItem.Text = "Help";
             // 
             // AboutToolStripMenuItem
             // 
             this.AboutToolStripMenuItem.Name = "AboutToolStripMenuItem";
-            this.AboutToolStripMenuItem.Size = new System.Drawing.Size(355, 38);
+            this.AboutToolStripMenuItem.Size = new System.Drawing.Size(179, 38);
             this.AboutToolStripMenuItem.Text = "About";
             this.AboutToolStripMenuItem.Click += new System.EventHandler(this.AboutToolStripMenuItem_Click);
             // 
@@ -411,13 +419,6 @@
             this.pingLabel.TabIndex = 8;
             this.pingLabel.Text = "Ping: [num]ms";
             this.pingLabel.Visible = false;
-            // 
-            // networkConsoleToolStripMenuItem
-            // 
-            this.networkConsoleToolStripMenuItem.Name = "networkConsoleToolStripMenuItem";
-            this.networkConsoleToolStripMenuItem.Size = new System.Drawing.Size(310, 38);
-            this.networkConsoleToolStripMenuItem.Text = "Network Console";
-            this.networkConsoleToolStripMenuItem.Click += new System.EventHandler(this.networkConsoleToolStripMenuItem_Click);
             // 
             // Form1
             // 
