@@ -30,6 +30,79 @@ MasterController::~MasterController()
   std::cout<<"MasterController Deconstructed"<<std::endl;
 }
 
+void MasterController::sendJsonError(SocketState * sstate)
+{
+  nlohmann::json badLoginResponse;
+  badLoginResponse["type"]="error";
+  badLoginResponse["code"]=1;
+  badLoginResponse["source"]="";
+  
+  sstate->socketSendData(badLoginResponse.dump(0));
+}
+
+void MasterController::sendAdminSuccess(SocketState * sstate)
+{
+  nlohmann::json successResponse;
+  successResponse["type"]="Success";
+  sstate->socketSendData(successResponse.dump(0));
+}
+
+void MasterController::admin(SocketState * sstate)
+{
+  //send success that they were validated.
+  sendAdminSuccess(sstate);
+
+  while(sstate->isConnected())
+    {
+      std::string userRequest = sstate->getSingleMessage();// getCommandsToProcess();
+      
+      nlohmann::json newCommand;
+      
+      if(userRequest!="")
+	{
+	  try{
+	    newCommand = nlohmann::json::parse(userRequest);
+	    std::cout<<"JSON:\n"<<newCommand.dump()<<std::endl;
+	    if(newCommand.at("type") == "UserList")
+	      {
+		std::map<std::string,std::string> *users = Utilities::getUserList();
+		nlohmann::json userMessage;
+		
+		for(std::map<std::string,std::string>::iterator it = users->begin();it!=users->end();it++)
+		  {
+		    userMessage["Users"].push_back(it->first);
+		  }
+		
+		std::cout<<"MESSAGE\n\n"<<userMessage.dump(2);
+
+		sstate->socketSendData(userMessage.dump(0));
+		
+	      }else if(newCommand.at("type")=="SpreadsheetList")
+	      {
+		std::vector<std::string> *users = Utilities::getSpreadsheetList();
+		nlohmann::json userMessage;
+		
+		for(std::vector<std::string>::iterator it = users->begin();it!=users->end();it++)
+		  {
+		    userMessage["Sheets"].push_back(*it);
+		  }
+		
+		std::cout<<"MESSAGE\n\n"<<userMessage.dump(2);
+
+		sstate->socketSendData(userMessage.dump(0));
+		
+	      }
+	    
+	    
+	    
+	  }
+	  catch (nlohmann::detail::parse_error e)  {}
+	  catch(nlohmann::detail::type_error){}
+	  catch(nlohmann::detail::out_of_range){}
+	}
+      
+    }  
+}
 
 void MasterController::startServer()
 {
@@ -129,13 +202,7 @@ int MasterController::newClientConnected(int socketID)
 		if(username=="" || password=="" ||usernameSpaceLocation!=std::string::npos||passwordSpaceLocation!=std::string::npos)
 		  {
 		    std::cout<<"Username or Password is empty or contains spaces."<<std::endl;
-		    nlohmann::json badLoginResponse;
-		    badLoginResponse["type"]="error";
-		    badLoginResponse["code"]=1;
-		    badLoginResponse["source"]="";
-		    
-		    sstate->socketSendData(badLoginResponse.dump(0));
-		    //send error message
+		    sendJsonError(sstate);
 		    continue;
 		  }
 
@@ -145,48 +212,30 @@ int MasterController::newClientConnected(int socketID)
 		  }else{
 		  //generate failed response
 		  std::cout<<"Failed to Validate '"<<username<<"'. Sending Error Code...";
-		  nlohmann::json badLoginResponse;
-		  badLoginResponse["type"]="error";
-		  badLoginResponse["code"]=1;
-		  badLoginResponse["source"]="";
-		  
-		  sstate->socketSendData(badLoginResponse.dump(0));
-		  std::cout<<"DONE\n";
+		  sendJsonError(sstate);
 		}
 		
 	      }else if(newCommand.at("type")=="Login")
 	      {
 		std::cout<<"ADMIN CONNECTED"<<std::endl;
+
+		userValidated=true;
+		
 		isAdmin = true;
 		
 	    
 	      }
 	    
 	  }catch (nlohmann::detail::parse_error e)  {
-	    //send bad response again. sloppy code
-	    nlohmann::json badLoginResponse;
-	    std::cout<<"BAD PARSE"<<std::endl;
-	    badLoginResponse["type"]="error";
-	    badLoginResponse["code"]=1;
-	    badLoginResponse["source"]="";
-	    
-	    sstate->socketSendData(badLoginResponse.dump(0));
+	    std::cout<<"JSON Parse Error"<<std::endl;
+	    sendJsonError(sstate);
 	  }catch(nlohmann::detail::type_error){
 	    std::cout<<"Bad Token in JSON"<<std::endl;
-	    nlohmann::json badLoginResponse;
-	    badLoginResponse["type"]="error";
-	    badLoginResponse["code"]=1;
-	    badLoginResponse["source"]="";
-	    
-	    sstate->socketSendData(badLoginResponse.dump(0));
+	    sendJsonError(sstate);
 	  }catch(nlohmann::detail::out_of_range)
 	    {
 	    std::cout<<"Bad Token in JSON"<<std::endl;
-	    nlohmann::json badLoginResponse;
-	    badLoginResponse["type"]="error";
-	    badLoginResponse["code"]=1;
-	    badLoginResponse["source"]="";
-	      
+	    sendJsonError(sstate);
 	    }
 	}
 
@@ -206,7 +255,7 @@ int MasterController::newClientConnected(int socketID)
     this->spreadsheetController->connectedClient(sstate,desiredSheet);}
   else
     {
-      std::cout<<"ADMIN";
+      admin(sstate);
     }
   /*
   //**********

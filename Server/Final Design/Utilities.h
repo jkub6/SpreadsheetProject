@@ -34,8 +34,9 @@ class Utilities{
   
   static void newSpreadsheetInList(std::string name);
   
- private:
   static std::map<std::string,std::string> * getUserList();
+ private:
+
 
   static void saveUsers();
 
