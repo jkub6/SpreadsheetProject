@@ -25,7 +25,8 @@ SpreadsheetController::SpreadsheetController(std::map<int,std::thread*> *threadp
 SpreadsheetController::~SpreadsheetController()
 {
   std::cout<<"SpreadsheetController deconstructed..."<<std::endl;
-  delete this->spreadsheets;
+  if(this->spreadsheets)
+    delete this->spreadsheets;
   //TODO
 }
 

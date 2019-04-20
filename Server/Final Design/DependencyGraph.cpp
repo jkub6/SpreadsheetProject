@@ -179,6 +179,41 @@ void DependencyGraph::ReplaceDependees(string s, vector<string> *newDependees)
 }
 
 
+/*
+ *Will visit all dependencies and see a throw a circle exception if a circular exception exists
+ */
+void DependencyGraph::Visit(string start, string name, vector<string> *visited)
+{
+  visited->push_back(name);
+  for(string n: *GetDependees(name))
+    {
+      if(n == start)
+	{
+	  throw "Circular Dependency";
+	}
+      else if(!(std::find(visited->begin(), visited->end(), n) != visited->end()))
+	{
+	  Visit(start, n, visited);
+	}
+    }
+}
+
+/*
+ *Returns True if a circular dependency exists for cellName
+ */
+bool DependencyGraph::IsCircular(string cellName)
+{
+  vector<string> *visited = new vector<string>();
+  try{
+    Visit(cellName, cellName, visited);
+  }catch(const char* msg){
+    return true;
+  }
+  return false;
+
+}
+
+
 
 /*
 int main()
@@ -265,7 +300,36 @@ int main()
   else
     cout<<"FAIL"<<endl;
 
+   DependencyGraph *DG2 = new DependencyGraph();
+   DG2->AddDependency("a", "b");
+   if(DG2->IsCircular("a"))
+     {
+       cout<<"Fail"<<endl;
+     }
+   else
+     {
+       cout<<"Success"<<endl;
+     }
 
+   DG2->AddDependency("b", "c");
+   if(DG2->IsCircular("a"))
+     {
+       cout<<"Fail"<<endl;
+     }
+   else
+     {
+       cout<<"Success"<<endl;
+     }
+
+   DG2->AddDependency("c", "a");
+   if(DG2->IsCircular("a"))
+     {
+       cout<<"Success"<<endl;
+     }
+   else
+     {
+       cout<<"Fail"<<endl;
+     }
 
   
   

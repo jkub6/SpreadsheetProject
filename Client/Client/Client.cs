@@ -16,6 +16,7 @@ using System.Threading;
 using SpreadsheetUtilities;
 using Newtonsoft.Json.Linq;
 using Newtonsoft.Json;
+using System.Diagnostics;
 
 namespace Client
 {
@@ -145,9 +146,12 @@ namespace Client
                     {
                         Spreadsheet newSpreadsheet = new Spreadsheet();
                         JToken cells = o["spreadsheet"];
-                        foreach (JObject ob in cells.Children<JObject>())
-                            foreach (JProperty p in ob.Properties())
-                                newSpreadsheet.SetContentsOfCell(p.Name, (string)p.Value);
+
+                        var cellDict = JsonConvert.DeserializeObject<Dictionary<string, string>>(cells.ToString());
+
+                        foreach (string name in cellDict.Keys)
+                            newSpreadsheet.SetContentsOfCell(name, cellDict[name]);
+                                
                         foreach (string cellName in spreadsheet.GetNamesOfAllNonemptyCells())
                         {
                             string contents = spreadsheet.GetCellContents(cellName).ToString();
@@ -155,6 +159,7 @@ namespace Client
                                 contents = "=" + contents;
                             newSpreadsheet.SetContentsOfCell(cellName, contents);
                         }
+
                         spreadsheet = newSpreadsheet;
                         FullSendRecieved?.Invoke(this, new EventArgs());
                     }
@@ -167,7 +172,7 @@ namespace Client
                         SpreadsheetsRecieved?.Invoke(this, spreadsheets);
                     }
                 }
-                catch (Exception) { }
+                catch (Exception e) { Debug.WriteLine(e.Message); }
             }
         }
 

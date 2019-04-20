@@ -24,11 +24,14 @@ std::vector<std::string> *GetDependees(std::string s);
 void RemoveDependency(std::string s, std::string t);
  void ReplaceDependents(std::string s, std::vector<std::string> *newDependents);
  void ReplaceDependees(std::string s, std::vector<std::string> *newDependees);
+ bool IsCircular(std::string s);
+ void Visit(std::string start, std::string name, std::vector<std::string> *visited);
   
 private:
 int size;
 std::map<std::string,std::vector<std::string>* > *dependents;
 std::map<std::string,std::vector<std::string>* > *dependees;
+
 };
 
 

@@ -1,3 +1,4 @@
+C:\Users\jkub6\Documents\Dev\repos\SpreadsheetProject\SpreadsheetProject\Client\.vs\Client\lut\0\i\ClientGUI\Debug\ClientGui.exe.config
 C:\Users\jkub6\Documents\Dev\repos\SpreadsheetProject\SpreadsheetProject\Client\.vs\Client\lut\0\i\ClientGUI\Debug\ClientGui.AboutBox1.resources
 C:\Users\jkub6\Documents\Dev\repos\SpreadsheetProject\SpreadsheetProject\Client\.vs\Client\lut\0\i\ClientGUI\Debug\ClientGui.Form1.resources
 C:\Users\jkub6\Documents\Dev\repos\SpreadsheetProject\SpreadsheetProject\Client\.vs\Client\lut\0\i\ClientGUI\Debug\ClientGui.ConnectForm.resources
