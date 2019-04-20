@@ -2,6 +2,7 @@
 #include <iostream>
 #include <exception>
 #include <map>
+#include <fstream>
 
 //Use this command to compile
 // g++ -std=c++11 -I /home/ludwig/cs3505_assignments/finalSpreadsheet/SpreadsheetProject/Server/Server/json/include jsonTester.cpp
@@ -23,7 +24,37 @@ int main()
   
   std::cout<<test.dump()<<std::endl;
 
- for(json::iterator it = test["two"].begin();it!=test["two"].end();it++)
+  std::ofstream o("test.json");
+  o<<test<<std::endl;
+
+  o.close();
+
+  std::ifstream i("test.json");
+  json input;
+  i>>input;
+
+  std::cout<<"INPUT: "<<input.dump(0)<<std::endl;
+
+
+  std::string first = "32";
+  std::string second = "=A3";
+  
+  json testSave;
+  testSave["name"]="test1";
+  testSave["A1"]["value"]="63";
+  testSave["A1"]["history"]=json::array({first,second,"43"});
+  testSave["dep"]["A3"]=json::array({"A1","A4"});
+  testSave["dee"]["A1"]=json::array({"A3"});
+  testSave["dee"]["A4"]=json::array({"A3"});
+  testSave["undo"].push_back({"A1","56"});
+  testSave["undo"].push_back({"A3","=A1"});
+  
+  std::cout<<"\nTEST SAVE: "<<testSave.dump(2)<<std::endl;
+
+  std::ofstream of("save.json");
+  of<<testSave;
+  
+  /* for(json::iterator it = test["two"].begin();it!=test["two"].end();it++)
   {
     json element = json::parse((std::string)it.value());
 
@@ -37,7 +68,7 @@ int main()
 
     
     //    std::cout<<json::parse((std::string)it.value()).begin().value()<<std::endl;;
-  }
+    }*/
 
   
   /*try

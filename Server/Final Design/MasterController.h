@@ -25,6 +25,9 @@ class MasterController
  private:
   ConnectionListener *connectionListener;
   SpreadsheetController *spreadsheetController;
+  void admin(SocketState * sstate);
+  void sendJsonError(SocketState * sstate);
+  void sendAdminSuccess(SocketState * sstate);
   int port;
   bool running;
 };

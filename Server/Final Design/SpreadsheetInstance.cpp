@@ -11,15 +11,14 @@
 #include <ostream>
 #include <mutex>
 
-SpreadsheetInstance::SpreadsheetInstance(std::string pathToSaveFile)
+SpreadsheetInstance::SpreadsheetInstance(std::string pathToSave)
   {
-    pathToSaveFile = pathToSaveFile;
-    dependencyGraph = new DependencyGraph();
-    connectedClients = new std::map<int,SocketState *>();
-    data = new std::map<std::string, std::string>();
-    (*data)["hi"]="wow";
-    usersMtx = new std::mutex();
-    savingMtx = new std::mutex();
+    this->pathToSaveFile = pathToSave;
+    this->dependencyGraph = new DependencyGraph();
+    this->connectedClients = new std::map<int,SocketState *>();
+    this->data = new std::map<std::string, std::string>();
+    this->usersMtx = new std::mutex();
+    this->savingMtx = new std::mutex();
     
     running = true;
     load();
@@ -63,10 +62,7 @@ void SpreadsheetInstance::loop()
 	  break;
 	}
       savingMtx->unlock();
-      
-      //**************
-      //FAKE SERVER LOOP
-      //**************
+
 
       //Iterate through each client, and process commands:
 
@@ -127,10 +123,10 @@ void SpreadsheetInstance::loop()
 	    }
 
 	  delete commandsToProcess;
-	  std::this_thread::sleep_for(std::chrono::milliseconds(50));
+	 
 	  
 	}
-
+      std::this_thread::sleep_for(std::chrono::milliseconds(50));
       //****************
       //REMOVE SOCKET STATES THAT ARE DISCONNECTED:
       //*****************
