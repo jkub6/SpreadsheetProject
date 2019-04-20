@@ -1,72 +1,57 @@
-﻿
-@{
-    ViewData["Title"] = "User List";
-}
-
-@section Head {
-    <title>Spreadsheet - User List</title>
+﻿@section Head {
+    <title>Spreadsheet - List</title>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width">
-    <!--===============================================================================================-->
-    <link rel="icon" type="image/png" href="images/icons/favicon.ico" />
-    <!--===============================================================================================-->
-    <link rel="stylesheet" type="text/css" href="vendor/bootstrap/css/bootstrap.min.css">
-    <!--===============================================================================================-->
-    <link rel="stylesheet" type="text/css" href="fonts/font-awesome-4.7.0/css/font-awesome.min.css">
-    <!--===============================================================================================-->
-    <link rel="stylesheet" type="text/css" href="fonts/iconic/css/material-design-iconic-font.min.css">
-    <!--===============================================================================================-->
-    <link rel="stylesheet" type="text/css" href="vendor/animate/animate.css">
-    <!--===============================================================================================-->
-    <link rel="stylesheet" type="text/css" href="vendor/css-hamburgers/hamburgers.min.css">
-    <!--===============================================================================================-->
-    <link rel="stylesheet" type="text/css" href="vendor/animsition/css/animsition.min.css">
-    <!--===============================================================================================-->
-    <link rel="stylesheet" type="text/css" href="vendor/select2/select2.min.css">
-    <!--===============================================================================================-->
-    <link rel="stylesheet" type="text/css" href="vendor/daterangepicker/daterangepicker.css">
-    <!--===============================================================================================-->
-    <link rel="stylesheet" type="text/css" href="css/util.css">
-    <link rel="stylesheet" type="text/css" href="css/main.css">
-    <!--===============================================================================================-->
+    <link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/1.10.15/css/jquery.dataTables.min.css">
 }
 
-<h2>Index</h2>
-<body>
-    <div class="limiter">
-        <div class="container-login100" style="background-image: url('images/bg-01.jpg');">
-            <div class="wrap-login100">
+@section Scripts {
+    <link rel="stylesheet" href="//code.jquery.com/ui/1.11.4/themes/smoothness/jquery-ui.css">
+    <script src="//code.jquery.com/jquery-1.10.2.js"></script>
+    <script type="text/javascript" charset="utf8" src="https://cdn.datatables.net/1.10.15/js/jquery.dataTables.min.js"></script>
+    <script type="text/javascript">
+        $(document).ready(function () {
+            var table = $("#user-table").DataTable({
+                responsive: true
+            });
+        });
+    </script>
+    <script src="~/js/main.js"></script>
+}
 
-                <div class="col-lg-10">
-                    <h1 class='page-title'>Users</h1>
-                    <table id="user-table" class="display" cellspacing="0">
-                        <thead>
+<body style="color:#e5e5e5;">
+    <div class="limiter">
+        <div class="container-login100" style="background-image: url('@Url.Content("~/images/bg-01.jpg")');">
+            <div class="custom-table">
+                <h1 class='page-title'>Spreadsheets</h1>
+                <table id="user-table" class="display" cellspacing="0">
+                    <thead>
+                        <tr>
+                            <th>Username</th>
+                            <th>Delete</th>
+                        </tr>
+                    </thead>
+                    <tbody style="color:black">
+                        @foreach (var Items in Model)
+                        {
                             <tr>
-                                <th>Users</th>
-                                <th>Delete</th>
+                                <td>@Items.Users</td>
+                                <td>
+                                    <button class="btn btn-danger deleteButton"><i class="glyphicon glyphicon-trash"></i></button>
+                                </td>
                             </tr>
-                        </thead>
-                        <tbody>
-                            @foreach (var Item in Model)
-                            {
-                                <tr>
-                                    <td>@Item.Username</td>
-                                    <td>
-                                        <button class="btn btn-danger deleteButton"><i class="glyphicon glyphicon-trash"></i></button>
-                                    </td>
-                                </tr>
-                            }
-                        </tbody>
-                    </table>
-                </div>
+                        }
+                    </tbody>
+                </table>
 
                 <div style="clear:both"></div>
                 <hr />
                 <div class="form-group">
                     <div style="display: inline-block">
                         <form>
-                            <a class="btn btn-primary" href="@Url.Content("~/UserList/CreateUser")"><i class="glyphicon glyphicon-plus"></i> Add New User</a>
-                            <a class="btn btn-primary" href="@Url.Content("~/Home/SpreadsheetList")"><i class="glyphicon glyphicon-plus"></i> Redirect to Spreadsheet List</a>
+                            <a class="btn btn-outline-success" href="@Url.Content("~/Home/CreateSpread")"><i class="glyphicon glyphicon-plus"></i> Add New Spreadsheet</a>
+                            <a class="btn btn-outline-dark" href="@Url.Content("~/Home/SpreadsheetList")"><i class="glyphicon glyphicon-random"></i> Redirect to Spreadsheet List</a>
+                            <a class="btn btn-outline-danger" href="@Url.Content("~/Home/Logout")"><i class="glyphicon glyphicon-user"></i> Sign out</a>
                         </form>
                     </div>
                 </div>
@@ -74,5 +59,3 @@
         </div>
     </div>
 </body>
-
-

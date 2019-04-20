@@ -2,30 +2,7 @@
     <title>Spreadsheet - List</title>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width">
-    <!--===============================================================================================-->
-    <link rel="icon" type="image/png" href="~/images/icons/favicon.ico" />
-    <!--===============================================================================================-->
-    <link rel="stylesheet" type="text/css" href="~/vendor/bootstrap/css/bootstrap.min.css">
-    <!--===============================================================================================-->
-    <link rel="stylesheet" type="text/css" href="~/fonts/font-awesome-4.7.0/css/font-awesome.min.css">
-    <!--===============================================================================================-->
-    <link rel="stylesheet" type="text/css" href="~/fonts/iconic/css/material-design-iconic-font.min.css">
-    <!--===============================================================================================-->
-    <link rel="stylesheet" type="text/css" href="~/vendor/animate/animate.css">
-    <!--===============================================================================================-->
-    <link rel="stylesheet" type="text/css" href="~/vendor/css-hamburgers/hamburgers.min.css">
-    <!--===============================================================================================-->
-    <link rel="stylesheet" type="text/css" href="~/vendor/animsition/css/animsition.min.css">
-    <!--===============================================================================================-->
-    <link rel="stylesheet" type="text/css" href="~/vendor/select2/select2.min.css">
-    <!--===============================================================================================-->
-    <link rel="stylesheet" type="text/css" href="~/vendor/daterangepicker/daterangepicker.css">
-    <!--===============================================================================================-->
-    <link rel="stylesheet" type="text/css" href="~/css/util.css">
-    <link rel="stylesheet" type="text/css" href="~/css/main.css">
-    <!--===============================================================================================-->
     <link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/1.10.15/css/jquery.dataTables.min.css">
-    <link href="~/css/chosen.css" rel="stylesheet" />
 }
 
 @section Scripts {
@@ -39,58 +16,42 @@
             });
         });
     </script>
-    <!--===============================================================================================-->
-    <script src="~/vendor/jquery/jquery-3.2.1.min.js"></script>
-    <!--===============================================================================================-->
-    <script src="~/vendor/animsition/js/animsition.min.js"></script>
-    <!--===============================================================================================-->
-    <script src="~/vendor/bootstrap/js/popper.js"></script>
-    <script src="~/vendor/bootstrap/js/bootstrap.min.js"></script>
-    <!--===============================================================================================-->
-    <script src="~/vendor/select2/select2.min.js"></script>
-    <!--===============================================================================================-->
-    <script src="~/vendor/daterangepicker/moment.min.js"></script>
-    <script src="~/vendor/daterangepicker/daterangepicker.js"></script>
-    <!--===============================================================================================-->
-    <script src="~/vendor/countdowntime/countdowntime.js"></script>
-    <!--===============================================================================================-->
     <script src="~/js/main.js"></script>
 }
 
-<body>
+<body style="color:#e5e5e5;">
     <div class="limiter">
         <div class="container-login100" style="background-image: url('@Url.Content("~/images/bg-01.jpg")');">
-            <div class="wrap-table">
-                <div class="col-lg-10">
-                    <h1 class='page-title'>Spreadsheets</h1>
-                    <table id="spreadsheet-table" class="display" cellspacing="0">
-                        <thead>
+            <div class="custom-table">
+                <h1 class='page-title'>Spreadsheets</h1>
+                <table id="spreadsheet-table" class="display" cellspacing="0">
+                    <thead>
+                        <tr>
+                            <th>Spreadsheet Name</th>
+                            <th>Delete</th>
+                        </tr>
+                    </thead>
+                    <tbody style="color:black">
+                        @foreach (var Items in Model.spreadsheets)
+                        {
                             <tr>
-                                <th>Spreadsheet Name</th>
-                                <th>Delete</th>
+                                <td>@Items</td>
+                                <td>
+                                    <button class="btn btn-danger deleteButton"><i class="glyphicon glyphicon-trash"></i></button>
+                                </td>
                             </tr>
-                        </thead>
-                        <tbody>
-                            @foreach (var Items in Model.spreadsheets)
-                            {
-                                <tr>
-                                    <td>@Items</td>
-                                    <td>
-                                        <button class="btn btn-danger deleteButton"><i class="glyphicon glyphicon-trash"></i></button>
-                                    </td>
-                                </tr>
-                            }
-                        </tbody>
-                    </table>
-                </div>
+                        }
+                    </tbody>
+                </table>
 
                 <div style="clear:both"></div>
                 <hr />
                 <div class="form-group">
                     <div style="display: inline-block">
                         <form>
-                            <a class="btn btn-primary" href="@Url.Content("~/Home/CreateSpread")"><i class="glyphicon glyphicon-plus"></i> Add New Spreadsheet</a>
-                            <a class="btn btn-primary" href="@Url.Content("~/UserList")"><i class="glyphicon glyphicon-plus"></i> Redirect to User List</a>
+                            <a class="btn btn-outline-success" href="@Url.Content("~/Home/CreateSpread")"><i class="glyphicon glyphicon-plus"></i> Add New Spreadsheet</a>
+                            <a class="btn btn-outline-dark" href="@Url.Content("~/UserList")"><i class="glyphicon glyphicon-random"></i> Redirect to User List</a>
+                            <a class="btn btn-outline-danger" href="@Url.Content("~/Home/Logout")"><i class="glyphicon glyphicon-user"></i> Sign out</a>
                         </form>
                     </div>
                 </div>

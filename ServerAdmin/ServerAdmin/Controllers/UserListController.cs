@@ -16,7 +16,20 @@ namespace ServerAdmin.Controllers
         private readonly TcpClient tcpClient = new TcpClient();
         public IActionResult Index()
         {
-            List<User> users = new List<User>();
+            User currentUser;
+            var sessionVar = HttpContext.Session.GetString("CurrentUser");
+            if (sessionVar != null)
+                currentUser = JsonConvert.DeserializeObject<User>((String)sessionVar);
+            else
+            {
+                HttpContext.Session.SetString("ErrorMessage", "Session Timed Out");
+                return RedirectToAction("Index");
+            }
+
+            String response = ServerComm.ConnectToServer(tcpClient, currentUser.IpAddress, currentUser.Username, currentUser.Password, "UserList");
+
+
+
             ViewBag.ErrorMessage = HttpContext.Session.GetString("ErrorMessage");
             if (ViewBag.ErrorMessage != null)
                 return RedirectToAction("Index", "Home");
@@ -95,6 +108,28 @@ namespace ServerAdmin.Controllers
             {
                 HttpContext.Session.SetString("CurrentUser", JsonConvert.SerializeObject(currentUser));
                 return RedirectToAction("SpreadsheetList", "Home");
+            }
+        }
+
+
+        /// <summary>
+        /// Parses the json string for the spreadsheet list
+        /// </summary>
+        /// <param name="json"></param>
+        private UserList ReadUserList(String json)
+        {
+            try
+            {
+                //Parses the json here
+                UserList value = JsonConvert.DeserializeObject<SpreadsheetList>(json);
+                if (value.type == "list")
+                    return value;
+                else
+                    throw new Exception();
+            }
+            catch (Exception e)
+            {
+                return null;
             }
         }
     }
