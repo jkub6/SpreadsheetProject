@@ -36,7 +36,7 @@
                         <tr>
                             <td>@Items</td>
                             <td>
-                                <button class="btn btn-danger deleteButton"><i class="glyphicon glyphicon-trash"></i></button>
+                                <a class="btn btn-danger deleteButton" href="@Url.Content("~/Home/DeleteSpread?spreadsheetName=")@Items"><i class="glyphicon glyphicon-trash"></i></a>
                             </td>
                         </tr>
                     }
