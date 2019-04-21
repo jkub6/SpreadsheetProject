@@ -161,7 +161,7 @@ int MasterController::newClientConnected(int socketID)
 
 		for(std::map<std::string,std::string>::iterator it = userList->begin(); it!=userList->end();it++)
 		  {
-		    response["sheets"].push_back(it->first);
+		    response["users"].push_back(it->first);
 		  }
 		
 		std::cout<<"SPREAD\n"<<response.dump(1);
@@ -170,15 +170,19 @@ int MasterController::newClientConnected(int socketID)
 	      }else if(newCommand["type"]=="CreateUser")
 	      {
 		std::cout<<"CREATE USER"<<std::endl;
+		sstate->socketSendData("success");
 	      }else if(newCommand["type"]=="DeleteUser")
 	      {
 		std::cout<<"DELETE USER"<<std::endl;
+		sstate->socketSendData("success");
 	      }else if(newCommand["type"]=="CreateSpread")
 	      {
 		std::cout<<"CREATE SPREAD"<<std::endl;
+		sstate->socketSendData("success");
 	      }else if(newCommand["type"]=="DeleteSpread")
 	      {
-		std::cout<<"DELETE SPREAD"<<std::endl;	
+		std::cout<<"DELETE SPREAD"<<std::endl;
+		sstate->socketSendData("success");
 	      }else if(newCommand["type"]=="SpreadsheetList")
 	      {
 		std::cout<<"SPREADSHEET LIST"<<std::endl;
