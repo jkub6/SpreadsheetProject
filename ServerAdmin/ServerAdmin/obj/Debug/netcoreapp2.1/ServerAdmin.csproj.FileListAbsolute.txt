@@ -16,7 +16,6 @@ C:\Users\aaron\Documents\CodeDirectories\Spreadsheet\ServerAdmin\ServerAdmin\obj
 C:\Users\aaron\Documents\CodeDirectories\Spreadsheet\ServerAdmin\ServerAdmin\obj\Debug\netcoreapp2.1\ServerAdmin.RazorCoreGenerate.cache
 C:\Users\aaron\Documents\CodeDirectories\Spreadsheet\ServerAdmin\ServerAdmin\obj\Debug\netcoreapp2.1\Razor\Views\Home\Index.g.cshtml.cs
 C:\Users\aaron\Documents\CodeDirectories\Spreadsheet\ServerAdmin\ServerAdmin\obj\Debug\netcoreapp2.1\Razor\Views\Shared\Error.g.cshtml.cs
-C:\Users\aaron\Documents\CodeDirectories\Spreadsheet\ServerAdmin\ServerAdmin\obj\Debug\netcoreapp2.1\Razor\Views\Shared\_CookieConsentPartial.g.cshtml.cs
 C:\Users\aaron\Documents\CodeDirectories\Spreadsheet\ServerAdmin\ServerAdmin\obj\Debug\netcoreapp2.1\Razor\Views\Shared\_Layout.g.cshtml.cs
 C:\Users\aaron\Documents\CodeDirectories\Spreadsheet\ServerAdmin\ServerAdmin\obj\Debug\netcoreapp2.1\Razor\Views\Shared\_ValidationScriptsPartial.g.cshtml.cs
 C:\Users\aaron\Documents\CodeDirectories\Spreadsheet\ServerAdmin\ServerAdmin\obj\Debug\netcoreapp2.1\Razor\Views\_ViewImports.g.cshtml.cs
@@ -61,3 +60,6 @@ C:\Users\Aaron Goh\Documents\SpreadsheetProject\ServerAdmin\ServerAdmin\obj\Debu
 C:\Users\Aaron Goh\Documents\SpreadsheetProject\ServerAdmin\ServerAdmin\obj\Debug\netcoreapp2.1\ServerAdmin.RazorTargetAssemblyInfo.cs
 C:\Users\Aaron Goh\Documents\SpreadsheetProject\ServerAdmin\ServerAdmin\obj\Debug\netcoreapp2.1\ServerAdmin.Views.pdb
 C:\Users\Aaron Goh\Documents\SpreadsheetProject\ServerAdmin\ServerAdmin\obj\Debug\netcoreapp2.1\ServerAdmin.csproj.CopyComplete
+C:\Users\aaron\Documents\CodeDirectories\Spreadsheet\ServerAdmin\ServerAdmin\obj\Debug\netcoreapp2.1\Razor\Views\Home\CreateSpread.g.cshtml.cs
+C:\Users\aaron\Documents\CodeDirectories\Spreadsheet\ServerAdmin\ServerAdmin\obj\Debug\netcoreapp2.1\Razor\Views\UserList\CreateUser.g.cshtml.cs
+C:\Users\aaron\Documents\CodeDirectories\Spreadsheet\ServerAdmin\ServerAdmin\obj\Debug\netcoreapp2.1\Razor\Views\UserList\Index.g.cshtml.cs

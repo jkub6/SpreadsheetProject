@@ -16,6 +16,7 @@ namespace ServerAdmin.Controllers
         private readonly TcpClient tcpClient = new TcpClient();
         public IActionResult Index()
         {
+            //Makes sure that the user has not timed out
             User currentUser;
             var sessionVar = HttpContext.Session.GetString("CurrentUser");
             if (sessionVar != null)
@@ -23,17 +24,22 @@ namespace ServerAdmin.Controllers
             else
             {
                 HttpContext.Session.SetString("ErrorMessage", "Session Timed Out");
-                return RedirectToAction("Index");
+                return RedirectToAction("Index", "Home");
             }
 
+
+            //Connect to server and read out the data
             String response = ServerComm.ConnectToServer(tcpClient, currentUser.IpAddress, currentUser.Username, currentUser.Password, "UserList");
             UserList users = ReadUserList(response);
-
-            ViewBag.ErrorMessage = HttpContext.Session.GetString("ErrorMessage");
-            if (ViewBag.ErrorMessage != null)
-                return RedirectToAction("Index", "Home");
-            else
+            if (users != null)
                 return View(users);
+
+            //If users is null, means server gave the wrong data for gui to read
+            else
+            {
+                HttpContext.Session.SetString("ErrorMessage", "Invalid Data from Server");
+                return RedirectToAction("Index", "Home");
+            }
         }
 
         /// <summary>

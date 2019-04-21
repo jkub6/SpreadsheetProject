@@ -231,6 +231,10 @@ iframe {
 /*------------------------------------------------------------------
 [ Form ]*/
 
+.custom-form {
+    color: white !important;
+}
+
 .login100-form {
   width: 100%;
 }
