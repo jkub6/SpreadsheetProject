@@ -75,6 +75,7 @@ namespace ServerAdmin.Controllers
             else
             {
                 HttpContext.Session.SetString("CurrentUser", JsonConvert.SerializeObject(currentUser));
+                //Return to the user list here
                 return RedirectToAction("Index");
             }
         }
@@ -112,13 +113,14 @@ namespace ServerAdmin.Controllers
             else
             {
                 HttpContext.Session.SetString("CurrentUser", JsonConvert.SerializeObject(currentUser));
+                //Return to the user list here
                 return RedirectToAction("Index");
             }
         }
 
 
         /// <summary>
-        /// Parses the json string for the spreadsheet list
+        /// Parses the json string for the user list
         /// </summary>
         /// <param name="json"></param>
         private UserList ReadUserList(String json)
