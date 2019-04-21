@@ -40,69 +40,6 @@ void MasterController::sendJsonError(SocketState * sstate)
   sstate->socketSendData(badLoginResponse.dump(0));
 }
 
-void MasterController::sendAdminSuccess(SocketState * sstate)
-{
-  nlohmann::json successResponse;
-  successResponse["type"]="Success";
-  sstate->socketSendData(successResponse.dump(0));
-}
-
-void MasterController::admin(SocketState * sstate)
-{
-  //send success that they were validated.
-  sendAdminSuccess(sstate);
-
-  while(sstate->isConnected())
-    {
-      std::string userRequest = sstate->getSingleMessage();// getCommandsToProcess();
-      
-      nlohmann::json newCommand;
-      
-      if(userRequest!="")
-	{
-	  try{
-	    newCommand = nlohmann::json::parse(userRequest);
-	    std::cout<<"JSON:\n"<<newCommand.dump()<<std::endl;
-	    if(newCommand.at("type") == "UserList")
-	      {
-		std::map<std::string,std::string> *users = Utilities::getUserList();
-		nlohmann::json userMessage;
-		
-		for(std::map<std::string,std::string>::iterator it = users->begin();it!=users->end();it++)
-		  {
-		    userMessage["Users"].push_back(it->first);
-		  }
-		
-		std::cout<<"MESSAGE\n\n"<<userMessage.dump(2);
-
-		sstate->socketSendData(userMessage.dump(0));
-		
-	      }else if(newCommand.at("type")=="SpreadsheetList")
-	      {
-		std::vector<std::string> *users = Utilities::getSpreadsheetList();
-		nlohmann::json userMessage;
-		
-		for(std::vector<std::string>::iterator it = users->begin();it!=users->end();it++)
-		  {
-		    userMessage["Sheets"].push_back(*it);
-		  }
-		
-		std::cout<<"MESSAGE\n\n"<<userMessage.dump(2);
-
-		sstate->socketSendData(userMessage.dump(0));
-		
-	      }
-	    
-	    
-	    
-	  }
-	  catch (nlohmann::detail::parse_error e)  {}
-	  catch(nlohmann::detail::type_error){}
-	  catch(nlohmann::detail::out_of_range){}
-	}
-      
-    }  
-}
 
 void MasterController::startServer()
 {
@@ -167,16 +104,12 @@ int MasterController::newClientConnected(int socketID)
   //*********************
 
   bool userValidated = false;
-  bool isAdmin = false;
-
 
   std::string desiredSheet = "";
   
   while(!userValidated)
     {
 
-
-      
       if(!sstate->isConnected())
 	break;
       
@@ -218,24 +151,63 @@ int MasterController::newClientConnected(int socketID)
 	      }else if(newCommand.at("type")=="Login")
 	      {
 		std::cout<<"ADMIN CONNECTED"<<std::endl;
+		//todo
+		sstate->socketSendData("success");
+	      }else if(newCommand.at("type")=="UserList")
+	      {
+		std::map<std::string,std::string> *userList = Utilities::getUserList();
+		nlohmann::json response;
+		response["type"]="user";
 
-		userValidated=true;
+		for(std::map<std::string,std::string>::iterator it = userList->begin(); it!=userList->end();it++)
+		  {
+		    response["sheets"].push_back(it->first);
+		  }
 		
-		isAdmin = true;
+		std::cout<<"SPREAD\n"<<response.dump(1);
 		
-	    
+		sstate->socketSendData(response.dump(0));
+	      }else if(newCommand["type"]=="CreateUser")
+	      {
+		std::cout<<"CREATE USER"<<std::endl;
+	      }else if(newCommand["type"]=="DeleteUser")
+	      {
+		std::cout<<"DELETE USER"<<std::endl;
+	      }else if(newCommand["type"]=="CreateSpread")
+	      {
+		std::cout<<"CREATE SPREAD"<<std::endl;
+	      }else if(newCommand["type"]=="DeleteSpread")
+	      {
+		std::cout<<"DELETE SPREAD"<<std::endl;	
+	      }else if(newCommand["type"]=="SpreadsheetList")
+	      {
+		std::cout<<"SPREADSHEET LIST"<<std::endl;
+		std::vector<std::string> * list = Utilities::getSpreadsheetList();
+
+		nlohmann::json response;
+		response["type"]="spread";
+
+		for(std::vector<std::string>::iterator it = list->begin();it!=list->end();it++)
+		  {
+		    response["Sheets"].push_back(*it);
+		  }
+
+		std::cout<<"Spread List:\n"<<response.dump(1);
+		sstate->socketSendData(response.dump(0));
 	      }
 	    
-	  }catch (nlohmann::detail::parse_error e)  {
-	    std::cout<<"JSON Parse Error"<<std::endl;
-	    sendJsonError(sstate);
-	  }catch(nlohmann::detail::type_error){
-	    std::cout<<"Bad Token in JSON"<<std::endl;
-	    sendJsonError(sstate);
-	  }catch(nlohmann::detail::out_of_range)
+	  }catch (nlohmann::detail::parse_error e)
 	    {
-	    std::cout<<"Bad Token in JSON"<<std::endl;
-	    sendJsonError(sstate);
+	      std::cout<<"JSON Parse Error"<<std::endl;
+	      sendJsonError(sstate);
+	    }catch(nlohmann::detail::type_error)
+	    {
+	      std::cout<<"Bad Token in JSON"<<std::endl;
+	      sendJsonError(sstate);
+	    }catch(nlohmann::detail::out_of_range)
+	    {
+	      std::cout<<"Bad Token in JSON"<<std::endl;
+	      sendJsonError(sstate);
 	    }
 	}
 
@@ -251,98 +223,8 @@ int MasterController::newClientConnected(int socketID)
   //TRANSFER SOCKETSTATE TO SPREADSHEETCONTROLLER
   //**************************
 
-  if(!isAdmin){
-    this->spreadsheetController->connectedClient(sstate,desiredSheet);}
-  else
-    {
-      admin(sstate);
-    }
-  /*
-  //**********
-  //FAKE FULL SEND TEST DELETE LATER
-  //***************
-  nlohmann::json fullSend;
-
-  fullSend["type"]="full send";
-  fullSend["spreadsheet"]=nlohmann::json::object();
-
-  sstate->socketSendData(fullSend.dump(0));
+  this->spreadsheetController->connectedClient(sstate,desiredSheet);
   
-  std::cout<<"Full send sent"<<std::endl;
-  //**************
-  //FAKE SERVER LOOP
-  //**************
-  
-  while(running && userValidated)
-    {
-      if(!sstate->isConnected())
-	break;
-
-      sdata = sstate->getCommandsToProcess();
-      
-      for(int i = 0;i<sdata->size();i++)
-	{
-	  std::string s = (*sdata)[i];
-	  
-	  std::cout<<"New Message: \n["<<s<<"]\n"<<std::endl;
-
-	  nlohmann::json echoMsg;
-	  
-	  try
-	    {
-	      echoMsg = nlohmann::json::parse(s);
-
-	      if(echoMsg["type"]=="edit")
-		{
-		  nlohmann::json response;
-		  response["type"]="full send";
-		  response["spreadsheet"][(std::string)echoMsg["cell"]]=echoMsg["value"];
-
-		  sstate->socketSendData(response.dump(0));
-		  std::cout<<"\n\nRESPONDED WITH: \n"<<response.dump(1)<<std::endl;
-		}
-	      
-	    }catch (nlohmann::detail::parse_error e){}
-	  catch(nlohmann::detail::type_error){}
-	  
-	}
-      
-      //free sdata MUST CALL
-      delete sdata;
-      //sleep thread
-
-
-      //chrono sleep, prevents 100% processor utilization
-      std::this_thread::sleep_for(std::chrono::milliseconds(50));
-    }
-  
-
-  //      std::string remaining = sstate->getBuffer();
-
-      /*    nlohmann::json newCommand;
-
-      try{
-      if(sdata->size()>0)
-	newCommand = nlohmann::json::parse((*sdata)[0]);
-
-      }catch (nlohmann::detail::parse_error e){}
-      
-      std::cout<<"HI: "<<newCommand["hi"]<<std::endl;*/
-  /*  std::cout<<"\nNew Message From: "<<sstate->getID()<<".\nFull messages:\n"<<std::endl;
-      for(int i = 0;i<sdata->size();i++)
-	{
-	  std::cout<<"["<<(*sdata)[i]<<"]\n";
-	}
-
-      std::cout<<"Remaining Message:\n\n"<<remaining;
-      
-      
-      }
-  std::cout<<"Client: "<<sstate->getID()<<" disconnected."<<std::endl;
-  
-  threadpool->erase(sstate->getID());
-
-*/
   return 0;
 }
 
