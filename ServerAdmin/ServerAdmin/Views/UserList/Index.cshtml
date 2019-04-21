@@ -32,10 +32,10 @@
                         </tr>
                     </thead>
                     <tbody style="color:black">
-                        @foreach (var Items in Model)
+                        @foreach (var Items in Model.users)
                         {
                             <tr>
-                                <td>@Items.Users</td>
+                                <td>@Items</td>
                                 <td>
                                     <button class="btn btn-danger deleteButton"><i class="glyphicon glyphicon-trash"></i></button>
                                 </td>

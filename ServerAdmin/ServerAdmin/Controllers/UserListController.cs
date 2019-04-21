@@ -75,7 +75,7 @@ namespace ServerAdmin.Controllers
             else
             {
                 HttpContext.Session.SetString("CurrentUser", JsonConvert.SerializeObject(currentUser));
-                return RedirectToAction("SpreadsheetList", "Home");
+                return RedirectToAction("Index");
             }
         }
 
@@ -112,7 +112,7 @@ namespace ServerAdmin.Controllers
             else
             {
                 HttpContext.Session.SetString("CurrentUser", JsonConvert.SerializeObject(currentUser));
-                return RedirectToAction("SpreadsheetList", "Home");
+                return RedirectToAction("Index");
             }
         }
 

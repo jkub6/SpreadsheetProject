@@ -55,7 +55,7 @@ namespace ServerAdmin.Controllers
                 json = ServerComm.ConnectToServer(tcpClient, ipAddress, username, password, "Login");
 
             //If json is not empty, means that it can go to the spreadsheet list without issue
-            if (!json.Contains("Error"))
+            if (!json.Substring(0,5).Contains("Error"))
             {
                 HttpContext.Session.SetString("CurrentUser", JsonConvert.SerializeObject(currentUser));
                 return RedirectToAction("SpreadsheetList", new { currentUser = currentUser });
@@ -98,7 +98,7 @@ namespace ServerAdmin.Controllers
                 return RedirectToAction("Index");
             }
   
-            if (!response.Contains("Error"))
+            if (!response.Substring(0, 5).Contains("Error"))
             {
                 //Reads the JSON
                 spreadsheetList = ReadSpreadsheetList(response);
@@ -145,7 +145,7 @@ namespace ServerAdmin.Controllers
         public IActionResult CreateSpread(User currentUser, Spreadsheet spread)
         {
             String response = ServerComm.ConnectToServer(tcpClient, currentUser.IpAddress, spread.Name, null, "CreateSpread");
-            if (response.Contains("Error"))
+            if (response.Substring(0, 5).Contains("Error"))
             {
                 HttpContext.Session.SetString("ErrorMessage", "Authentication Error: Redirecting to Login");
                 return RedirectToAction("Index");
@@ -179,7 +179,7 @@ namespace ServerAdmin.Controllers
         public IActionResult DeleteSpread(User currentUser, Spreadsheet spread)
         {
             string response = ServerComm.ConnectToServer(tcpClient, currentUser.IpAddress, spread.Name, null, "DeleteSpread");
-            if (response.Contains("Error"))
+            if (response.Substring(0, 5).Contains("Error"))
             {
                 HttpContext.Session.SetString("ErrorMessage", "Authentication Error: Redirecting to Login");
                 return RedirectToAction("Index");
@@ -208,7 +208,7 @@ namespace ServerAdmin.Controllers
             {
                 //Parses the json here
                 SpreadsheetList value = JsonConvert.DeserializeObject<SpreadsheetList>(json);
-                if (value.type == "list")
+                if (value.type == "spread")
                     return value;
                 else
                     throw new Exception();
