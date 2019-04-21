@@ -97,7 +97,7 @@ namespace ServerAdmin.Controllers
                 HttpContext.Session.SetString("ErrorMessage", "Error Occured, Redirecting to Sign In");
                 return RedirectToAction("Index");
             }
-
+  
             if (!response.Contains("Error"))
             {
                 //Reads the JSON
@@ -185,6 +185,17 @@ namespace ServerAdmin.Controllers
                 return RedirectToAction("Index");
             }
             return RedirectToAction("SpreadsheetList", new { currentUser });
+        }
+
+        /// <summary>
+        /// Log out the user
+        /// </summary>
+        /// <returns></returns>
+        [HttpGet]
+        public IActionResult Logout()
+        {
+            HttpContext.Session.Clear();
+            return RedirectToAction("Index");
         }
 
         /// <summary>

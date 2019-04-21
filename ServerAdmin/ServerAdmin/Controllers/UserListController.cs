@@ -27,8 +27,7 @@ namespace ServerAdmin.Controllers
             }
 
             String response = ServerComm.ConnectToServer(tcpClient, currentUser.IpAddress, currentUser.Username, currentUser.Password, "UserList");
-
-
+            UserList users = ReadUserList(response);
 
             ViewBag.ErrorMessage = HttpContext.Session.GetString("ErrorMessage");
             if (ViewBag.ErrorMessage != null)
@@ -121,8 +120,8 @@ namespace ServerAdmin.Controllers
             try
             {
                 //Parses the json here
-                UserList value = JsonConvert.DeserializeObject<SpreadsheetList>(json);
-                if (value.type == "list")
+                UserList value = JsonConvert.DeserializeObject<UserList>(json);
+                if (value.type == "user")
                     return value;
                 else
                     throw new Exception();
