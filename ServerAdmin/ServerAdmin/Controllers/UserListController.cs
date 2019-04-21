@@ -85,7 +85,7 @@ namespace ServerAdmin.Controllers
             }
 
             //If user just wants to cancel and return to list of users 
-            if (submitAction == "Cancel")
+            if (submitAction == "Return")
                 return RedirectToAction("Index");
             else
             {

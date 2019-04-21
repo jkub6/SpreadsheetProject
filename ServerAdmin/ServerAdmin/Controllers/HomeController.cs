@@ -163,7 +163,7 @@ namespace ServerAdmin.Controllers
             }
 
             //If user just wants to cancel and return to spreadsheet list
-            if (submitAction == "Cancel")
+            if (submitAction == "Return")
                 return RedirectToAction("SpreadsheetList", new { currentUser });
             else
             {
