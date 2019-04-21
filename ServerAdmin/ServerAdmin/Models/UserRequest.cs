@@ -10,6 +10,7 @@ namespace ServerAdmin.Models
         public string username { get; set; }
         public string password { get; set; }
         public string role { get; set; }
+        public string spreadsheet { get; set; }
 
         //Login, CreateUser, DeleteUser, CreateSpread, DeleteSpread
         public string type { get; set; }

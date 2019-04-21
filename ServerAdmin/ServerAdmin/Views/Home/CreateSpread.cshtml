@@ -19,7 +19,7 @@
             <form method="post">
                 <div class="form-group">
                     <label for="spreadsheetName">Spreadsheet Name</label>
-                    <input type="text" class="form-control" id="spreadsheetName" placeholder="Spreadsheet Name">
+                    <input type="text" class="form-control" name="spreadsheetName" id="spreadsheetName" placeholder="Spreadsheet Name">
                 </div>
                 <button class="btn btn-primary" type="submit" name="submitAction" value="Save" onclick="window.location.href='@Url.Content("~/Home/CreateSpread")'"><i class="glyphicon glyphicon-plus"></i> Save & Return to Spreadsheet List</button>
                 <button class="btn btn-info" type="submit" name="submitAction" value="SaveAndAdd" onclick="window.location.href='@Url.Content("~/Home/CreateSpread")'"><i class="glyphicon glyphicon-plus"></i> Save & Add New Spreadsheet</button>
