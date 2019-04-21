@@ -128,6 +128,15 @@ namespace ServerAdmin.Controllers
         [HttpGet]
         public IActionResult CreateSpread(User currentUser)
         {
+            var sessionVar = HttpContext.Session.GetString("CurrentUser");
+            if (sessionVar != null)
+                currentUser = JsonConvert.DeserializeObject<User>((String)sessionVar);
+            else
+            {
+                HttpContext.Session.SetString("ErrorMessage", "Session Timed Out");
+                return RedirectToAction("Index");
+            }
+
             ViewBag.ErrorMessage = HttpContext.Session.GetString("ErrorMessage");
             if (ViewBag.ErrorMessage != null)
                 return RedirectToAction("Index");
@@ -142,16 +151,37 @@ namespace ServerAdmin.Controllers
         /// <param name="spread"></param>
         /// <returns></returns>
         [HttpPost]
-        public IActionResult CreateSpread(User currentUser, Spreadsheet spread)
+        public IActionResult CreateSpread(User currentUser, string spreadsheetName, string submitAction)
         {
-            String response = ServerComm.ConnectToServer(tcpClient, currentUser.IpAddress, spread.Name, null, "CreateSpread");
-            if (response.Substring(0, 5).Contains("Error"))
+            var sessionVar = HttpContext.Session.GetString("CurrentUser");
+            if (sessionVar != null)
+                currentUser = JsonConvert.DeserializeObject<User>((String)sessionVar);
+            else
             {
-                HttpContext.Session.SetString("ErrorMessage", "Authentication Error: Redirecting to Login");
+                HttpContext.Session.SetString("ErrorMessage", "Session Timed Out");
                 return RedirectToAction("Index");
             }
 
-            return RedirectToAction("SpreadsheetList", new { currentUser });
+            //If user just wants to cancel and return to spreadsheet list
+            if (submitAction == "Cancel")
+                return RedirectToAction("SpreadsheetList", new { currentUser });
+            else
+            {
+                String response = ServerComm.ConnectToServer(tcpClient, currentUser.IpAddress, spreadsheetName, null, "CreateSpread");
+                //If there is a bug
+                if (response.Substring(0, 5).Contains("Error"))
+                {
+                    HttpContext.Session.SetString("ErrorMessage", "Authentication Error: Redirecting to Login");
+                    return RedirectToAction("Index");
+                }
+
+                //Case when user wants to create another spreadsheet
+                if (submitAction == "SaveAndAdd")
+                    return RedirectToAction("CreateSpread");
+                //Case where the user just wants to save and return to list
+                else
+                    return RedirectToAction("SpreadsheetList", new { currentUser });
+            }
         }
 
         /// <summary>
@@ -160,25 +190,23 @@ namespace ServerAdmin.Controllers
         /// <param name="currentUser"></param>
         /// <returns></returns>
         [HttpGet]
-        public IActionResult DeleteSpread(User currentUser)
+        public IActionResult DeleteSpread(User currentUser, String spreadsheetName)
         {
-            ViewBag.ErrorMessage = HttpContext.Session.GetString("ErrorMessage");
-            if (ViewBag.ErrorMessage != null)
+
+            var sessionVar = HttpContext.Session.GetString("CurrentUser");
+            if (sessionVar != null)
+                currentUser = JsonConvert.DeserializeObject<User>((String)sessionVar);
+            else
+            {
+                HttpContext.Session.SetString("ErrorMessage", "Session Timed Out");
                 return RedirectToAction("Index");
+            }
 
-            return View();
-        }
+            //Counts for spreadsheet that has empty character
+            if (spreadsheetName == null)
+                spreadsheetName = "";
 
-        /// <summary>
-        /// Post call to delete Spreadsheet
-        /// </summary>
-        /// <param name="currentUser"></param>
-        /// <param name="spread"></param>
-        /// <returns></returns>
-        [HttpPost]
-        public IActionResult DeleteSpread(User currentUser, Spreadsheet spread)
-        {
-            string response = ServerComm.ConnectToServer(tcpClient, currentUser.IpAddress, spread.Name, null, "DeleteSpread");
+            string response = ServerComm.ConnectToServer(tcpClient, currentUser.IpAddress, spreadsheetName, null, "DeleteSpread");
             if (response.Substring(0, 5).Contains("Error"))
             {
                 HttpContext.Session.SetString("ErrorMessage", "Authentication Error: Redirecting to Login");
@@ -208,7 +236,7 @@ namespace ServerAdmin.Controllers
             {
                 //Parses the json here
                 SpreadsheetList value = JsonConvert.DeserializeObject<SpreadsheetList>(json);
-                if (value.type == "spread")
+                if (value.type == "list")
                     return value;
                 else
                     throw new Exception();

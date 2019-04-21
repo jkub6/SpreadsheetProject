@@ -1,7 +1,30 @@
-﻿
-@{
-    ViewData["Title"] = "CreateSpread";
+﻿@section Head {
+    <title>Spreadsheet - New Spreadsheet</title>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width">
+    <link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/1.10.15/css/jquery.dataTables.min.css">
 }
 
-<h2>CreateSpread</h2>
+@section Scripts {
+    <link rel="stylesheet" href="//code.jquery.com/ui/1.11.4/themes/smoothness/jquery-ui.css">
+    <script src="//code.jquery.com/jquery-1.10.2.js"></script>
+    <script src="~/js/main.js"></script>
+}
 
+<div class="limiter" style="color:#e5e5e5;">
+    <div class="container-login100" style="background-image: url('@Url.Content("~/images/bg-01.jpg")');">
+        <div class="custom-table">
+            <h1 class='page-title'>New Spreadsheet</h1>
+
+            <form method="post">
+                <div class="form-group">
+                    <label for="spreadsheetName">Spreadsheet Name</label>
+                    <input type="text" class="form-control" id="spreadsheetName" placeholder="Spreadsheet Name">
+                </div>
+                <button class="btn btn-primary" type="submit" name="submitAction" value="Save" onclick="window.location.href='@Url.Content("~/Home/CreateSpread")'"><i class="glyphicon glyphicon-plus"></i> Save & Return to Spreadsheet List</button>
+                <button class="btn btn-info" type="submit" name="submitAction" value="SaveAndAdd" onclick="window.location.href='@Url.Content("~/Home/CreateSpread")'"><i class="glyphicon glyphicon-plus"></i> Save & Add New Spreadsheet</button>
+                <button class="btn btn-danger" type="submit" name="submitAction" value="Return" onclick="window.location.href='@Url.Content("~/Home/CreateSpread")"><i class="glyphicon glyphicon-random"></i> Return to Spreadsheet List</button>
+            </form>
+        </div>
+    </div>
+</div>
