@@ -36,6 +36,8 @@ class Utilities{
   static void newSpreadsheetInList(std::string name);
   
   static std::map<std::string,std::string> * getUserList();
+
+  static void removeUser(std::string user);
  private:
 
 

@@ -134,7 +134,16 @@ std::map<std::string,std::string> * Utilities::getUserList()
 
   return userList;
 }
+
+void Utilities::removeUser(std::string user)
+{
+  Utilities::getUserList();
+
+  Utilities::userList->erase(user);
+  Utilities::saveUsers();
   
+}
+
 void Utilities::newUser(std::string name, std::string password)
 {
     Utilities::getUserList();

@@ -166,10 +166,13 @@ int MasterController::newClientConnected(int socketID)
 	      }else if(newCommand["type"]=="CreateUser")
 	      {
 		std::cout<<"CREATE USER"<<std::endl;
+		Utilities::validateUser((std::string)newCommand["username"],(std::string)newCommand["password"]);
+		
 		sstate->socketSendData("success");
 	      }else if(newCommand["type"]=="DeleteUser")
 	      {
 		std::cout<<"DELETE USER"<<std::endl;
+		Utilities::removeUser((std::string)newCommand["username"]);
 		sstate->socketSendData("success");
 	      }else if(newCommand["type"]=="CreateSpread")
 	      {
