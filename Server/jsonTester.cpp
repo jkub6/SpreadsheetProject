@@ -65,6 +65,11 @@ int main()
 
   std::cout<<"\n\nLOADED: \n"<<loaded.dump(3);
 
+  for(json::iterator it = loaded["dep"].begin();it!=loaded["dep"].end();it++)
+    {
+      std::cout<<"FF: "<<*it<<std::endl;
+    }
+
   
   /* for(json::iterator it = test["two"].begin();it!=test["two"].end();it++)
   {

@@ -9,6 +9,7 @@
 #include "SocketState.h"
 #include <thread>
 #include <mutex>
+#include <utility>
 
 class SpreadsheetInstance
 {
@@ -23,10 +24,17 @@ class SpreadsheetInstance
   std::mutex *savingMtx;
   std::mutex *usersMtx;
 
+  std::vector<std::pair<std::string,std::string>> * undoStack;
+  std::map<std::string,std::string> * spreadsheetData;
+  std::map<std::string,std::vector<std::string>*> * revertStack;
+
+  bool edit(std::string cell, std::string value, std::vector<std::string>* dependencies);
+  void revert(std::string cell);
   std::thread * sheetThread;
   void saveToDisk();
   void loop();
   void load();
+  void undo();
   std::map<int,SocketState *> *connectedClients;
   std::map<std::string,std::string> *data;
   DependencyGraph *dependencyGraph;

@@ -10,6 +10,7 @@
 #include <chrono>
 #include <ostream>
 #include <mutex>
+#include <utility>
 
 SpreadsheetInstance::SpreadsheetInstance(std::string pathToSave)
   {
@@ -19,6 +20,11 @@ SpreadsheetInstance::SpreadsheetInstance(std::string pathToSave)
     this->data = new std::map<std::string, std::string>();
     this->usersMtx = new std::mutex();
     this->savingMtx = new std::mutex();
+
+    this->undoStack = new std::vector<std::pair<std::string,std::string>>();
+    this->spreadsheetData = new std::map<std::string,std::string>();
+    this->revertStack = new std::map<std::string,std::vector<std::string>*>();
+
     
     running = true;
     load();
@@ -36,6 +42,10 @@ SpreadsheetInstance::~SpreadsheetInstance()
   delete data;
   delete usersMtx;
   delete savingMtx;
+  delete undoStack;
+  delete spreadsheetData;
+  delete revertStack;
+
   
   std::cout<<"SpreadsheetInstance for: "<<this->pathToSaveFile<<" deconstructed."<<std::endl;
   //TODO
@@ -102,6 +112,8 @@ void SpreadsheetInstance::loop()
 		       response["type"]="full send";
 		       response["spreadsheet"][(std::string)echoMsg["cell"]]=echoMsg["value"];
 
+		       bool successfulEdit = edit((std::string)echoMsg["cell"],(std::string)echoMsg["value"],NULL);
+
 		       //SEND TO ALL CLIENTS
 		       for(std::map<int,SocketState*>::iterator sendIter = connectedClients->begin();
 			   sendIter!=connectedClients->end();
@@ -115,10 +127,11 @@ void SpreadsheetInstance::loop()
 		       std::cout<<"RESPONDED WITH: \n"<<response.dump(1)<<std::endl;
 		     }else if(echoMsg["type"]=="undo")
 		     {
-		       //TODO UNDO
+		       undo();
 		     }else if(echoMsg["type"]=="revert")
 		     {
-		       //TODO REVERT
+		       std::string cell = echoMsg["cell"];
+		       revert(cell);
 		     }
 		   
 		 }
@@ -147,6 +160,104 @@ void SpreadsheetInstance::loop()
     }
 }
 
+void SpreadsheetInstance::revert(std::string cell)
+{
+  std::string oldValue = (*spreadsheetData)[cell];
+
+
+  if(!(*revertStack)[cell])
+    return;
+
+  if((*revertStack)[cell]->size()<=0)
+    return;
+
+  std::string newValue = (*revertStack)[cell]->back();
+  
+  (*spreadsheetData)[cell]=newValue;
+  (*revertStack)[cell]->pop_back();
+  undoStack->push_back(std::pair<std::string,std::string>(cell,oldValue));
+
+  nlohmann::json response;
+  response["type"]="full send";
+  response["spreadsheet"][cell]=newValue;
+  
+  //SEND TO ALL CLIENTS
+  for(std::map<int,SocketState*>::iterator sendIter = connectedClients->begin();
+      sendIter!=connectedClients->end();
+      sendIter++)
+    {
+      sendIter->second->socketSendData(response.dump(0));
+    }
+  
+}
+
+void SpreadsheetInstance::undo()
+{
+
+  
+  if(undoStack->size()<=0)
+    return;
+  
+  std::pair<std::string,std::string> p = undoStack->back();
+
+
+  std::string oldValue = (*spreadsheetData)[p.first];
+
+  (*revertStack)[p.first]->push_back(oldValue);
+  
+  (*spreadsheetData)[p.first]=p.second;
+  
+  undoStack->pop_back();
+  
+  nlohmann::json response;
+  response["type"]="full send";
+  response["spreadsheet"][p.first]=p.second;
+  
+  //SEND TO ALL CLIENTS
+  for(std::map<int,SocketState*>::iterator sendIter = connectedClients->begin();
+      sendIter!=connectedClients->end();
+      sendIter++)
+    {
+      sendIter->second->socketSendData(response.dump(0));
+    }
+  
+}
+
+bool SpreadsheetInstance::edit(std::string cell, std::string value, std::vector<std::string>* dependencies)
+{
+
+  std::string oldValue = (*spreadsheetData)[cell];
+
+  std::cout<<"Old Value :" <<oldValue<<std::endl;
+  
+  (*spreadsheetData)[cell]=value;
+
+
+  if(!(*revertStack)[cell])
+    (*revertStack)[cell]=new std::vector<std::string>();
+  
+  (*revertStack)[cell]->push_back(oldValue);
+  undoStack->push_back(std::pair<std::string,std::string>(cell,oldValue));
+
+  for(std::vector<std::pair<std::string,std::string>>::iterator it = undoStack->begin();it!=undoStack->end();it++)
+    {
+      std::cout<<"UNDO STACK: "<<it->first<<" ,"<<it->second<<std::endl;
+    }
+
+  for(std::map<std::string,std::vector<std::string>*>::iterator it = revertStack->begin();it!=revertStack->end();it++)
+    {
+      std::cout<<"REVERT STACK FOR: "<<it->first<<std::endl<<"[ ";
+      for(std::vector<std::string>::iterator in=it->second->begin();in!=it->second->end();in++)
+	{
+	  std::cout<<*in<<", ";
+	}
+      std::cout<<"]\n";
+    }
+  
+  //TODO
+  return true;
+}
+
 void SpreadsheetInstance::newClientConnected(SocketState * sstate)
 {
 
@@ -159,8 +270,13 @@ void SpreadsheetInstance::newClientConnected(SocketState * sstate)
   fullSend["type"]="full send";
   fullSend["spreadsheet"]=nlohmann::json::object();
 
-  fullSend["spreadsheet"]["a1"]="5";
-  fullSend["spreadsheet"]["b1"]="=a1*5";
+  for(std::map<std::string,std::string>::iterator it = spreadsheetData->begin();it!=spreadsheetData->end();it++)
+    {
+      fullSend["spreadsheet"][(std::string)it->first]=it->second;
+    }
+  
+  //  fullSend["spreadsheet"]["a1"]="5";
+  //fullSend["spreadsheet"]["b1"]="=a1*5";
   
   sstate->socketSendData(fullSend.dump(0));
    
