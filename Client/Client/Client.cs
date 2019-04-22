@@ -31,7 +31,7 @@ namespace Client
         private TcpClient tcpClient;
         public event EventHandler<string> NetworkMessageRecieved;
         public event EventHandler<int> ErrorRecieved;
-        public event EventHandler FullSendRecieved;
+        public event EventHandler<List<string>> FullSendRecieved;
         public event EventHandler<List<string>> SpreadsheetsRecieved;
 
         public event EventHandler<string> SendingText;
@@ -96,7 +96,7 @@ namespace Client
             }
                 
 
-            string d = "[" + string.Join("\",\"", deps.ToArray()) + "]";
+            string d = "[\"" + string.Join("\",\"", deps.ToArray()) + "\"]";
 
             SendNetworkMessage($"{{\"type\": \"edit\",\"cell\": \"{cell}\",\"value\": \"{c}\",\"dependencies\":{d}}}\n\n");
         }
@@ -144,11 +144,18 @@ namespace Client
                         ErrorRecieved?.Invoke(this, (int)o["code"]);
                     else if (type == "full send")
                     {
-                        Spreadsheet newSpreadsheet = new Spreadsheet();
                         JToken cells = o["spreadsheet"];
 
                         var cellDict = JsonConvert.DeserializeObject<Dictionary<string, string>>(cells.ToString());
+                        List<string> updatedCells = new List<string>();
 
+                        foreach (string name in cellDict.Keys)
+                        {
+                            spreadsheet.SetContentsOfCell(name, cellDict[name]);
+                            updatedCells.Add(name);
+                        }
+                            
+                        /*Spreadsheet newSpreadsheet = new Spreadsheet();
                         foreach (string name in cellDict.Keys)
                             newSpreadsheet.SetContentsOfCell(name, cellDict[name]);
                                 
@@ -157,11 +164,16 @@ namespace Client
                             string contents = spreadsheet.GetCellContents(cellName).ToString();
                             if (spreadsheet.GetCellContents(cellName) is Formula f)
                                 contents = "=" + contents;
-                            newSpreadsheet.SetContentsOfCell(cellName, contents);
+                            if (!newSpreadsheet.GetNamesOfAllNonemptyCells().Contains(cellName))
+                            {
+                                newSpreadsheet.SetContentsOfCell(cellName, contents);
+                                Debug.WriteLine("setting " + cellName + " to " + contents.ToString());
+                            }
+                                
                         }
 
-                        spreadsheet = newSpreadsheet;
-                        FullSendRecieved?.Invoke(this, new EventArgs());
+                        spreadsheet = newSpreadsheet;*/
+                        FullSendRecieved?.Invoke(this, updatedCells);
                     }
                     else if (type == "list")
                     {
@@ -172,7 +184,7 @@ namespace Client
                         SpreadsheetsRecieved?.Invoke(this, spreadsheets);
                     }
                 }
-                catch (Exception e) { Debug.WriteLine(e.Message); }
+                catch (Exception e) { Debug.WriteLine(e.Message + "here"); }
             }
         }
 

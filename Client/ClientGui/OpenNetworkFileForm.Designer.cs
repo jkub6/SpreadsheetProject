@@ -31,7 +31,7 @@
             this.button1 = new System.Windows.Forms.Button();
             this.listBox1 = new System.Windows.Forms.ListBox();
             this.button2 = new System.Windows.Forms.Button();
-            this.textBox1 = new System.Windows.Forms.TextBox();
+            this.filenameTextBox = new System.Windows.Forms.TextBox();
             this.label5 = new System.Windows.Forms.Label();
             this.passwordTextBox = new System.Windows.Forms.TextBox();
             this.label2 = new System.Windows.Forms.Label();
@@ -67,13 +67,14 @@
             this.button2.TabIndex = 24;
             this.button2.Text = "Create New File";
             this.button2.UseVisualStyleBackColor = true;
+            this.button2.Click += new System.EventHandler(this.button2_Click);
             // 
-            // textBox1
+            // filenameTextBox
             // 
-            this.textBox1.Location = new System.Drawing.Point(222, 654);
-            this.textBox1.Name = "textBox1";
-            this.textBox1.Size = new System.Drawing.Size(332, 31);
-            this.textBox1.TabIndex = 25;
+            this.filenameTextBox.Location = new System.Drawing.Point(222, 654);
+            this.filenameTextBox.Name = "filenameTextBox";
+            this.filenameTextBox.Size = new System.Drawing.Size(332, 31);
+            this.filenameTextBox.TabIndex = 25;
             // 
             // label5
             // 
@@ -128,7 +129,7 @@
             this.Controls.Add(this.passwordTextBox);
             this.Controls.Add(this.label2);
             this.Controls.Add(this.usernameTextBox);
-            this.Controls.Add(this.textBox1);
+            this.Controls.Add(this.filenameTextBox);
             this.Controls.Add(this.button2);
             this.Controls.Add(this.listBox1);
             this.Controls.Add(this.button1);
@@ -143,7 +144,7 @@
         private System.Windows.Forms.Button button1;
         private System.Windows.Forms.ListBox listBox1;
         private System.Windows.Forms.Button button2;
-        private System.Windows.Forms.TextBox textBox1;
+        private System.Windows.Forms.TextBox filenameTextBox;
         private System.Windows.Forms.Label label5;
         private System.Windows.Forms.TextBox passwordTextBox;
         private System.Windows.Forms.Label label2;

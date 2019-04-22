@@ -48,5 +48,21 @@ namespace ClientGui
             }
             
         }
+
+        private void button2_Click(object sender, EventArgs e)
+        {
+            string fileName = filenameTextBox.Text;
+
+            if (fileName == "") { } //no filename
+            else if (listBox1.Items.Contains(fileName))
+                MessageBox.Show("Spreadsheet " + fileName + " already exists. (Nothing has been changed)");
+            else
+            {
+                selectedSpreadsheet = fileName;
+                username = usernameTextBox.Text.ToString();
+                password = passwordTextBox.Text.ToString();
+                Close();
+            }
+        }
     }
 }
