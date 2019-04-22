@@ -14,7 +14,6 @@ using System.IO;
 using System.Media;
 using System.Net.NetworkInformation;
 
-using ServerAdmin;
 
 namespace ClientGui
 {
@@ -251,6 +250,29 @@ namespace ClientGui
                 text = tempText;
 
             spreadsheetPanel.SetValue(col, row, text);
+
+            if (GetSelectedCellName() == name && tempText == null)
+            {
+                object o = client.spreadsheet.GetCellContents(name);
+
+                text = o.ToString();
+                if (o is Formula formula)
+                    text = "="+text;
+
+                SetCellContentBox(text);
+            }
+        }
+
+        void SetCellContentBox(string text)
+        {
+            MethodInvoker methodInvokerDelegate = delegate ()
+            { cellContentBox.Text = text; };
+
+            //This will be true if Current thread is not UI thread.
+            if (InvokeRequired)
+                Invoke(methodInvokerDelegate);
+            else
+                methodInvokerDelegate();            
         }
 
         /// <summary>
@@ -506,15 +528,14 @@ namespace ClientGui
             client.SendNetworkMessage(text);
         }
 
-        private void FullSendRecieved(object sender, EventArgs e)
+        private void FullSendRecieved(object sender, List<string> updatedCells)
         {
-            foreach (string cellName in client.spreadsheet.GetNamesOfAllNonemptyCells())
-                UpdateCellByName(cellName);
+            foreach (string cellName in updatedCells)
+                UpdateCellByName(cellName);   
         }
 
         private void serverAdminToolToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            ServerAdmin.Program.StartWithNoArgs();
         }
     }
 }

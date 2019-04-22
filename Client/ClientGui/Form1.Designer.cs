@@ -210,7 +210,7 @@
             // 
             this.cutToolStripMenuItem.Name = "cutToolStripMenuItem";
             this.cutToolStripMenuItem.ShortcutKeys = ((System.Windows.Forms.Keys)((System.Windows.Forms.Keys.Control | System.Windows.Forms.Keys.X)));
-            this.cutToolStripMenuItem.Size = new System.Drawing.Size(421, 38);
+            this.cutToolStripMenuItem.Size = new System.Drawing.Size(441, 38);
             this.cutToolStripMenuItem.Text = "Cut";
             this.cutToolStripMenuItem.Click += new System.EventHandler(this.cutToolStripMenuItem_Click);
             // 
@@ -218,7 +218,7 @@
             // 
             this.copySelectedTextToolStripMenuItem.Name = "copySelectedTextToolStripMenuItem";
             this.copySelectedTextToolStripMenuItem.ShortcutKeys = ((System.Windows.Forms.Keys)((System.Windows.Forms.Keys.Control | System.Windows.Forms.Keys.C)));
-            this.copySelectedTextToolStripMenuItem.Size = new System.Drawing.Size(421, 38);
+            this.copySelectedTextToolStripMenuItem.Size = new System.Drawing.Size(441, 38);
             this.copySelectedTextToolStripMenuItem.Text = "Copy";
             this.copySelectedTextToolStripMenuItem.Click += new System.EventHandler(this.copySelectedTextToolStripMenuItem_Click);
             // 
@@ -226,7 +226,7 @@
             // 
             this.pasteToolStripMenuItem.Name = "pasteToolStripMenuItem";
             this.pasteToolStripMenuItem.ShortcutKeys = ((System.Windows.Forms.Keys)((System.Windows.Forms.Keys.Control | System.Windows.Forms.Keys.V)));
-            this.pasteToolStripMenuItem.Size = new System.Drawing.Size(421, 38);
+            this.pasteToolStripMenuItem.Size = new System.Drawing.Size(441, 38);
             this.pasteToolStripMenuItem.Text = "Paste";
             this.pasteToolStripMenuItem.Click += new System.EventHandler(this.pasteToolStripMenuItem_Click);
             // 
@@ -234,34 +234,34 @@
             // 
             this.deleteToolStripMenuItem.Name = "deleteToolStripMenuItem";
             this.deleteToolStripMenuItem.ShortcutKeys = System.Windows.Forms.Keys.Delete;
-            this.deleteToolStripMenuItem.Size = new System.Drawing.Size(421, 38);
+            this.deleteToolStripMenuItem.Size = new System.Drawing.Size(441, 38);
             this.deleteToolStripMenuItem.Text = "Delete";
             this.deleteToolStripMenuItem.Click += new System.EventHandler(this.deleteToolStripMenuItem_Click);
             // 
             // toolStripSeparator5
             // 
             this.toolStripSeparator5.Name = "toolStripSeparator5";
-            this.toolStripSeparator5.Size = new System.Drawing.Size(418, 6);
+            this.toolStripSeparator5.Size = new System.Drawing.Size(438, 6);
             // 
             // selectAllToolStripMenuItem
             // 
             this.selectAllToolStripMenuItem.Name = "selectAllToolStripMenuItem";
             this.selectAllToolStripMenuItem.ShortcutKeys = ((System.Windows.Forms.Keys)((System.Windows.Forms.Keys.Control | System.Windows.Forms.Keys.A)));
-            this.selectAllToolStripMenuItem.Size = new System.Drawing.Size(421, 38);
+            this.selectAllToolStripMenuItem.Size = new System.Drawing.Size(441, 38);
             this.selectAllToolStripMenuItem.Text = "Select All";
             this.selectAllToolStripMenuItem.Click += new System.EventHandler(this.selectAllToolStripMenuItem_Click);
             // 
             // toolStripSeparator4
             // 
             this.toolStripSeparator4.Name = "toolStripSeparator4";
-            this.toolStripSeparator4.Size = new System.Drawing.Size(418, 6);
+            this.toolStripSeparator4.Size = new System.Drawing.Size(438, 6);
             // 
             // undoNetworkToolStripMenuItem
             // 
             this.undoNetworkToolStripMenuItem.Enabled = false;
             this.undoNetworkToolStripMenuItem.Name = "undoNetworkToolStripMenuItem";
             this.undoNetworkToolStripMenuItem.ShortcutKeys = ((System.Windows.Forms.Keys)((System.Windows.Forms.Keys.Control | System.Windows.Forms.Keys.U)));
-            this.undoNetworkToolStripMenuItem.Size = new System.Drawing.Size(421, 38);
+            this.undoNetworkToolStripMenuItem.Size = new System.Drawing.Size(441, 38);
             this.undoNetworkToolStripMenuItem.Text = "Undo (Network)";
             this.undoNetworkToolStripMenuItem.Click += new System.EventHandler(this.undoNetworkToolStripMenuItem_Click);
             // 
@@ -269,21 +269,21 @@
             // 
             this.revertNetworkToolStripMenuItem.Enabled = false;
             this.revertNetworkToolStripMenuItem.Name = "revertNetworkToolStripMenuItem";
-            this.revertNetworkToolStripMenuItem.ShortcutKeys = ((System.Windows.Forms.Keys)(((System.Windows.Forms.Keys.Control | System.Windows.Forms.Keys.Alt) 
+            this.revertNetworkToolStripMenuItem.ShortcutKeys = ((System.Windows.Forms.Keys)(((System.Windows.Forms.Keys.Control | System.Windows.Forms.Keys.Shift) 
             | System.Windows.Forms.Keys.U)));
-            this.revertNetworkToolStripMenuItem.Size = new System.Drawing.Size(421, 38);
+            this.revertNetworkToolStripMenuItem.Size = new System.Drawing.Size(441, 38);
             this.revertNetworkToolStripMenuItem.Text = "Revert (Network)";
             this.revertNetworkToolStripMenuItem.Click += new System.EventHandler(this.revertNetworkToolStripMenuItem_Click);
             // 
             // toolStripSeparator1
             // 
             this.toolStripSeparator1.Name = "toolStripSeparator1";
-            this.toolStripSeparator1.Size = new System.Drawing.Size(418, 6);
+            this.toolStripSeparator1.Size = new System.Drawing.Size(438, 6);
             // 
             // clearAllCellsToolStripMenuItem
             // 
             this.clearAllCellsToolStripMenuItem.Name = "clearAllCellsToolStripMenuItem";
-            this.clearAllCellsToolStripMenuItem.Size = new System.Drawing.Size(421, 38);
+            this.clearAllCellsToolStripMenuItem.Size = new System.Drawing.Size(441, 38);
             this.clearAllCellsToolStripMenuItem.Text = "Clear All Cells";
             this.clearAllCellsToolStripMenuItem.Click += new System.EventHandler(this.ClearAllCellsToolStripMenuItem_Click);
             // 
@@ -323,14 +323,14 @@
             // serverAdminToolToolStripMenuItem
             // 
             this.serverAdminToolToolStripMenuItem.Name = "serverAdminToolToolStripMenuItem";
-            this.serverAdminToolToolStripMenuItem.Size = new System.Drawing.Size(324, 38);
+            this.serverAdminToolToolStripMenuItem.Size = new System.Drawing.Size(310, 38);
             this.serverAdminToolToolStripMenuItem.Text = "Server Admin Tool";
             this.serverAdminToolToolStripMenuItem.Click += new System.EventHandler(this.serverAdminToolToolStripMenuItem_Click);
             // 
             // networkConsoleToolStripMenuItem
             // 
             this.networkConsoleToolStripMenuItem.Name = "networkConsoleToolStripMenuItem";
-            this.networkConsoleToolStripMenuItem.Size = new System.Drawing.Size(324, 38);
+            this.networkConsoleToolStripMenuItem.Size = new System.Drawing.Size(310, 38);
             this.networkConsoleToolStripMenuItem.Text = "Network Console";
             this.networkConsoleToolStripMenuItem.Click += new System.EventHandler(this.networkConsoleToolStripMenuItem_Click);
             // 
