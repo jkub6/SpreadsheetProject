@@ -1,4 +1,5 @@
 
+#include "CellState.h"
 #include <thread>
 #include "SpreadsheetInstance.h"
 #include <map>
@@ -21,9 +22,9 @@ SpreadsheetInstance::SpreadsheetInstance(std::string pathToSave)
     this->usersMtx = new std::mutex();
     this->savingMtx = new std::mutex();
 
-    this->undoStack = new std::vector<std::pair<std::string,std::string>>();
+    this->undoStack = new std::vector<CellState *>();
     this->spreadsheetData = new std::map<std::string,std::string>();
-    this->revertStack = new std::map<std::string,std::vector<std::string>*>();
+    this->revertStack = new std::map<std::string,std::vector<CellState*>*>();
 
     
     running = true;
@@ -171,15 +172,15 @@ void SpreadsheetInstance::revert(std::string cell)
   if((*revertStack)[cell]->size()<=0)
     return;
 
-  std::string newValue = (*revertStack)[cell]->back();
+  CellState * newValue = (*revertStack)[cell]->back();
   
-  (*spreadsheetData)[cell]=newValue;
+  (*spreadsheetData)[cell]=newValue->getValue();
   (*revertStack)[cell]->pop_back();
-  undoStack->push_back(std::pair<std::string,std::string>(cell,oldValue));
-
+  undoStack->push_back(new CellState(cell,oldValue));
+  
   nlohmann::json response;
   response["type"]="full send";
-  response["spreadsheet"][cell]=newValue;
+  response["spreadsheet"][cell]=newValue->getValue();
   
   //SEND TO ALL CLIENTS
   for(std::map<int,SocketState*>::iterator sendIter = connectedClients->begin();
@@ -193,25 +194,22 @@ void SpreadsheetInstance::revert(std::string cell)
 
 void SpreadsheetInstance::undo()
 {
-
-  
   if(undoStack->size()<=0)
     return;
   
-  std::pair<std::string,std::string> p = undoStack->back();
+  CellState * p = undoStack->back();
 
+  std::string oldValue = (*spreadsheetData)[p->getCell()];
 
-  std::string oldValue = (*spreadsheetData)[p.first];
-
-  (*revertStack)[p.first]->push_back(oldValue);
+  (*revertStack)[p->getCell()]->push_back(new CellState(p->getCell(),oldValue));
   
-  (*spreadsheetData)[p.first]=p.second;
+  (*spreadsheetData)[p->getCell()]=p->getValue();
   
   undoStack->pop_back();
   
   nlohmann::json response;
   response["type"]="full send";
-  response["spreadsheet"][p.first]=p.second;
+  response["spreadsheet"][p->getCell()]=p->getValue();
   
   //SEND TO ALL CLIENTS
   for(std::map<int,SocketState*>::iterator sendIter = connectedClients->begin();
@@ -220,7 +218,6 @@ void SpreadsheetInstance::undo()
     {
       sendIter->second->socketSendData(response.dump(0));
     }
-  
 }
 
 bool SpreadsheetInstance::edit(std::string cell, std::string value, std::vector<std::string>* dependencies)
@@ -234,22 +231,22 @@ bool SpreadsheetInstance::edit(std::string cell, std::string value, std::vector<
 
 
   if(!(*revertStack)[cell])
-    (*revertStack)[cell]=new std::vector<std::string>();
+    (*revertStack)[cell]=new std::vector<CellState*>();
   
-  (*revertStack)[cell]->push_back(oldValue);
-  undoStack->push_back(std::pair<std::string,std::string>(cell,oldValue));
+  (*revertStack)[cell]->push_back(new CellState(cell,oldValue));
+  undoStack->push_back(new CellState(cell,oldValue));
 
-  for(std::vector<std::pair<std::string,std::string>>::iterator it = undoStack->begin();it!=undoStack->end();it++)
+  for(std::vector<CellState*>::iterator it = undoStack->begin();it!=undoStack->end();it++)
     {
-      std::cout<<"UNDO STACK: "<<it->first<<" ,"<<it->second<<std::endl;
+      std::cout<<"UNDO STACK: "<<(*it)->getCell()<<" ,"<<(*it)->getValue()<<std::endl;
     }
 
-  for(std::map<std::string,std::vector<std::string>*>::iterator it = revertStack->begin();it!=revertStack->end();it++)
+  for(std::map<std::string,std::vector<CellState*>*>::iterator it = revertStack->begin();it!=revertStack->end();it++)
     {
       std::cout<<"REVERT STACK FOR: "<<it->first<<std::endl<<"[ ";
-      for(std::vector<std::string>::iterator in=it->second->begin();in!=it->second->end();in++)
+      for(std::vector<CellState*>::iterator in=it->second->begin();in!=it->second->end();in++)
 	{
-	  std::cout<<*in<<", ";
+	  std::cout<<(*in)->getValue()<<", ";
 	}
       std::cout<<"]\n";
     }
