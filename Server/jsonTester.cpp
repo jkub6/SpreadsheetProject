@@ -53,6 +53,18 @@ int main()
 
   std::ofstream of("save.json");
   of<<testSave;
+
+  of.close();
+  
+  std::ifstream ins("save.json");
+
+  json loaded;
+  ins>>loaded;
+
+  ins.close();
+
+  std::cout<<"\n\nLOADED: \n"<<loaded.dump(3);
+
   
   /* for(json::iterator it = test["two"].begin();it!=test["two"].end();it++)
   {

@@ -32,6 +32,8 @@ class SpreadsheetInstance
   DependencyGraph *dependencyGraph;
   std::string pathToSaveFile;
   bool running;
+  void disconnectAllClients();
+  
 };
 
 

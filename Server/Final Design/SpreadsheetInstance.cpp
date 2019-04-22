@@ -113,10 +113,16 @@ void SpreadsheetInstance::loop()
 		       
 		       //		       sstate->socketSendData(response.dump(0));
 		       std::cout<<"RESPONDED WITH: \n"<<response.dump(1)<<std::endl;
+		     }else if(echoMsg["type"]=="undo")
+		     {
+		       //TODO UNDO
+		     }else if(echoMsg["type"]=="revert")
+		     {
+		       //TODO REVERT
 		     }
 		   
 		 }
-	       catch (nlohmann::detail::parse_error e){}
+	       catch(nlohmann::detail::parse_error e){}
 	       catch(nlohmann::detail::type_error){}
 	       catch(nlohmann::detail::out_of_range){}
 	       
@@ -126,6 +132,7 @@ void SpreadsheetInstance::loop()
 	 
 	  
 	}
+      
       std::this_thread::sleep_for(std::chrono::milliseconds(50));
       //****************
       //REMOVE SOCKET STATES THAT ARE DISCONNECTED:
@@ -137,56 +144,7 @@ void SpreadsheetInstance::loop()
 	{
 	  connectedClients->erase(*removeIt);
 	}
-      
-      /*std::vector<std::string> * sdata;
-      
-      
-      //chrono sleep, prevents 100% processor utilization
-      std::this_thread::sleep_for(std::chrono::milliseconds(50));
-      
-      if(!sstate->isConnected())
-	break;
-      
-      sdata = sstate->getCommandsToProcess();
-      
-      for(int i = 0;i<sdata->size();i++)
-	{
-	  std::this_thread::sleep_for(std::chrono::milliseconds(50));
-	  
-	  std::string s = (*sdata)[i];
-	  
-	  std::cout<<"Message Received: \n["<<s<<"]\n"<<std::endl;
-	  
-	  nlohmann::json echoMsg;
-	  
-	  try
-	    {
-	      echoMsg = nlohmann::json::parse(s);
-	      
-	      if(echoMsg["type"]=="edit")
-		{
-		  nlohmann::json response;
-		  response["type"]="full send";
-		  response["spreadsheet"][(std::string)echoMsg["cell"]]=echoMsg["value"];
-		  
-		  sstate->socketSendData(response.dump(0));
-		  std::cout<<"RESPONDED WITH: \n"<<response.dump(1)<<std::endl;
-		}
-	      
-	    }
-	  catch (nlohmann::detail::parse_error e){}
-	  catch(nlohmann::detail::type_error){}
-	  catch(nlohmann::detail::out_of_range){}
-	}
-      
-      //free sdata MUST CALL
-      delete sdata;*/
-      //sleep thread
     }
-  
-      
-   
-    
 }
 
 void SpreadsheetInstance::newClientConnected(SocketState * sstate)
@@ -197,27 +155,37 @@ void SpreadsheetInstance::newClientConnected(SocketState * sstate)
   //FAKE FULL SEND TEST DELETE LATER
   //***************
   nlohmann::json fullSend;
-
+  
   fullSend["type"]="full send";
   fullSend["spreadsheet"]=nlohmann::json::object();
 
-  sstate->socketSendData(fullSend.dump(0));
+  fullSend["spreadsheet"]["a1"]="5";
+  fullSend["spreadsheet"]["b1"]="=a1*5";
   
-  std::cout<<"Full send sent to: "<<sstate->getID()<<std::endl;
-
+  sstate->socketSendData(fullSend.dump(0));
+   
   usersMtx->lock();
   (*connectedClients)[sstate->getID()]=sstate;
   usersMtx->unlock();
    
   //TODO
 }
+
+void SpreadsheetInstance::disconnectAllClients()
+{
+  for(std::map<int,SocketState *>::iterator it = connectedClients->begin();it!=connectedClients->end();it++)
+    {
+      it->second->setConnected(false);
+    }
+}
+
 void SpreadsheetInstance::shutdown()
 {
   savingMtx->lock();
   running = false;
+  saveToDisk();
   savingMtx->unlock();
 
   sheetThread->join();
-  //TODO
 }
   

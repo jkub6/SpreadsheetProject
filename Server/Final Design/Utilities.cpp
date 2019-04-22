@@ -208,6 +208,19 @@ std::vector<std::string>* Utilities::getSpreadsheetList()
         return Utilities::spreadsheetList;
 }
 
+void Utilities::removeSheet(std::string name)
+{
+  Utilities::getSpreadsheetList();
+
+  Utilities::spreadSheetListMtx->lock();
+
+  std::vector<std::string>::iterator it = std::find(spreadsheetList->begin(),spreadsheetList->end(),name);
+  
+  Utilities::spreadsheetList->erase(it);
+  
+  Utilities::spreadSheetListMtx->unlock();
+  Utilities::saveSpreadsheetList();
+}
 
 void Utilities::newSpreadsheetInList(std::string name)
 {

@@ -30,6 +30,19 @@ SpreadsheetController::~SpreadsheetController()
   //TODO
 }
 
+void SpreadsheetController::createSheet(std::string name)
+{
+  Utilities::newSpreadsheetInList(name);
+  (*spreadsheets)[name]=new SpreadsheetInstance("./save/"+name);
+}
+void SpreadsheetController::deleteSheet(std::string name)
+{
+  std::vector<std::string>::iterator it = std::find(spreadsheetTitles->begin(),spreadsheetTitles->end(),name);
+  
+  spreadsheetTitles->erase(it);
+  Utilities::removeSheet(name);
+}
+
 void SpreadsheetController::loadSpreadsheets()
 {
   for(std::string str : *spreadsheetTitles)
@@ -84,7 +97,3 @@ void SpreadsheetController::shutdown()
   //TODO
 }
 
-void SpreadsheetController::loadSpreadsheet()
-{
-  //TODO
-}

@@ -20,13 +20,13 @@ class SpreadsheetController
 
   void connectedClient(SocketState * sstate, std::string desiredSpreadsheet);
   void shutdown();
-
+  void createSheet(std::string name);
+  void deleteSheet(std::string name);
   
  private:
   std::vector<std::string> *spreadsheetTitles;
   std::map<int,std::thread*> * threadpool;
   std::map<std::string,SpreadsheetInstance *> *spreadsheets;
-  void loadSpreadsheet();
   bool running;
   void loadSpreadsheets();
 

@@ -20,7 +20,8 @@ class Utilities{
   static std::string hash(std::string input);
   
   static void sendMessage(SocketState * sstate, std::string message);
- 
+
+  static void removeSheet(std::string name);
   
   static std::string receiveMessage(SocketState * sstate);
   

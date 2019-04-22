@@ -174,10 +174,12 @@ int MasterController::newClientConnected(int socketID)
 	      }else if(newCommand["type"]=="CreateSpread")
 	      {
 		std::cout<<"CREATE SPREAD"<<std::endl;
+		spreadsheetController->createSheet((std::string)newCommand["username"]);
 		sstate->socketSendData("success");
 	      }else if(newCommand["type"]=="DeleteSpread")
 	      {
 		std::cout<<"DELETE SPREAD"<<std::endl;
+		spreadsheetController->deleteSheet((std::string)newCommand["username"]);
 		sstate->socketSendData("success");
 	      }else if(newCommand["type"]=="SpreadsheetList")
 	      {
