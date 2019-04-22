@@ -19,7 +19,7 @@ MasterController::MasterController(int port)
   this->threadpool = new std::map<int,std::thread*>();
   this->connectionListener = new ConnectionListener(port,this);
   this->spreadsheetController = new SpreadsheetController(this->threadpool);
-
+  
   this->running = true;
 }
 MasterController::~MasterController()
@@ -45,8 +45,9 @@ void MasterController::startServer()
 {
   this->connectionListener->beginListeningForClients();
 }
+
 void MasterController::shutdown(){
-    std::cout<<"\n\n********************\n\n"<<"SHUTTING DOWN"<<std::endl;
+  std::cout<<"\n\n********************\n\n"<<"SHUTTING DOWN"<<std::endl;
   this->running = false;
   Utilities::shutdown();
   connectionListener->shutdownListener();
@@ -59,9 +60,6 @@ int MasterController::newClientConnected(int socketID)
   //***************************
   //send list of spreadsheets:
   //******************************
-
-
-  
   
   std::vector<std::string> *list = Utilities::getSpreadsheetList();
   
@@ -69,15 +67,12 @@ int MasterController::newClientConnected(int socketID)
 
   SocketState * sstate = new SocketState(socketID);
 
-
-  
   jsonObject["type"]="list";
 
   for(int i = 0;i<list->size();i++)
     {
       jsonObject["spreadsheets"].push_back((*list)[i]);
     };
-
 
   sstate->socketSendData(jsonObject.dump(0));
   
@@ -147,8 +142,7 @@ int MasterController::newClientConnected(int socketID)
 	      }else if(newCommand.at("type")=="Login")
 	      {
 		std::cout<<"ADMIN CONNECTED"<<std::endl;
-		//todo
-		sstate->socketSendData("success");
+		sstate->socketSendData(" ");
 	      }else if(newCommand.at("type")=="UserList")
 	      {
 		std::map<std::string,std::string> *userList = Utilities::getUserList();
@@ -167,23 +161,18 @@ int MasterController::newClientConnected(int socketID)
 	      {
 		std::cout<<"CREATE USER"<<std::endl;
 		Utilities::validateUser((std::string)newCommand["username"],(std::string)newCommand["password"]);
-		
-		sstate->socketSendData("success");
 	      }else if(newCommand["type"]=="DeleteUser")
 	      {
 		std::cout<<"DELETE USER"<<std::endl;
 		Utilities::removeUser((std::string)newCommand["username"]);
-		sstate->socketSendData("success");
 	      }else if(newCommand["type"]=="CreateSpread")
 	      {
 		std::cout<<"CREATE SPREAD"<<std::endl;
 		spreadsheetController->createSheet((std::string)newCommand["username"]);
-		sstate->socketSendData("success");
 	      }else if(newCommand["type"]=="DeleteSpread")
 	      {
 		std::cout<<"DELETE SPREAD"<<std::endl;
 		spreadsheetController->deleteSheet((std::string)newCommand["username"]);
-		sstate->socketSendData("success");
 	      }else if(newCommand["type"]=="SpreadsheetList")
 	      {
 		std::cout<<"SPREADSHEET LIST"<<std::endl;
@@ -222,8 +211,7 @@ int MasterController::newClientConnected(int socketID)
     }
   
   
-  
-  
+    
   //********************
   //TRANSFER SOCKETSTATE TO SPREADSHEETCONTROLLER
   //**************************

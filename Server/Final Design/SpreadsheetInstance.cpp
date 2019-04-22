@@ -58,7 +58,9 @@ void SpreadsheetInstance::load()
 }
 
 void SpreadsheetInstance::saveToDisk()
-{}
+{
+
+}
 
 
 //MAster loop of spreadsheet instance
@@ -232,6 +234,8 @@ bool SpreadsheetInstance::edit(std::string cell, std::string value, std::vector<
 
   if(!(*revertStack)[cell])
     (*revertStack)[cell]=new std::vector<CellState*>();
+  std::cout<<"AFTER CHECK";
+
   
   (*revertStack)[cell]->push_back(new CellState(cell,oldValue));
   undoStack->push_back(new CellState(cell,oldValue));
