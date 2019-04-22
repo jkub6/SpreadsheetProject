@@ -96,7 +96,7 @@ namespace Client
             }
                 
 
-            string d = "[" + string.Join("\",\"", deps.ToArray()) + "]";
+            string d = "[\"" + string.Join("\",\"", deps.ToArray()) + "\"]";
 
             SendNetworkMessage($"{{\"type\": \"edit\",\"cell\": \"{cell}\",\"value\": \"{c}\",\"dependencies\":{d}}}\n\n");
         }
@@ -184,7 +184,7 @@ namespace Client
                         SpreadsheetsRecieved?.Invoke(this, spreadsheets);
                     }
                 }
-                catch (Exception e) { Debug.WriteLine(e.Message); }
+                catch (Exception e) { Debug.WriteLine(e.Message + "here"); }
             }
         }
 

@@ -47,6 +47,7 @@ namespace ClientGui
             //networkConsoleForm.Show();
             //networkConsoleForm.Visible = false;
             client.FullSendRecieved += FullSendRecieved;
+            client.ErrorRecieved += ErrorRecieved;
 
 
             InitializeComponent();
@@ -532,6 +533,19 @@ namespace ClientGui
         {
             foreach (string cellName in updatedCells)
                 UpdateCellByName(cellName);   
+        }
+
+        private void ErrorRecieved(object sender, int errorNum)
+        {
+            MessageBox.Show(errorNum.ToString());
+            if (errorNum == 0)
+            {
+
+            }
+            else if (errorNum == 1)
+            {
+
+            }
         }
 
         private void serverAdminToolToolStripMenuItem_Click(object sender, EventArgs e)
