@@ -66,7 +66,7 @@ using ServerAdmin.Models;
                 WriteLiteral("\r\n    <link rel=\"stylesheet\" href=\"//code.jquery.com/ui/1.11.4/themes/smoothness/jquery-ui.css\">\r\n    <script src=\"//code.jquery.com/jquery-1.10.2.js\"></script>\r\n    ");
                 EndContext();
                 BeginContext(451, 36, false);
-                __tagHelperExecutionContext = __tagHelperScopeManager.Begin("script", global::Microsoft.AspNetCore.Razor.TagHelpers.TagMode.StartTagAndEndTag, "a1bd55ed5258437da1e647343d618056", async() => {
+                __tagHelperExecutionContext = __tagHelperScopeManager.Begin("script", global::Microsoft.AspNetCore.Razor.TagHelpers.TagMode.StartTagAndEndTag, "4878735dfe6b4099895a372639fdc668", async() => {
                 }
                 );
                 __Microsoft_AspNetCore_Mvc_Razor_TagHelpers_UrlResolutionTagHelper = CreateTagHelper<global::Microsoft.AspNetCore.Mvc.Razor.TagHelpers.UrlResolutionTagHelper>();
@@ -102,7 +102,7 @@ WriteAttributeValue("", 606, Url.Content("~/images/bg-01.jpg"), 606, 34, false);
             WriteLiteral(">\r\n        <div class=\"custom-table\">\r\n            <h1 class=\'page-title\'>New User</h1>\r\n\r\n            ");
             EndContext();
             BeginContext(747, 1225, false);
-            __tagHelperExecutionContext = __tagHelperScopeManager.Begin("form", global::Microsoft.AspNetCore.Razor.TagHelpers.TagMode.StartTagAndEndTag, "9e045603344a443292f4bb5a208af001", async() => {
+            __tagHelperExecutionContext = __tagHelperScopeManager.Begin("form", global::Microsoft.AspNetCore.Razor.TagHelpers.TagMode.StartTagAndEndTag, "8641fc39bf03498a9510a374a6f2b43a", async() => {
                 BeginContext(753, 550, true);
                 WriteLiteral(@"
                 <div class=""form-group"">
