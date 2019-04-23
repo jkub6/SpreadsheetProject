@@ -7,7 +7,7 @@ namespace ServerAdmin.Models
 {
     public class SpreadsheetList
     {
-        public List<String> spreadsheets { get; set; }
+        public List<String> Sheets { get; set; }
         public String type { get; set; }
 
         /// <summary>
@@ -26,10 +26,10 @@ namespace ServerAdmin.Models
             {
                 //Checks if the elements are equal
                 SpreadsheetList p = (SpreadsheetList)obj;
-                if (p.spreadsheets == null && this.spreadsheets == null)
+                if (p.Sheets == null && this.Sheets == null)
                     return true;
-                else if (p.spreadsheets != null && this.spreadsheets != null)
-                    return !p.spreadsheets.Except(this.spreadsheets).Any();
+                else if (p.Sheets != null && this.Sheets != null)
+                    return !p.Sheets.Except(this.Sheets).Any();
                 else
                     return false;
             }
@@ -41,7 +41,7 @@ namespace ServerAdmin.Models
         /// <returns></returns>
         public override int GetHashCode()
         {
-            return this.spreadsheets.GetHashCode();
+            return this.Sheets.GetHashCode();
         }
     }
 }
