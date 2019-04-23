@@ -234,12 +234,15 @@ bool SpreadsheetInstance::edit(std::string cell, std::string value, std::vector<
 {
 
   std::string oldValue = (*spreadsheetData)[cell];
+  std::vector<std::string> *oldDependencies = dependencyGraph->GetDependents(cell);
 
   std::cout<<"Old Value :" <<oldValue<<std::endl;
   
   (*spreadsheetData)[cell]=value;
   //Add in all of the dependencies to the Dependency Graph
-  for(std::vector<std::string>::iterator it = dependencies->begin();it!=dependencies->end();it++)
+ 
+  /*
+ for(std::vector<std::string>::iterator it = dependencies->begin();it!=dependencies->end();it++)
    {
       std::string current = *it;
       dependencyGraph->AddDependency(cell, current);
@@ -253,9 +256,20 @@ bool SpreadsheetInstance::edit(std::string cell, std::string value, std::vector<
 	  std::string current = *it;
 	  dependencyGraph->RemoveDependency(cell, current);
 	}
+	(*spreadsheetData)[cell]=oldValue;
+	return false;
+  */
+
+  dependencyGraph->ReplaceDependents(cell, dependencies);
+
+  if(dependencyGraph->IsCircular(cell))
+    {
+      dependencyGraph->ReplaceDependents(cell, oldDependencies);
       (*spreadsheetData)[cell]=oldValue;
       return false;
     }
+
+  //}
 
 
   if(!(*revertStack)[cell])
