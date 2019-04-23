@@ -71,6 +71,9 @@ namespace ClientGui
 
             SelectCell();
             spreadsheetPanel.SelectionChanged += CellSelectedEvent;
+
+            openNetworkFileForm = new OpenNetworkFileForm();
+            client.SpreadsheetsRecieved += openNetworkFileForm.UpdateList;
         }
 
         /// <summary>
@@ -202,9 +205,18 @@ namespace ClientGui
 
             if (connected)
             {
-                client.SendEdit(cellName, cellContentBox.Text);
-                UpdateCellByName(cellName); //cross out to keep temp value
-                //return;
+                try
+                {
+                    client.SendEdit(cellName, cellContentBox.Text);
+                    UpdateCellByName(cellName); //cross out to keep temp value
+                                                //return;
+                }
+                catch (System.IO.IOException)
+                {
+                    MessageBox.Show("Server terminated Connection Unexpectedly");
+                    Logout();
+                }
+                
             }
 
             try
@@ -460,32 +472,53 @@ namespace ClientGui
 
         private void OpenNetworkFile()
         {
-            ConnectForm loginForm = new ConnectForm(client);
-            loginForm.ShowDialog();
+            if (!connected)
+            {
+                ConnectForm loginForm = new ConnectForm(client);
+                loginForm.ShowDialog();
 
-            if (!loginForm.connected)
-                return; //return if connection failed.
+                if (!loginForm.connected)
+                    return; //return if connection failed.
 
-            //Now connected
-            connected = true;
-            pingLabel.Visible = true;
-            undoNetworkToolStripMenuItem.Enabled = true;
-            revertNetworkToolStripMenuItem.Enabled = true;
+                //Now connected
+                connected = true;
+                pingLabel.Visible = true;
+                undoNetworkToolStripMenuItem.Enabled = true;
+                revertNetworkToolStripMenuItem.Enabled = true;
+                logoutToolStripMenuItem.Enabled = true;
+            }
+            
 
 
-            openNetworkFileForm = new OpenNetworkFileForm();
-            client.SpreadsheetsRecieved += openNetworkFileForm.UpdateList;
+            Login();
+        }
+
+        private void Login()
+        {
             openNetworkFileForm.ShowDialog();
+
+            if (openNetworkFileForm.canceled)
+                return;
 
 
             string spreadsheet = openNetworkFileForm.selectedSpreadsheet;
             string username = openNetworkFileForm.username;
             string password = openNetworkFileForm.password;
 
-            client.SendOpen(spreadsheet, username, password);
+            try
+            {
+                client.SendOpen(spreadsheet, username, password);
+                //save unsaved first
+                client.spreadsheet = new Spreadsheet();
+            }
+            catch (System.IO.IOException)
+            {
+                MessageBox.Show("Server terminated Connection Unexpectedly");
+                Logout();
+            }
+            
 
-            //save unsaved first
-            client.spreadsheet = new Spreadsheet();
+            
         }
 
         private void openNetworkFileToolStripMenuItem_Click(object sender, EventArgs e)
@@ -516,17 +549,44 @@ namespace ClientGui
 
         private void undoNetworkToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            client.SendUndo();
+            try
+            {
+                client.SendUndo();
+            }
+            catch (System.IO.IOException)
+            {
+                MessageBox.Show("Server terminated Connection Unexpectedly");
+                Logout();
+            }
+
         }
 
         private void revertNetworkToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            client.SendRevert(GetSelectedCellName());
+            try
+            {
+                client.SendRevert(GetSelectedCellName());
+            }
+            catch (System.IO.IOException)
+            {
+                MessageBox.Show("Server terminated Connection Unexpectedly");
+                Logout();
+            }
+            
         }
 
         private void SendText(object sender, string text)
         {
-            client.SendNetworkMessage(text);
+            try
+            {
+                client.SendNetworkMessage(text);
+            }
+            catch (System.IO.IOException)
+            {
+                MessageBox.Show("Server terminated Connection Unexpectedly");
+                Logout();
+            }
+            
         }
 
         private void FullSendRecieved(object sender, List<string> updatedCells)
@@ -539,14 +599,10 @@ namespace ClientGui
 
         private void ErrorRecieved(object sender, int errorNum)
         {
-            
-            if (errorNum == 0)
+            if (errorNum == 1)
             {
-
-            }
-            else if (errorNum == 1)
-            {
-
+                MessageBox.Show("Error logging in, incorrect credentials.");
+                Login();
             }
             else if (errorNum == 2)
             {
@@ -556,6 +612,21 @@ namespace ClientGui
 
         private void serverAdminToolToolStripMenuItem_Click(object sender, EventArgs e)
         {
+        }
+
+        private void logoutToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            Logout();
+        }
+
+        private void Logout()
+        {
+            client.Disconnect();
+            connected = false;
+            pingLabel.Visible = false;
+            undoNetworkToolStripMenuItem.Enabled = false;
+            revertNetworkToolStripMenuItem.Enabled = false;
+            logoutToolStripMenuItem.Enabled = false;
         }
     }
 }
