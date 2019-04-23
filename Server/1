@@ -1,0 +1,70 @@
+{
+  "cells": {
+    "A1": {
+      "cell": "A1",
+      "history": [
+        ""
+      ],
+      "value": "5"
+    },
+    "A2": {
+      "cell": "A2",
+      "history": [
+        ""
+      ],
+      "value": "=A1"
+    },
+    "A3": {
+      "cell": "A3",
+      "history": [
+        ""
+      ],
+      "value": "=A2"
+    }
+  },
+  "dee": {
+    "A1": {
+      "cell": "A1",
+      "dee": [
+        "A2"
+      ]
+    },
+    "A2": {
+      "cell": "A2",
+      "dee": [
+        "A3"
+      ]
+    }
+  },
+  "dep": {
+    "A1": {
+      "cell": "A1"
+    },
+    "A2": {
+      "cell": "A2",
+      "dep": [
+        "A1"
+      ]
+    },
+    "A3": {
+      "cell": "A3",
+      "dep": [
+        "A2"
+      ]
+    }
+  },
+  "undo": [
+    {
+      "cell": "A1",
+      "value": ""
+    },
+    {
+      "cell": "A2",
+      "value": ""
+    },
+    {
+      "cell": "A3",
+      "value": ""
+    }
+  ]
+}

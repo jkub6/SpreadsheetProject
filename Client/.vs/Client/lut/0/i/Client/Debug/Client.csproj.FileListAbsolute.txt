@@ -1,0 +1,10 @@
+C:\Users\jkub6\Documents\Dev\repos\SpreadsheetProject\SpreadsheetProject\Client\.vs\Client\lut\0\b\Client\bin\Debug\Client.dll
+C:\Users\jkub6\Documents\Dev\repos\SpreadsheetProject\SpreadsheetProject\Client\.vs\Client\lut\0\i\Client\Debug\Client.csproj.CoreCompileInputs.cache
+C:\Users\jkub6\Documents\Dev\repos\SpreadsheetProject\SpreadsheetProject\Client\.vs\Client\lut\0\i\Client\Debug\Client.csproj.CopyComplete
+C:\Users\jkub6\Documents\Dev\repos\SpreadsheetProject\SpreadsheetProject\Client\.vs\Client\lut\0\i\Client\Debug\Client.dll
+C:\Users\aaron\Documents\CodeDirectories\Spreadsheet\Client\.vs\Client\lut\19760\b\Client\bin\Debug\Client.dll
+C:\Users\aaron\Documents\CodeDirectories\Spreadsheet\Client\.vs\Client\lut\19760\i\Client\Debug\Client.csprojAssemblyReference.cache
+C:\Users\aaron\Documents\CodeDirectories\Spreadsheet\Client\.vs\Client\lut\19760\i\Client\Debug\Client.csproj.CoreCompileInputs.cache
+C:\Users\aaron\Documents\CodeDirectories\Spreadsheet\Client\.vs\Client\lut\19760\i\Client\Debug\Client.csproj.CopyComplete
+C:\Users\aaron\Documents\CodeDirectories\Spreadsheet\Client\.vs\Client\lut\19760\i\Client\Debug\Client.dll
+C:\Users\jkub6\Documents\Dev\repos\SpreadsheetProject\SpreadsheetProject\Client\.vs\Client\lut\0\i\Client\Debug\Client.csprojAssemblyReference.cache
