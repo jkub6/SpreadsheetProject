@@ -44,6 +44,10 @@ namespace ServerAdmin.Controllers
         {
             ViewData.Clear();
             HttpContext.Session.Clear();
+
+            if (username == null || password == null || ipAddress == null)
+                return View();
+
             User currentUser = new User
             {
                 Username = username,
