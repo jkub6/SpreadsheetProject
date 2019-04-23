@@ -11,7 +11,7 @@ using System.Timers;
 
 using SS;
 using System.IO;
-using System.Threading; 
+using System.Threading;
 
 using SpreadsheetUtilities;
 using Newtonsoft.Json.Linq;
@@ -57,8 +57,8 @@ namespace Client
 
             //var result = tcpClient.ConnectAsync(ipAddress, port);
             result = tcpClient.BeginConnect(ipAddress, port, null, null);
-            bool success = result.AsyncWaitHandle.WaitOne(TimeSpan.FromSeconds(5),false);
-            
+            bool success = result.AsyncWaitHandle.WaitOne(TimeSpan.FromSeconds(5), false);
+
             if (!success)
             {
                 tcpClient.Close();
@@ -100,7 +100,7 @@ namespace Client
 
                 c = s.GetCellContents(cell).ToString();
 
-                
+
                 if (s.GetCellContents(cell) is Formula f)
                 {
                     deps = new List<string>(f.GetVariables());
@@ -111,10 +111,10 @@ namespace Client
             {
                 deps = new List<string>(spreadsheet.GetDeps(contents));
             }
-           
 
-            
-                
+
+
+
 
             string d = "[\"" + string.Join("\",\"", deps.ToArray()) + "\"]";
 
@@ -128,7 +128,7 @@ namespace Client
 
         public void SendRevert(string cell)
         {
-           SendNetworkMessage($"{{\"type\": \"revert\",\"cell\": \"{cell}\"}}\n\n");
+            SendNetworkMessage($"{{\"type\": \"revert\",\"cell\": \"{cell}\"}}\n\n");
         }
 
         public void SendNetworkMessage(string message)
@@ -139,7 +139,7 @@ namespace Client
             ASCIIEncoding asen = new ASCIIEncoding();
             byte[] ba = asen.GetBytes(message);
 
-            
+
             stm.Write(ba, 0, ba.Length);
             SendingText?.Invoke(this, message);
         }
@@ -177,7 +177,7 @@ namespace Client
                         }
 
                         Debug.WriteLine("eere");
-                            
+
                         /*Spreadsheet newSpreadsheet = new Spreadsheet();
                         foreach (string name in cellDict.Keys)
                             newSpreadsheet.SetContentsOfCell(name, cellDict[name]);
@@ -194,7 +194,6 @@ namespace Client
                             }
                                 
                         }
-
                         spreadsheet = newSpreadsheet;*/
                         FullSendRecieved?.Invoke(this, updatedCells);
                     }

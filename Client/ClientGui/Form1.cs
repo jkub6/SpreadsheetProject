@@ -143,16 +143,16 @@ namespace ClientGui
             {
                 //Shifts selection right when Tab/Right is pressed
                 case Keys.Tab:
-                //case Keys.Right:
+                    //case Keys.Right:
                     SubmitText();
-                    spreadsheetPanel.SetSelection((column+1)%26, row);
+                    spreadsheetPanel.SetSelection((column + 1) % 26, row);
                     SelectCell();
                     return true;
                 //Shifts selection left when Shift Tab/Left is pressed
                 case Keys.Tab | Keys.Shift:
-                //case Keys.Left:
+                    //case Keys.Left:
                     SubmitText();
-                    spreadsheetPanel.SetSelection((column-1)%26, row);
+                    spreadsheetPanel.SetSelection((column - 1) % 26, row);
                     SelectCell();
                     return true;
                 //Shifts selection down when Enter/Down is pressed
@@ -166,7 +166,7 @@ namespace ClientGui
                 case Keys.Enter | Keys.Shift:
                 case Keys.Up:
                     SubmitText();
-                    spreadsheetPanel.SetSelection(column, (row-1)%99);
+                    spreadsheetPanel.SetSelection(column, (row - 1) % 99);
                     SelectCell();
                     return true;
 
@@ -201,7 +201,7 @@ namespace ClientGui
                 UpdateCellByName(cellName);
                 return;
             }
-                
+
 
             if (connected)
             {
@@ -216,7 +216,7 @@ namespace ClientGui
                     MessageBox.Show("Server terminated Connection Unexpectedly");
                     Logout();
                 }
-                
+
             }
 
             try
@@ -248,7 +248,7 @@ namespace ClientGui
         /// spreadsheet to update all cell values resulting from changes. 
         /// </summary>
         /// <param InputString="name"></param>
-        private void UpdateCellByName(string name, string tempText=null)
+        private void UpdateCellByName(string name, string tempText = null)
         {
             //Converts the column and row to the Cell name
             int col = name[0] - 65;
@@ -270,7 +270,7 @@ namespace ClientGui
 
                 text = o.ToString();
                 if (o is Formula formula)
-                    text = "="+text;
+                    text = "=" + text;
 
                 SetCellContentBox(text);
             }
@@ -285,7 +285,7 @@ namespace ClientGui
             if (InvokeRequired)
                 Invoke(methodInvokerDelegate);
             else
-                methodInvokerDelegate();            
+                methodInvokerDelegate();
         }
 
         /// <summary>
@@ -355,7 +355,7 @@ namespace ClientGui
                     return true;
                 }
             }
-            catch(Exception e)
+            catch (Exception e)
             {
                 MessageBox.Show(e.Message, "Error Loading");
             }
@@ -391,7 +391,7 @@ namespace ClientGui
                 if (openFileDialog.ShowDialog() == DialogResult.OK)
                     Process.Start(Application.ExecutablePath, openFileDialog.FileName);
             }
-            catch(Exception z)
+            catch (Exception z)
             {
                 MessageBox.Show(z.Message, "Error Opening File!");
             }
@@ -454,7 +454,7 @@ namespace ClientGui
         /// </summary>
         private void playSimpleSound()
         {
-            SoundPlayer audio = new SoundPlayer(global::ClientGui.Properties.Resources._1_person_cheering_Jett_Rifkin_1851518140); 
+            SoundPlayer audio = new SoundPlayer(global::ClientGui.Properties.Resources._1_person_cheering_Jett_Rifkin_1851518140);
             audio.Play();
         }
 
@@ -507,7 +507,7 @@ namespace ClientGui
                 revertNetworkToolStripMenuItem.Enabled = true;
                 logoutToolStripMenuItem.Enabled = true;
             }
-            
+
 
 
             Login();
@@ -536,9 +536,9 @@ namespace ClientGui
                 MessageBox.Show("Server terminated Connection Unexpectedly");
                 Logout();
             }
-            
 
-            
+
+
         }
 
         private void openNetworkFileToolStripMenuItem_Click(object sender, EventArgs e)
@@ -592,7 +592,7 @@ namespace ClientGui
                 MessageBox.Show("Server terminated Connection Unexpectedly");
                 Logout();
             }
-            
+
         }
 
         private void SendText(object sender, string text)
@@ -606,29 +606,15 @@ namespace ClientGui
                 MessageBox.Show("Server terminated Connection Unexpectedly");
                 Logout();
             }
-            
+
         }
 
         private void FullSendRecieved(object sender, List<string> updatedCells)
         {
-                //IEnumerable<string> cells;
-                //List<string> all = updatedCells.ToList();
-                //all.AddRange(client.spreadsheet.GetNamesOfAllNonemptyCells().ToList());
 
-                //cells = new HashSet<string>(all);
-
-            //foreach (string cellName in updatedCells.ToList())
-            //    UpdateCellByName(cellName);
             foreach (string cellName in client.spreadsheet.GetNamesOfAllNonemptyCells())
                 UpdateCellByName(cellName);
-
-            //foreach (string cellName in all.ToList())
-            //{
-            //     UpdateCellByName(cellName);
-            //     Debug.WriteLine(cellNAme);
-
-            //}
-
+                
         }
 
         private void ErrorRecieved(object sender, int errorNum)
@@ -666,4 +652,3 @@ namespace ClientGui
         }
     }
 }
-
