@@ -537,7 +537,7 @@ namespace ClientGui
 
         private void ErrorRecieved(object sender, int errorNum)
         {
-            MessageBox.Show(errorNum.ToString());
+            
             if (errorNum == 0)
             {
 
@@ -545,6 +545,10 @@ namespace ClientGui
             else if (errorNum == 1)
             {
 
+            }
+            else if (errorNum == 2)
+            {
+                MessageBox.Show("Circular Error");
             }
         }
 
