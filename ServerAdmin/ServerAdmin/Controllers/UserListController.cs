@@ -138,6 +138,12 @@ namespace ServerAdmin.Controllers
                 return RedirectToAction("Index", "Home");
             }
 
+            if (username == currentUser.Username)
+            {
+                HttpContext.Session.SetString("ErrorMessage", "Authentication Error: User has deleted itself, returning to login");
+                return RedirectToAction("Index", "Home");
+            }
+
             //Checks if the user has already been deleted 
             String response = ServerComm.ConnectToServer(tcpClient, currentUser.IpAddress, currentUser.Username, currentUser.Password, "UserList");
             UserList list = ReadUserList(response);
