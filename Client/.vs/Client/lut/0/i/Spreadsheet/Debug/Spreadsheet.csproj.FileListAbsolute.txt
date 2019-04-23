@@ -1,5 +1,0 @@
-C:\Users\jkub6\Documents\Dev\repos\SpreadsheetProject\SpreadsheetProject\Client\.vs\Client\lut\0\b\Spreadsheet\bin\Debug\Spreadsheet.dll
-C:\Users\jkub6\Documents\Dev\repos\SpreadsheetProject\SpreadsheetProject\Client\.vs\Client\lut\0\i\Spreadsheet\Debug\Spreadsheet.csproj.CoreCompileInputs.cache
-C:\Users\jkub6\Documents\Dev\repos\SpreadsheetProject\SpreadsheetProject\Client\.vs\Client\lut\0\i\Spreadsheet\Debug\Spreadsheet.csproj.CopyComplete
-C:\Users\jkub6\Documents\Dev\repos\SpreadsheetProject\SpreadsheetProject\Client\.vs\Client\lut\0\i\Spreadsheet\Debug\Spreadsheet.dll
-C:\Users\jkub6\Documents\Dev\repos\SpreadsheetProject\SpreadsheetProject\Client\.vs\Client\lut\0\i\Spreadsheet\Debug\Spreadsheet.csprojAssemblyReference.cache
