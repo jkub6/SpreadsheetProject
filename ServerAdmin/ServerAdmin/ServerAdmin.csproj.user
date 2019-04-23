@@ -15,7 +15,7 @@
     <DebuggerFlavor>ProjectDebugger</DebuggerFlavor>
   </PropertyGroup>
   <PropertyGroup>
-    <ActiveDebugProfile>ServerAdmin</ActiveDebugProfile>
+    <ActiveDebugProfile>IIS Express</ActiveDebugProfile>
     <NameOfLastUsedPublishProfile>gotorocksadmin - Web Deploy</NameOfLastUsedPublishProfile>
   </PropertyGroup>
 </Project>
