@@ -39,8 +39,6 @@ namespace Client
         System.Timers.Timer pingTimer;
         public event PingCompletedEventHandler PingCompleted;
 
-        IAsyncResult result;
-
         public Client()
         {
             spreadsheet = new Spreadsheet();
@@ -56,7 +54,7 @@ namespace Client
             IPAddress ipAddress = ipHostInfo.AddressList[0];
 
             //var result = tcpClient.ConnectAsync(ipAddress, port);
-            result = tcpClient.BeginConnect(ipAddress, port, null, null);
+            var result = tcpClient.BeginConnect(ipAddress, port, null, null);
             bool success = result.AsyncWaitHandle.WaitOne(TimeSpan.FromSeconds(5), false);
 
             if (!success)
@@ -77,11 +75,6 @@ namespace Client
             pingTimer.Enabled = true;
         }
 
-        public void Disconnect()
-        {
-            tcpClient.Close();
-        }
-
         public void SendOpen(string spreadsheet, string username, string password)
         {
             SendNetworkMessage($"{{\"type\": \"open\",\"name\": \"{spreadsheet}\",\"username\": \"{username}\",\"password\": \"{password}\"}}\n\n");
@@ -91,29 +84,16 @@ namespace Client
         {
             Spreadsheet s = new Spreadsheet();
 
+            s.SetContentsOfCell(cell, contents);
+
+            string c = s.GetCellContents(cell).ToString();
+
             List<string> deps = new List<string>();
-            string c = contents;
-
-            try
+            if (s.GetCellContents(cell) is Formula f)
             {
-                s.SetContentsOfCell(cell, contents);
-
-                c = s.GetCellContents(cell).ToString();
-
-
-                if (s.GetCellContents(cell) is Formula f)
-                {
-                    deps = new List<string>(f.GetVariables());
-                    c = "=" + c;
-                }
+                deps = new List<string>(f.GetVariables());
+                c = "=" + c;
             }
-            catch (CircularException)
-            {
-                deps = new List<string>(spreadsheet.GetDeps(contents));
-            }
-
-
-
 
 
             string d = "[\"" + string.Join("\",\"", deps.ToArray()) + "\"]";
@@ -138,7 +118,6 @@ namespace Client
             Stream stm = tcpClient.GetStream();
             ASCIIEncoding asen = new ASCIIEncoding();
             byte[] ba = asen.GetBytes(message);
-
 
             stm.Write(ba, 0, ba.Length);
             SendingText?.Invoke(this, message);
@@ -176,8 +155,6 @@ namespace Client
                             updatedCells.Add(name);
                         }
 
-                        Debug.WriteLine("eere");
-
                         /*Spreadsheet newSpreadsheet = new Spreadsheet();
                         foreach (string name in cellDict.Keys)
                             newSpreadsheet.SetContentsOfCell(name, cellDict[name]);
@@ -206,7 +183,7 @@ namespace Client
                         SpreadsheetsRecieved?.Invoke(this, spreadsheets);
                     }
                 }
-                catch (Exception e) { Debug.WriteLine(e.Message + "hereasdf"); }
+                catch (Exception e) { Debug.WriteLine(e.Message + "here"); }
             }
         }
 
