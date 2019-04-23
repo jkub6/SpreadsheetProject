@@ -57,35 +57,58 @@ void SpreadsheetInstance::load()
   try{
 
     std::ifstream in(pathToSaveFile);
-    if(!in.is_open())//no file to load
+
+    if(!in.is_open())
       return;
-    nlohmann::json js;
+
+    std::cout<<"OPENING "<<pathToSaveFile<<"\n";
     
-    in>>js;
+    nlohmann::json test;
+    in>>test;
+    
     in.close();
-
-    //load cells
-    for(auto it = js["cells"].begin();it!=js["cells"].end();it++)
+    for(auto it = test["cells"].begin();it!=test["cells"].end();it++)
       {
-	std::string cel = (std::string)(*it);
-	std::string val = (*it)["value"];
-	//	std::vector<std::string> * hist = new std::vector<std::string>();
-	//for(auto hi = js["cells"][
-	std::cout<<"CELL: "<<cel<<" VAL: "<<val<<std::endl;
-      }
+	nlohmann::json a = *it;
+	std::string cell = a["cell"];
+	std::string value = a["value"];
+	(*spreadsheetData)[cell]=value;
+	
+	for(auto de = a["history"].begin();de!=a["history"].end();de++)
+	  {
+	    CellState * hist = new CellState(cell,(std::string)*de);
+	    if(!(*revertStack)[cell])
+	      (*revertStack)[cell]=new std::vector<CellState*>();
 
+	    (*revertStack)[cell]->push_back(hist);
+	    
+	  }
+      }
     
+    for(auto it = test["undo"].begin();it!=test["undo"].end();it++)
+      {
+	nlohmann::json a = *it;
+	CellState * item = new CellState((std::string)a["cell"],(std::string)a["value"]);
+
+	undoStack->push_back(item);
+      }
     
-    
+    for(auto it =test["dee"].begin();it!=test["dee"].end();it++)
+      {
+	for(auto de = (*it)["dee"].begin();de!=(*it)["dee"].end();de++)
+	  {
+	    dependencyGraph->AddDependency(*de,*it);
+	  }
+      }    
   }catch(nlohmann::detail::parse_error e){}
   catch(nlohmann::detail::type_error){}
   catch(nlohmann::detail::out_of_range){}
-
+  catch(...){}
 }
 
 void SpreadsheetInstance::saveToDisk()
 {
-  
+  std::cout<<"SAVING "<<pathToSaveFile<<"... done.\n";  
   try{
     nlohmann::json save;
 
@@ -97,7 +120,7 @@ void SpreadsheetInstance::saveToDisk()
 	std::string value = it->second;
 	std::vector<CellState*> * cellHistory = (*revertStack)[cell];
 	save["cells"][cell]["value"]=value;
-	
+	save["cells"][cell]["cell"]=cell;
 	for(std::vector<CellState*>::iterator hist = cellHistory->begin();hist!=cellHistory->end();hist++)
 	  {
 	    std::string newVal = (*hist)->getValue();
@@ -114,12 +137,13 @@ void SpreadsheetInstance::saveToDisk()
 	std::string cell = it->first;
 	if(cell=="")
 	  continue;
+	save["dep"][cell]["cell"]=cell;
 	std::vector<std::string> * cellDep = it->second;
 	for(std::vector<std::string>::iterator i = cellDep->begin();i!=cellDep->end();i++)
 	  {
 	    std::string val = *i;
 	    if(val!="")
-	      save["dep"][cell].push_back(val);
+	      save["dep"][cell]["dep"].push_back(val);
 	  }
 	
       }
@@ -130,14 +154,14 @@ void SpreadsheetInstance::saveToDisk()
 	std::string cell = it->first;
 	if(cell=="")
 	  continue;
-	
+	save["dee"][cell]["cell"]=cell;
 	std::vector<std::string> * cellDee = it->second;
 	
 	for(std::vector<std::string>::iterator i = cellDee->begin();i!=cellDee->end();i++)
 	  {
 	    std::string val = *i;
 	    if(val!="")
-	      save["dee"][cell].push_back(val);
+	      save["dee"][cell]["dee"].push_back(val);
 	  }
 	
       }
@@ -150,7 +174,7 @@ void SpreadsheetInstance::saveToDisk()
 	std::string cell = current->getCell();
 	std::string value = current->getValue();
 
-	save["undo"].push_back({cell,value});
+	save["undo"].push_back({{"cell",cell},{"value",value}});
 	
       }
     
@@ -160,7 +184,7 @@ void SpreadsheetInstance::saveToDisk()
   }catch(nlohmann::detail::parse_error e){}
   catch(nlohmann::detail::type_error){}
   catch(nlohmann::detail::out_of_range){}
-
+  catch(...){}
 
   
 }

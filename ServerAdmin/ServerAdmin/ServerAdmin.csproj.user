@@ -16,5 +16,6 @@
   </PropertyGroup>
   <PropertyGroup>
     <ActiveDebugProfile>IIS Express</ActiveDebugProfile>
+    <NameOfLastUsedPublishProfile>gotorocksadmin - Web Deploy</NameOfLastUsedPublishProfile>
   </PropertyGroup>
 </Project>
