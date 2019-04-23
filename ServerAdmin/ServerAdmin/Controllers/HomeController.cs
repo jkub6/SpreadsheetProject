@@ -241,7 +241,22 @@ namespace ServerAdmin.Controllers
             if (spreadsheetName == null)
                 spreadsheetName = "";
 
-            string response = ServerComm.ConnectToServer(tcpClient, currentUser.IpAddress, spreadsheetName, null, "DeleteSpread");
+            //Checks if the spreadsheet has already been deleted
+            String response = ServerComm.ConnectToServer(tcpClient, currentUser.IpAddress, currentUser.Username, currentUser.Password, "SpreadsheetList");
+            SpreadsheetList list = ReadSpreadsheetList(response);
+            if (list == null)
+            {
+                HttpContext.Session.SetString("ErrorMessage", "Invalid Data from Server");
+                return RedirectToAction("Index");
+            }
+            else if (!list.Sheets.Contains(spreadsheetName))
+            {
+                ViewBag.Message = "Notice: Spreadsheet with name " + spreadsheetName + " has already been deleted.";
+                return View();
+            }
+
+
+            response = ServerComm.ConnectToServer(tcpClient, currentUser.IpAddress, spreadsheetName, null, "DeleteSpread");
             if (response.Substring(0, 5).Contains("Error"))
             {
                 HttpContext.Session.SetString("ErrorMessage", "Authentication Error: Redirecting to Login");

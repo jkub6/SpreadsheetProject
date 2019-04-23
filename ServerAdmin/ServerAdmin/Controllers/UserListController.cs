@@ -88,7 +88,7 @@ namespace ServerAdmin.Controllers
             if (submitAction == "Return")
                 return RedirectToAction("Index");
 
-            //Checks if the spreadsheet already exists
+            //Checks if the user already exists
             String response = ServerComm.ConnectToServer(tcpClient, currentUser.IpAddress, currentUser.Username, currentUser.Password, "UserList");
             UserList list = ReadUserList(response);
             if (list == null)
@@ -138,7 +138,21 @@ namespace ServerAdmin.Controllers
                 return RedirectToAction("Index", "Home");
             }
 
-            String response = ServerComm.ConnectToServer(tcpClient, currentUser.IpAddress, username, null, "DeleteUser");
+            //Checks if the user has already been deleted 
+            String response = ServerComm.ConnectToServer(tcpClient, currentUser.IpAddress, currentUser.Username, currentUser.Password, "UserList");
+            UserList list = ReadUserList(response);
+            if (list == null)
+            {
+                HttpContext.Session.SetString("ErrorMessage", "Invalid Data from Server");
+                return RedirectToAction("Index");
+            }
+            else if (!list.users.Contains(username))
+            {
+                ViewBag.Message = "Notice: User with username named " + username + " has already been deleted.";
+                return View();
+            }
+
+            response = ServerComm.ConnectToServer(tcpClient, currentUser.IpAddress, username, null, "DeleteUser");
             if (response.Contains("Error"))
             {
                 HttpContext.Session.SetString("ErrorMessage", "Authentication Error: Redirecting to Login");
