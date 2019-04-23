@@ -60,7 +60,7 @@ void SpreadsheetInstance::load()
     if(!in.is_open())
       return;
 
-    std::cout<<"OPENING "<<pathToSaveFile<<"\n";
+    std::cout<<"OPENING "<<pathToSaveFile<<"... ";
     
     nlohmann::json test;
     in>>test;
@@ -110,6 +110,9 @@ void SpreadsheetInstance::load()
   catch(nlohmann::detail::type_error){}
   catch(nlohmann::detail::out_of_range){}
   catch(...){}
+
+
+  std::cout<<"DONE\n";
 }
 
 void SpreadsheetInstance::saveToDisk()
@@ -202,7 +205,6 @@ void SpreadsheetInstance::saveToDisk()
 	save["undo"].push_back({{"cell",cell},{"value",value}});
 	
       }
-      std::cout<<"afterUndo";
     std::ofstream o(pathToSaveFile);
     o<<save.dump(2);
     o.close();
