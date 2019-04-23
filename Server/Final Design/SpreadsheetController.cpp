@@ -27,7 +27,6 @@ SpreadsheetController::~SpreadsheetController()
   std::cout<<"SpreadsheetController deconstructed..."<<std::endl;
   if(this->spreadsheets)
     delete this->spreadsheets;
-  //TODO
 }
 
 void SpreadsheetController::createSheet(std::string name)
@@ -94,6 +93,5 @@ void SpreadsheetController::shutdown()
     }
 
   std::cout<<"SPREADSHEETCONTROLLER SUCCESSFULLY SHUTDOWN...\n"<<std::endl;
-  //TODO
 }
 

@@ -170,6 +170,7 @@ int MasterController::newClientConnected(int socketID)
 		std::cout<<"SPREAD\n"<<response.dump(1);
 		
 		sstate->socketSendData(response.dump(0));
+		//sstate->socketSendData("}");
 	      }else if(newCommand["type"]=="CreateUser")
 	      {
 		std::cout<<"CREATE USER"<<std::endl;

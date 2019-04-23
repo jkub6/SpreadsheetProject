@@ -63,7 +63,7 @@ namespace ServerAdmin.Library
                         Console.WriteLine("Transmitting.....");
 
                         // Buffer to store the response bytes.
-                        data = new Byte[256];
+                        data = new Byte[1024];
 
                         // String to store the response ASCII representation.
                         String responseData = String.Empty;
@@ -85,7 +85,7 @@ namespace ServerAdmin.Library
                            
                             // Read the second batch of the TcpServer response bytes.
                             Int32 bytes2 = stream.Read(data, 0, data.Length); //(**This receives the data using the byte method**)
-                            secondData = System.Text.Encoding.ASCII.GetString(data, 0, bytes); //(**This converts it to string**)
+                            secondData = System.Text.Encoding.ASCII.GetString(data, 0, bytes2); //(**This converts it to string**)
 
                             secondData = secondData.TrimStart('\n');
                             secondData = secondData.TrimEnd('\n');

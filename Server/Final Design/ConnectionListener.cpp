@@ -20,7 +20,6 @@ ConnectionListener::~ConnectionListener()
 {
 
   std::cout<<"ConnectionListener deconstructed"<<std::endl;
-  //TODO
 }
 
 
