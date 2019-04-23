@@ -63,7 +63,18 @@ void SpreadsheetInstance::load()
     
     in>>js;
     in.close();
-    std::cout<<"RAW: "<<js.dump();
+
+    //load cells
+    for(auto it = js["cells"].begin();it!=js["cells"].end();it++)
+      {
+	std::string cel = (std::string)(*it);
+	std::string val = (*it)["value"];
+	//	std::vector<std::string> * hist = new std::vector<std::string>();
+	//for(auto hi = js["cells"][
+	std::cout<<"CELL: "<<cel<<" VAL: "<<val<<std::endl;
+      }
+
+    
     
     
   }catch(nlohmann::detail::parse_error e){}
@@ -215,9 +226,9 @@ void SpreadsheetInstance::loop()
 			   dep->push_back(*di);
 			 }
 
-		       
+		       savingMtx->lock();
 		       bool successfulEdit = edit((std::string)echoMsg["cell"],(std::string)echoMsg["value"],dep);
-
+		       savingMtx->unlock();
 		       if(!successfulEdit)
 			 {
 			   nlohmann::json circularResponse;
@@ -244,12 +255,16 @@ void SpreadsheetInstance::loop()
 		     }else if(echoMsg["type"]=="undo")
 		     {
 		       edited = true;
+		       savingMtx->lock();
 		       undo();
+		       savingMtx->unlock();
 		     }else if(echoMsg["type"]=="revert")
 		     {
 		       edited = true;
 		       std::string cell = echoMsg["cell"];
+		       savingMtx->lock();
 		       revert(cell);
+		       savingMtx->unlock();
 		     }
 		   
 		 }
@@ -271,7 +286,9 @@ void SpreadsheetInstance::loop()
 	  removeIt!=toRemove.end();
 	  removeIt++)
 	{
+	  savingMtx->lock();
 	  connectedClients->erase(*removeIt);
+	  savingMtx->unlock();
 	}
       savingMtx->lock();
       if(edited)
