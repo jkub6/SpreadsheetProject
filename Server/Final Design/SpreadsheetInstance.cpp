@@ -86,18 +86,51 @@ void SpreadsheetInstance::saveToDisk()
     for(std::map<std::string,std::vector<std::string>*>::iterator it = dep->begin();it!=dep->end();it++)
       {
 	std::string cell = it->first;
+	if(cell=="")
+	  continue;
 	std::vector<std::string> * cellDep = it->second;
 	for(std::vector<std::string>::iterator i = cellDep->begin();i!=cellDep->end();i++)
 	  {
-	    save["dep"][cell].push_back(*i);
+	    std::string val = *i;
+	    if(val!="")
+	      save["dep"][cell].push_back(val);
 	  }
+	
+      }
+
+
+    for(std::map<std::string,std::vector<std::string>*>::iterator it = dee->begin();it!=dee->end();it++)
+      {
+	std::string cell = it->first;
+	if(cell=="")
+	  continue;
+	
+	std::vector<std::string> * cellDee = it->second;
+	
+	for(std::vector<std::string>::iterator i = cellDee->begin();i!=cellDee->end();i++)
+	  {
+	    std::string val = *i;
+	    if(val!="")
+	      save["dee"][cell].push_back(val);
+	  }
+	
+      }
+
+    //Save undo
+
+    for(std::vector<CellState*>::iterator it = undoStack->begin();it!=undoStack->end();it++)
+      {
+	CellState * current = *it;
+	std::string cell = current->getCell();
+	std::string value = current->getValue();
+
+	save["undo"].push_back({cell,value});
 	
       }
     
     std::ofstream o(pathToSaveFile);
     o<<save.dump(2);
     o.close();
-    std::cout<<"SAVE: \n"<<save.dump(1);
   }catch(nlohmann::detail::parse_error e){}
   catch(nlohmann::detail::type_error){}
   catch(nlohmann::detail::out_of_range){}
@@ -170,17 +203,29 @@ void SpreadsheetInstance::loop()
 		       
 		       bool successfulEdit = edit((std::string)echoMsg["cell"],(std::string)echoMsg["value"],dep);
 
-		       //SEND TO ALL CLIENTS
-		       for(std::map<int,SocketState*>::iterator sendIter = connectedClients->begin();
-			   sendIter!=connectedClients->end();
-			   sendIter++)
+		       if(!successfulEdit)
 			 {
-			   sendIter->second->socketSendData(response.dump(0));
-			 }
+			   nlohmann::json circularResponse;
 
+			   circularResponse["type"]="error";
+			   circularResponse["code"]="2";
+			   circularResponse["source"]=(std::string)echoMsg["cell"];
+			   sstate->socketSendData(circularResponse.dump(0));
+			 }
 		       
-		       //		       sstate->socketSendData(response.dump(0));
-		       std::cout<<"RESPONDED WITH: \n"<<response.dump(1)<<std::endl;
+		       //SEND TO ALL CLIENTS
+		       if(successfulEdit)
+			 {
+			   for(std::map<int,SocketState*>::iterator sendIter = connectedClients->begin();
+			       sendIter!=connectedClients->end();
+			       sendIter++)
+			     {
+			       sendIter->second->socketSendData(response.dump(0));
+			     }
+			   
+			   
+			   //		       sstate->socketSendData(response.dump(0));
+			   std::cout<<"RESPONDED WITH: \n"<<response.dump(1)<<std::endl;}
 		     }else if(echoMsg["type"]=="undo")
 		     {
 		       edited = true;
