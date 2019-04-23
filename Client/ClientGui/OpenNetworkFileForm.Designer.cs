@@ -45,7 +45,7 @@
             this.button1.Location = new System.Drawing.Point(15, 482);
             this.button1.Name = "button1";
             this.button1.Size = new System.Drawing.Size(187, 55);
-            this.button1.TabIndex = 19;
+            this.button1.TabIndex = 4;
             this.button1.Text = "Open Selected File";
             this.button1.UseVisualStyleBackColor = true;
             this.button1.Click += new System.EventHandler(this.button1_Click);
@@ -57,14 +57,14 @@
             this.listBox1.Location = new System.Drawing.Point(20, 110);
             this.listBox1.Name = "listBox1";
             this.listBox1.Size = new System.Drawing.Size(534, 354);
-            this.listBox1.TabIndex = 22;
+            this.listBox1.TabIndex = 3;
             // 
             // button2
             // 
             this.button2.Location = new System.Drawing.Point(15, 642);
             this.button2.Name = "button2";
             this.button2.Size = new System.Drawing.Size(187, 54);
-            this.button2.TabIndex = 24;
+            this.button2.TabIndex = 6;
             this.button2.Text = "Create New File";
             this.button2.UseVisualStyleBackColor = true;
             this.button2.Click += new System.EventHandler(this.button2_Click);
@@ -74,7 +74,7 @@
             this.filenameTextBox.Location = new System.Drawing.Point(222, 654);
             this.filenameTextBox.Name = "filenameTextBox";
             this.filenameTextBox.Size = new System.Drawing.Size(332, 31);
-            this.filenameTextBox.TabIndex = 25;
+            this.filenameTextBox.TabIndex = 5;
             // 
             // label5
             // 
@@ -91,7 +91,7 @@
             this.passwordTextBox.Location = new System.Drawing.Point(131, 61);
             this.passwordTextBox.Name = "passwordTextBox";
             this.passwordTextBox.Size = new System.Drawing.Size(423, 31);
-            this.passwordTextBox.TabIndex = 33;
+            this.passwordTextBox.TabIndex = 2;
             this.passwordTextBox.UseSystemPasswordChar = true;
             // 
             // label2
@@ -108,7 +108,7 @@
             this.usernameTextBox.Location = new System.Drawing.Point(131, 12);
             this.usernameTextBox.Name = "usernameTextBox";
             this.usernameTextBox.Size = new System.Drawing.Size(423, 31);
-            this.usernameTextBox.TabIndex = 31;
+            this.usernameTextBox.TabIndex = 1;
             // 
             // label1
             // 

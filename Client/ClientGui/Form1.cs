@@ -301,7 +301,7 @@ namespace ClientGui
 
         private void Form1_FormClosing(object sender, FormClosingEventArgs e)
         {
-            if (client.spreadsheet.Changed)
+            if (client.spreadsheet.Changed && !connected)
             {
                 MessageBoxButtons buttons = MessageBoxButtons.YesNoCancel;
                 var result = MessageBox.Show("You have unsaved data. Save file before closing?", "Unsaved Data", buttons);
@@ -421,10 +421,30 @@ namespace ClientGui
         private void ClearAllCellsToolStripMenuItem_Click(object sender, EventArgs e)
         {
             Spreadsheet old = client.spreadsheet;
-            client.spreadsheet = new Spreadsheet(s => true, s => s.ToUpper(), "ps6");
 
-            foreach (string cellName in old.GetNamesOfAllNonemptyCells())
+            List<string> cells = new List<string>(client.spreadsheet.GetNamesOfAllNonemptyCells());
+
+            foreach (string cellName in cells)
+            {
+                client.spreadsheet.SetContentsOfCell(cellName, "");
+
                 UpdateCellByName(cellName);
+
+                if (connected)
+                {
+                    try
+                    {
+                        client.SendEdit(cellName, cellContentBox.Text);
+                        UpdateCellByName(cellName); //cross out to keep temp value
+                                                    //return;
+                    }
+                    catch (System.IO.IOException)
+                    {
+                        MessageBox.Show("Server terminated Connection Unexpectedly");
+                        Logout();
+                    }
+                }
+            }
 
             SelectCell();
         }

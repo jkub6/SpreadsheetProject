@@ -40,7 +40,7 @@
             this.button1.Location = new System.Drawing.Point(207, 77);
             this.button1.Name = "button1";
             this.button1.Size = new System.Drawing.Size(163, 42);
-            this.button1.TabIndex = 28;
+            this.button1.TabIndex = 3;
             this.button1.Text = "Login";
             this.button1.UseVisualStyleBackColor = true;
             this.button1.Click += new System.EventHandler(this.button1_Click);
@@ -68,7 +68,7 @@
             this.hostTextBox.Location = new System.Drawing.Point(76, 15);
             this.hostTextBox.Name = "hostTextBox";
             this.hostTextBox.Size = new System.Drawing.Size(294, 31);
-            this.hostTextBox.TabIndex = 22;
+            this.hostTextBox.TabIndex = 1;
             // 
             // portTextBox
             // 
@@ -76,7 +76,7 @@
             this.portTextBox.Mask = "00000";
             this.portTextBox.Name = "portTextBox";
             this.portTextBox.Size = new System.Drawing.Size(105, 31);
-            this.portTextBox.TabIndex = 31;
+            this.portTextBox.TabIndex = 2;
             this.portTextBox.ValidatingType = typeof(int);
             // 
             // ConnectForm
