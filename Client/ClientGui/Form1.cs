@@ -204,7 +204,7 @@ namespace ClientGui
             {
                 client.SendEdit(cellName, cellContentBox.Text);
                 UpdateCellByName(cellName); //cross out to keep temp value
-                return;
+                //return;
             }
 
             try
@@ -531,13 +531,15 @@ namespace ClientGui
 
         private void FullSendRecieved(object sender, List<string> updatedCells)
         {
-            foreach (string cellName in updatedCells)
-                UpdateCellByName(cellName);   
+            //foreach (string cellName in updatedCells)
+            //    UpdateCellByName(cellName);
+            foreach (string cellName in client.spreadsheet.GetNamesOfAllNonemptyCells())
+                UpdateCellByName(cellName);
         }
 
         private void ErrorRecieved(object sender, int errorNum)
         {
-            MessageBox.Show(errorNum.ToString());
+            
             if (errorNum == 0)
             {
 
@@ -545,6 +547,10 @@ namespace ClientGui
             else if (errorNum == 1)
             {
 
+            }
+            else if (errorNum == 2)
+            {
+                MessageBox.Show("Circular Error");
             }
         }
 

@@ -1,4 +1,8 @@
-﻿@section Head {
+﻿@{
+    ViewData["Title"] = "Spreadsheet - New Spreadsheet";
+}
+
+@section Head {
     <title>Spreadsheet - New Spreadsheet</title>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width">
@@ -28,12 +32,13 @@
     <div class="container-login100" style="background-image: url('@Url.Content("~/images/bg-01.jpg")');">
         <div class="custom-table">
             <h1 class='page-title'>New Spreadsheet</h1>
-
+            <hr />
             <form method="post">
                 <div class="form-group">
                     <label for="spreadsheetName">Spreadsheet Name</label>
                     <input type="text" class="form-control" name="spreadsheetName" id="spreadsheetName" placeholder="Spreadsheet Name" required>
                 </div>
+                <hr />
                 <button class="btn btn-primary" type="submit" name="submitAction" value="Save"><i class="glyphicon glyphicon-plus"></i> Save & Return to Spreadsheet List</button>
                 <button class="btn btn-info" type="submit" name="submitAction" value="SaveAndAdd"><i class="glyphicon glyphicon-plus"></i> Save & Add New Spreadsheet</button>
                 <button class="btn btn-danger" type="submit" name="submitAction" value="Return" onclick="window.location.href='@Url.Content("~/Home/CreateSpread")" formnovalidate><i class="glyphicon glyphicon-random"></i> Return to Spreadsheet List</button>
