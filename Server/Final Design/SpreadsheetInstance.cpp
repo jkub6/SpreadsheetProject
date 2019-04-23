@@ -49,7 +49,6 @@ SpreadsheetInstance::~SpreadsheetInstance()
 
   
   std::cout<<"SpreadsheetInstance for: "<<this->pathToSaveFile<<" deconstructed."<<std::endl;
-  //TODO
 }
 
 void SpreadsheetInstance::load()
@@ -92,6 +91,13 @@ void SpreadsheetInstance::load()
 
 	undoStack->push_back(item);
       }
+
+
+    /*    for(auto it = undoStack->begin();it!=undoStack->end();it++)
+      {
+	CellState * item = *it;
+	std::cout<<"["<<item->getCell()<<", "<<item->getValue()<<std::endl;
+	}*/
     
     for(auto it =test["dee"].begin();it!=test["dee"].end();it++)
       {
@@ -108,10 +114,14 @@ void SpreadsheetInstance::load()
 
 void SpreadsheetInstance::saveToDisk()
 {
-  std::cout<<"SAVING "<<pathToSaveFile<<"... done.\n";  
+  std::cout<<"SAVING "<<pathToSaveFile;
   try{
     nlohmann::json save;
 
+    if(!spreadsheetData)
+      {
+	return;
+      }
     
     //Save cells
     for(std::map<std::string,std::string>::iterator it = spreadsheetData->begin(); it != spreadsheetData->end(); it++)
@@ -119,6 +129,9 @@ void SpreadsheetInstance::saveToDisk()
 	std::string cell = it->first;
 	std::string value = it->second;
 	std::vector<CellState*> * cellHistory = (*revertStack)[cell];
+	if(!cellHistory)
+	  continue;
+	
 	save["cells"][cell]["value"]=value;
 	save["cells"][cell]["cell"]=cell;
 	for(std::vector<CellState*>::iterator hist = cellHistory->begin();hist!=cellHistory->end();hist++)
@@ -128,9 +141,13 @@ void SpreadsheetInstance::saveToDisk()
 	  }
       }
 
+    
     //Save dependencies
     std::map<std::string,std::vector<std::string>*> * dep = dependencyGraph->getDependents();
     std::map<std::string,std::vector<std::string>*> * dee = dependencyGraph->getDependees();
+
+    if(!dep || !dee)
+      return;
 
     for(std::map<std::string,std::vector<std::string>*>::iterator it = dep->begin();it!=dep->end();it++)
       {
@@ -156,6 +173,9 @@ void SpreadsheetInstance::saveToDisk()
 	  continue;
 	save["dee"][cell]["cell"]=cell;
 	std::vector<std::string> * cellDee = it->second;
+
+	if(!cellDee)
+	  return;
 	
 	for(std::vector<std::string>::iterator i = cellDee->begin();i!=cellDee->end();i++)
 	  {
@@ -166,18 +186,23 @@ void SpreadsheetInstance::saveToDisk()
 	
       }
 
+
     //Save undo
 
     for(std::vector<CellState*>::iterator it = undoStack->begin();it!=undoStack->end();it++)
       {
 	CellState * current = *it;
+
+	if(!current)
+	  continue;
+	
 	std::string cell = current->getCell();
 	std::string value = current->getValue();
 
 	save["undo"].push_back({{"cell",cell},{"value",value}});
 	
       }
-    
+      std::cout<<"afterUndo";
     std::ofstream o(pathToSaveFile);
     o<<save.dump(2);
     o.close();
@@ -186,7 +211,7 @@ void SpreadsheetInstance::saveToDisk()
   catch(nlohmann::detail::out_of_range){}
   catch(...){}
 
-  
+  std::cout<<"... done.\n";
 }
 
 
@@ -253,6 +278,10 @@ void SpreadsheetInstance::loop()
 		       savingMtx->lock();
 		       bool successfulEdit = edit((std::string)echoMsg["cell"],(std::string)echoMsg["value"],dep);
 		       savingMtx->unlock();
+
+		       if(std::find(dep->begin(),dep->end(),(std::string)echoMsg["cell"])!=dep->end())
+			  successfulEdit = false;
+		       
 		       if(!successfulEdit)
 			 {
 			   nlohmann::json circularResponse;
@@ -382,15 +411,12 @@ void SpreadsheetInstance::undo()
 
 bool SpreadsheetInstance::edit(std::string cell, std::string value, std::vector<std::string>* dependencies)
 {
-
   std::string oldValue = (*spreadsheetData)[cell];
-  std::vector<std::string> *oldDependencies = dependencyGraph->GetDependents(cell);
 
-  std::cout<<"Old Value :" <<oldValue<<std::endl;
   
   (*spreadsheetData)[cell]=value;
   //Add in all of the dependencies to the Dependency Graph
- 
+  std::vector<std::string> *oldDependencies = dependencyGraph->GetDependents(cell); 
 
 for(std::vector<std::string>::iterator it = oldDependencies->begin();it!=oldDependencies->end();it++)
 	{
@@ -461,7 +487,7 @@ for(std::vector<std::string>::iterator it = oldDependencies->begin();it!=oldDepe
       std::cout<<"]\n";
     }
 
-  delete dependencies;
+  //  delete dependencies;
   return true;
 }
 
@@ -491,7 +517,6 @@ void SpreadsheetInstance::newClientConnected(SocketState * sstate)
   (*connectedClients)[sstate->getID()]=sstate;
   usersMtx->unlock();
    
-  //TODO
 }
 
 void SpreadsheetInstance::disconnectAllClients()

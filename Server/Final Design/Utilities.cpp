@@ -30,7 +30,7 @@ void Utilities::disconnectSocket(int socketID)
 
 void Utilities::shutdown()
 {
-  //TODO
+
   if(Utilities::spreadSheetListMtx)
     delete Utilities::spreadSheetListMtx;
 
