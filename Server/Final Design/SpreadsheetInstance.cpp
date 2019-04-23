@@ -54,7 +54,22 @@ SpreadsheetInstance::~SpreadsheetInstance()
 
 void SpreadsheetInstance::load()
 {
-  
+  try{
+
+    std::ifstream in(pathToSaveFile);
+    if(!in.is_open())//no file to load
+      return;
+    nlohmann::json js;
+    
+    in>>js;
+    in.close();
+    std::cout<<"RAW: "<<js.dump();
+    
+    
+  }catch(nlohmann::detail::parse_error e){}
+  catch(nlohmann::detail::type_error){}
+  catch(nlohmann::detail::out_of_range){}
+
 }
 
 void SpreadsheetInstance::saveToDisk()
@@ -335,11 +350,19 @@ bool SpreadsheetInstance::edit(std::string cell, std::string value, std::vector<
   (*spreadsheetData)[cell]=value;
   //Add in all of the dependencies to the Dependency Graph
  
-  /*
+
+for(std::vector<std::string>::iterator it = oldDependencies->begin();it!=oldDependencies->end();it++)
+	{
+	  std::string current = *it;
+	  dependencyGraph->RemoveDependency(cell,current);
+	}
+ 
  for(std::vector<std::string>::iterator it = dependencies->begin();it!=dependencies->end();it++)
    {
-      std::string current = *it;
-      dependencyGraph->AddDependency(cell, current);
+     
+     std::string current = *it;      
+     dependencyGraph->AddDependency(cell, current);
+     
    }
   
   //Check if Circular
@@ -351,24 +374,32 @@ bool SpreadsheetInstance::edit(std::string cell, std::string value, std::vector<
 	  dependencyGraph->RemoveDependency(cell, current);
 	}
 	(*spreadsheetData)[cell]=oldValue;
-	return false;
-  */
 
-  dependencyGraph->ReplaceDependents(cell, dependencies);
+	for(std::vector<std::string>::iterator it = oldDependencies->begin();it!=oldDependencies->end();it++)
+	{
+	  std::string current = *it;
+	  dependencyGraph->AddDependency(cell,current);
+	}
+
+	return false;
+
+	
+	
+  /*dependencyGraph->ReplaceDependents(cell, dependencies);
 
   if(dependencyGraph->IsCircular(cell))
     {
+      std::cout<<"CIRCULAR DEPENDENCY!"<<std::endl;
       dependencyGraph->ReplaceDependents(cell, oldDependencies);
       (*spreadsheetData)[cell]=oldValue;
       return false;
-    }
+      }*/
 
-  //}
+  }
 
 
   if(!(*revertStack)[cell])
     (*revertStack)[cell]=new std::vector<CellState*>();
-  std::cout<<"AFTER CHECK";
 
   
   (*revertStack)[cell]->push_back(new CellState(cell,oldValue));
