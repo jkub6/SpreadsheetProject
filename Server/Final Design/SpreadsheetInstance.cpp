@@ -59,7 +59,51 @@ void SpreadsheetInstance::load()
 
 void SpreadsheetInstance::saveToDisk()
 {
+  
+  try{
+    nlohmann::json save;
 
+    
+    //Save cells
+    for(std::map<std::string,std::string>::iterator it = spreadsheetData->begin(); it != spreadsheetData->end(); it++)
+      {
+	std::string cell = it->first;
+	std::string value = it->second;
+	std::vector<CellState*> * cellHistory = (*revertStack)[cell];
+	save["cells"][cell]["value"]=value;
+	
+	for(std::vector<CellState*>::iterator hist = cellHistory->begin();hist!=cellHistory->end();hist++)
+	  {
+	    std::string newVal = (*hist)->getValue();
+	    save["cells"][cell]["history"].push_back(newVal);
+	  }
+      }
+
+    //Save dependencies
+    std::map<std::string,std::vector<std::string>*> * dep = dependencyGraph->getDependents();
+    std::map<std::string,std::vector<std::string>*> * dee = dependencyGraph->getDependees();
+
+    for(std::map<std::string,std::vector<std::string>*>::iterator it = dep->begin();it!=dep->end();it++)
+      {
+	std::string cell = it->first;
+	std::vector<std::string> * cellDep = it->second;
+	for(std::vector<std::string>::iterator i = cellDep->begin();i!=cellDep->end();i++)
+	  {
+	    save["dep"][cell].push_back(*i);
+	  }
+	
+      }
+    
+    std::ofstream o(pathToSaveFile);
+    o<<save.dump(2);
+    o.close();
+    std::cout<<"SAVE: \n"<<save.dump(1);
+  }catch(nlohmann::detail::parse_error e){}
+  catch(nlohmann::detail::type_error){}
+  catch(nlohmann::detail::out_of_range){}
+
+
+  
 }
 
 
@@ -76,7 +120,8 @@ void SpreadsheetInstance::loop()
 	}
       savingMtx->unlock();
 
-
+      bool edited = false;
+      
       //Iterate through each client, and process commands:
 
       std::vector<int> toRemove;
@@ -114,7 +159,7 @@ void SpreadsheetInstance::loop()
 		       nlohmann::json response;
 		       response["type"]="full send";
 		       response["spreadsheet"][(std::string)echoMsg["cell"]]=echoMsg["value"];
-
+		       edited = true;
 
 		       std::vector<std::string> * dep = new std::vector<std::string>();
 		       for(nlohmann::json::iterator di = echoMsg["dependencies"].begin();di!=echoMsg["dependencies"].end();di++)
@@ -138,9 +183,11 @@ void SpreadsheetInstance::loop()
 		       std::cout<<"RESPONDED WITH: \n"<<response.dump(1)<<std::endl;
 		     }else if(echoMsg["type"]=="undo")
 		     {
+		       edited = true;
 		       undo();
 		     }else if(echoMsg["type"]=="revert")
 		     {
+		       edited = true;
 		       std::string cell = echoMsg["cell"];
 		       revert(cell);
 		     }
@@ -153,8 +200,6 @@ void SpreadsheetInstance::loop()
 	    }
 
 	  delete commandsToProcess;
-	 
-	  
 	}
       
       std::this_thread::sleep_for(std::chrono::milliseconds(10));
@@ -168,6 +213,10 @@ void SpreadsheetInstance::loop()
 	{
 	  connectedClients->erase(*removeIt);
 	}
+      savingMtx->lock();
+      if(edited)
+	saveToDisk();
+      savingMtx->unlock();
     }
 }
 
