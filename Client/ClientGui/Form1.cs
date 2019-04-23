@@ -611,10 +611,24 @@ namespace ClientGui
 
         private void FullSendRecieved(object sender, List<string> updatedCells)
         {
-            //foreach (string cellName in updatedCells)
+                //IEnumerable<string> cells;
+                //List<string> all = updatedCells.ToList();
+                //all.AddRange(client.spreadsheet.GetNamesOfAllNonemptyCells().ToList());
+
+                //cells = new HashSet<string>(all);
+
+            //foreach (string cellName in updatedCells.ToList())
             //    UpdateCellByName(cellName);
             foreach (string cellName in client.spreadsheet.GetNamesOfAllNonemptyCells())
                 UpdateCellByName(cellName);
+
+            //foreach (string cellName in all.ToList())
+            //{
+            //     UpdateCellByName(cellName);
+            //     Debug.WriteLine(cellNAme);
+
+            //}
+
         }
 
         private void ErrorRecieved(object sender, int errorNum)
@@ -632,6 +646,8 @@ namespace ClientGui
 
         private void serverAdminToolToolStripMenuItem_Click(object sender, EventArgs e)
         {
+            ProcessStartInfo sInfo = new ProcessStartInfo("http://gotorocksadmin.tk");
+            Process.Start(sInfo);
         }
 
         private void logoutToolStripMenuItem_Click(object sender, EventArgs e)

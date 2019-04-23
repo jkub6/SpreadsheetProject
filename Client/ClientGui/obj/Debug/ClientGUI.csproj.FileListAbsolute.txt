@@ -6,10 +6,9 @@ C:\Users\jkub6\Documents\Dev\repos\SpreadsheetProject\SpreadsheetProject\Client\
 C:\Users\jkub6\Documents\Dev\repos\SpreadsheetProject\SpreadsheetProject\Client\ClientGui\bin\Debug\Newtonsoft.Json.dll
 C:\Users\jkub6\Documents\Dev\repos\SpreadsheetProject\SpreadsheetProject\Client\ClientGui\bin\Debug\Client.pdb
 C:\Users\jkub6\Documents\Dev\repos\SpreadsheetProject\SpreadsheetProject\Client\ClientGui\bin\Debug\Spreadsheet.pdb
-C:\Users\jkub6\Documents\Dev\repos\SpreadsheetProject\SpreadsheetProject\Client\ClientGui\bin\Debug\SpreadsheetPanel.pdb
-C:\Users\jkub6\Documents\Dev\repos\SpreadsheetProject\SpreadsheetProject\Client\ClientGui\bin\Debug\SpreadsheetPanel.xml
 C:\Users\jkub6\Documents\Dev\repos\SpreadsheetProject\SpreadsheetProject\Client\ClientGui\bin\Debug\Newtonsoft.Json.pdb
 C:\Users\jkub6\Documents\Dev\repos\SpreadsheetProject\SpreadsheetProject\Client\ClientGui\bin\Debug\Newtonsoft.Json.xml
+C:\Users\jkub6\Documents\Dev\repos\SpreadsheetProject\SpreadsheetProject\Client\ClientGui\obj\Debug\ClientGUI.csprojAssemblyReference.cache
 C:\Users\jkub6\Documents\Dev\repos\SpreadsheetProject\SpreadsheetProject\Client\ClientGui\obj\Debug\ClientGui.AboutBox1.resources
 C:\Users\jkub6\Documents\Dev\repos\SpreadsheetProject\SpreadsheetProject\Client\ClientGui\obj\Debug\ClientGui.Form1.resources
 C:\Users\jkub6\Documents\Dev\repos\SpreadsheetProject\SpreadsheetProject\Client\ClientGui\obj\Debug\ClientGui.ConnectForm.resources
@@ -21,4 +20,3 @@ C:\Users\jkub6\Documents\Dev\repos\SpreadsheetProject\SpreadsheetProject\Client\
 C:\Users\jkub6\Documents\Dev\repos\SpreadsheetProject\SpreadsheetProject\Client\ClientGui\obj\Debug\ClientGUI.csproj.CopyComplete
 C:\Users\jkub6\Documents\Dev\repos\SpreadsheetProject\SpreadsheetProject\Client\ClientGui\obj\Debug\ClientGui.exe
 C:\Users\jkub6\Documents\Dev\repos\SpreadsheetProject\SpreadsheetProject\Client\ClientGui\obj\Debug\ClientGui.pdb
-C:\Users\jkub6\Documents\Dev\repos\SpreadsheetProject\SpreadsheetProject\Client\ClientGui\obj\Debug\ClientGUI.csprojAssemblyReference.cache

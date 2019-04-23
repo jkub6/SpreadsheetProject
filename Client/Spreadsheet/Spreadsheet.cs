@@ -4,6 +4,7 @@
 
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Text.RegularExpressions;
 using System.Xml;
 using SpreadsheetUtilities;
@@ -278,7 +279,7 @@ namespace SS
                     writer.WriteStartElement("spreadsheet");
                     writer.WriteAttributeString("version", Version);
 
-                    foreach (KeyValuePair<String, object> cell in cells)
+                    foreach (KeyValuePair<String, object> cell in cells.ToList())
                     {
                         string name = cell.Key;
                         string contents = (cell.Value is Formula ? "=" : "") + cell.Value.ToString(); //prepend "=" if a formula
@@ -406,7 +407,7 @@ namespace SS
             else
                 toUpdate = SetCellContents(name, content);
 
-            foreach (string cell in toUpdate)
+            foreach (string cell in toUpdate.ToList())
                 cellValues[cell] = GetCellValue(cell);
 
             return toUpdate;
