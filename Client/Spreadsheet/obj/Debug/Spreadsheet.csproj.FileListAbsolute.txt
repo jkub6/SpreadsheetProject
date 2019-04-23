@@ -9,3 +9,4 @@ C:\Users\jkub6\Documents\Dev\repos\SpreadsheetProject\SpreadsheetProject\Client\
 C:\Users\jkub6\Documents\Dev\repos\SpreadsheetProject\SpreadsheetProject\Client\Spreadsheet\obj\Debug\Spreadsheet.csproj.CoreCompileInputs.cache
 C:\Users\jkub6\Documents\Dev\repos\SpreadsheetProject\SpreadsheetProject\Client\Spreadsheet\obj\Debug\Spreadsheet.dll
 C:\Users\jkub6\Documents\Dev\repos\SpreadsheetProject\SpreadsheetProject\Client\Spreadsheet\obj\Debug\Spreadsheet.pdb
+C:\Users\jkub6\Documents\Dev\repos\SpreadsheetProject\SpreadsheetProject\Client\Spreadsheet\obj\Debug\Spreadsheet.csprojAssemblyReference.cache
