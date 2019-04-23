@@ -15,6 +15,7 @@ namespace ClientGui
         public string selectedSpreadsheet = "";
         public string username = "";
         public string password = "";
+        public bool canceled = false;
 
         public OpenNetworkFileForm()
         {
@@ -44,6 +45,9 @@ namespace ClientGui
                 selectedSpreadsheet = listBox1.SelectedItem.ToString();
                 username = usernameTextBox.Text.ToString();
                 password = passwordTextBox.Text.ToString();
+
+                canceled = false;
+
                 Close();
             }
             
@@ -61,8 +65,21 @@ namespace ClientGui
                 selectedSpreadsheet = fileName;
                 username = usernameTextBox.Text.ToString();
                 password = passwordTextBox.Text.ToString();
+
+                canceled = false;
+
                 Close();
             }
+        }
+
+        private void OpenNetworkFileForm_Load(object sender, EventArgs e)
+        {
+            canceled = true;
+        }
+
+        private void OpenNetworkFileForm_FormClosing(object sender, FormClosingEventArgs e)
+        {
+            
         }
     }
 }

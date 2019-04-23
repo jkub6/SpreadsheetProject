@@ -69,6 +69,7 @@
             this.label1 = new System.Windows.Forms.Label();
             this.label2 = new System.Windows.Forms.Label();
             this.pingLabel = new System.Windows.Forms.Label();
+            this.logoutToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.menuStrip1.SuspendLayout();
             this.SuspendLayout();
             // 
@@ -112,6 +113,7 @@
             this.saveFileToolStripMenuItem,
             this.saveFileAsToolStripMenuItem,
             this.toolStripSeparator3,
+            this.logoutToolStripMenuItem,
             this.exitToolStripMenuItem});
             this.fileToolStripMenuItem.Name = "fileToolStripMenuItem";
             this.fileToolStripMenuItem.Size = new System.Drawing.Size(64, 38);
@@ -420,6 +422,14 @@
             this.pingLabel.Text = "Ping: [num]ms";
             this.pingLabel.Visible = false;
             // 
+            // logoutToolStripMenuItem
+            // 
+            this.logoutToolStripMenuItem.Enabled = false;
+            this.logoutToolStripMenuItem.Name = "logoutToolStripMenuItem";
+            this.logoutToolStripMenuItem.Size = new System.Drawing.Size(465, 38);
+            this.logoutToolStripMenuItem.Text = "Logout";
+            this.logoutToolStripMenuItem.Click += new System.EventHandler(this.logoutToolStripMenuItem_Click);
+            // 
             // Form1
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(12F, 25F);
@@ -489,6 +499,7 @@
         private System.Windows.Forms.ToolStripMenuItem serverAdminToolToolStripMenuItem;
         private System.Windows.Forms.Label pingLabel;
         private System.Windows.Forms.ToolStripMenuItem networkConsoleToolStripMenuItem;
+        private System.Windows.Forms.ToolStripMenuItem logoutToolStripMenuItem;
     }
 }
 

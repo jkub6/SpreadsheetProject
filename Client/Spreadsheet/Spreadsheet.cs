@@ -412,6 +412,17 @@ namespace SS
             return toUpdate;
         }
 
+        public IEnumerable<string> GetDeps(string content)
+        {
+            List<string> l = new List<string>();
+
+            Formula f = new Formula(content.Remove(0, 1), Normalize, IsValid);
+
+            return f.GetVariables();
+
+            //return l;
+        }
+
         /// <summary>
         /// A convenience method for invoking the other version of GetCellsToRecalculate
         /// with a singleton set of names.  See the other version in AbstractSpreadsheet for details.
