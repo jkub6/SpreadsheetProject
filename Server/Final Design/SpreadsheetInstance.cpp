@@ -115,7 +115,15 @@ void SpreadsheetInstance::loop()
 		       response["type"]="full send";
 		       response["spreadsheet"][(std::string)echoMsg["cell"]]=echoMsg["value"];
 
-		       bool successfulEdit = edit((std::string)echoMsg["cell"],(std::string)echoMsg["value"],NULL);
+
+		       std::vector<std::string> * dep = new std::vector<std::string>();
+		       for(nlohmann::json::iterator di = echoMsg["dependencies"].begin();di!=echoMsg["dependencies"].end();di++)
+			 {
+			   dep->push_back(*di);
+			 }
+
+		       
+		       bool successfulEdit = edit((std::string)echoMsg["cell"],(std::string)echoMsg["value"],dep);
 
 		       //SEND TO ALL CLIENTS
 		       for(std::map<int,SocketState*>::iterator sendIter = connectedClients->begin();
@@ -254,7 +262,8 @@ bool SpreadsheetInstance::edit(std::string cell, std::string value, std::vector<
 	}
       std::cout<<"]\n";
     }
-  
+
+  delete dependencies;
   //TODO
   return true;
 }
