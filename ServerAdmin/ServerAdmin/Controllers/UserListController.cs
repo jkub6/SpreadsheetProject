@@ -87,11 +87,25 @@ namespace ServerAdmin.Controllers
             //If user just wants to cancel and return to list of users 
             if (submitAction == "Return")
                 return RedirectToAction("Index");
+
+            //Checks if the spreadsheet already exists
+            String response = ServerComm.ConnectToServer(tcpClient, currentUser.IpAddress, currentUser.Username, currentUser.Password, "UserList");
+            UserList list = ReadUserList(response);
+            if (list == null)
+            {
+                HttpContext.Session.SetString("ErrorMessage", "Invalid Data from Server");
+                return RedirectToAction("Index");
+            }
+            else if (list.users.Contains(username))
+            {
+                ViewBag.Message = "Error: User with username named " + username + " already exists. Please choose another username or delete existing user.";
+                return View();
+            }
             else
             {
-                String response = ServerComm.ConnectToServer(tcpClient, currentUser.IpAddress, username, password, "CreateUser");
+                response = ServerComm.ConnectToServer(tcpClient, currentUser.IpAddress, username, password, "CreateUser");
                 //If there is a bug
-                if (response.Substring(0, 5).Contains("Error"))
+                if (response.Length >= 5 && response.Substring(0, 5).Contains("Error"))
                 {
                     HttpContext.Session.SetString("ErrorMessage", "Authentication Error: Redirecting to Login");
                     return RedirectToAction("Index", "Home");

@@ -1,6 +1,6 @@
 
-all: MasterController.o ConnectionListener.o DependencyGraph.o SocketState.o SpreadsheetController.o SpreadsheetInstance.o sha256.o Utilities.o
-	g++ -g -o server -pthread -std=c++11 -I ./include/json ConnectionListener.o DependencyGraph.o MasterController.o SocketState.o SpreadsheetController.o SpreadsheetInstance.o sha256.o Utilities.o
+all: MasterController.o ConnectionListener.o DependencyGraph.o SocketState.o SpreadsheetController.o SpreadsheetInstance.o sha256.o Utilities.o CellState.o
+	g++ -g -o server -pthread -std=c++11 -I ./include/json ConnectionListener.o DependencyGraph.o MasterController.o SocketState.o SpreadsheetController.o SpreadsheetInstance.o sha256.o Utilities.o CellState.o
 ConnectionListener.o: ConnectionListener.cpp ConnectionListener.h
 	g++ -pthread -std=c++11 -I ./include/json -c -o ConnectionListener.o ConnectionListener.cpp
 DependencyGraph.o: DependencyGraph.cpp DependencyGraph.h 
@@ -17,6 +17,8 @@ sha256.o: sha256.cpp sha256.h
 	g++ -pthread -std=c++11 -c -o sha256.o sha256.cpp
 Utilities.o: Utilities.cpp Utilities.h
 	g++ -pthread -std=c++11 -I ./include/json -c -o Utilities.o Utilities.cpp
+CellState.o: CellState.cpp CellState.h
+	g++ -pthread -std=c++11 -c -o CellState.o CellState.cpp
 clean:
 	rm -f *.o
 	rm -f server

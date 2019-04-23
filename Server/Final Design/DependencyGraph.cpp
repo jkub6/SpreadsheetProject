@@ -214,6 +214,14 @@ bool DependencyGraph::IsCircular(string cellName)
 }
 
 
+std::map<std::string,std::vector<std::string>*> * DependencyGraph::getDependents()
+{
+  return dependents;
+}
+std::map<std::string,std::vector<std::string>*> * DependencyGraph::getDependees()
+{
+  return dependees;
+}
 
 /*
 int main()

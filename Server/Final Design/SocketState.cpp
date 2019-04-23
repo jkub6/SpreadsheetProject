@@ -116,7 +116,7 @@ void SocketState::socketAwaitData()
       *buffer = buffer->append(newData);
       this->bufferMtx->unlock();
     }
-
+  Utilities::disconnectSocket(this->socketID);
   std::cout<<"SocketState for SocketID: "<<socketID<<" Disconnected..."<<std::endl;
 }
 void SocketState::socketSendData(std::string msg)

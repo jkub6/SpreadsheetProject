@@ -1,0 +1,11 @@
+
+
+  CellState(std::string cell, std::string value);
+  CellState(std::string cell, std::string value, std::vector<std::string> * dependencies);
+  ~CellState();
+  
+ private:
+  std::vector<std::string> * dependencies;
+  std::string cell;
+  std::string value;
+  

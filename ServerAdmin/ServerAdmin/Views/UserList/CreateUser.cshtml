@@ -9,25 +9,39 @@
     <link rel="stylesheet" href="//code.jquery.com/ui/1.11.4/themes/smoothness/jquery-ui.css">
     <script src="//code.jquery.com/jquery-1.10.2.js"></script>
     <script src="~/js/main.js"></script>
+
+}
+
+<script type="text/javascript">
+    //Method referenced from stack overflow
+    function htmlEntities(str) {
+        return String(str).replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/"/g, '&quot;');
+    }
+</script>
+
+@if (ViewBag.Message != null && ViewBag.Message != "")
+{
+    <script>alert(htmlEntities('@ViewBag.Message'));</script>
 }
 
 <div class="limiter" style="color:#e5e5e5;">
     <div class="container-login100" style="background-image: url('@Url.Content("~/images/bg-01.jpg")');">
         <div class="custom-table">
             <h1 class='page-title'>New User</h1>
-
-            <form>
+            <hr />
+            <form method="post">
                 <div class="form-group">
                     <label for="username">Username</label>
-                    <input type="text" class="form-control" id="username" placeholder="Username">
+                    <input type="text" name="username" class="form-control" id="username" placeholder="Username" required>
                 </div>
                 <div class="form-group">
                     <label for="password">Password</label>
-                    <input type="password" class="form-control" id="password" placeholder="Password">
+                    <input type="password" name="password" class="form-control" id="password" placeholder="Password" required>
                 </div>
-                <button class="btn btn-primary" type="submit" name="submitAction" value="Save" onclick="window.location.href='@Url.Content("~/UserList/CreateUser")'"><i class="glyphicon glyphicon-plus"></i> Save & Return to Spreadsheet List</button>
-                <button class="btn btn-info" type="submit" name="submitAction" value="SaveAndAdd" onclick="window.location.href='@Url.Content("~/UserList/CreateUser")'"><i class="glyphicon glyphicon-plus"></i> Save & Add New Spreadsheet</button>
-                <button class="btn btn-danger" type="submit" name="submitAction" value="Return" onclick="window.location.href='@Url.Content("~/UserList/CreateUser")"><i class="glyphicon glyphicon-random"></i> Return to Spreadsheet List</button>
+                <hr />
+                <button class="btn btn-primary" type="submit" name="submitAction" value="Save"><i class="glyphicon glyphicon-plus"></i> Save & Return to User List</button>
+                <button class="btn btn-info" type="submit" name="submitAction" value="SaveAndAdd"><i class="glyphicon glyphicon-plus"></i> Save & Add New User</button>
+                <button class="btn btn-danger" type="submit" name="submitAction" value="Return" onclick="window.location.href='@Url.Content("~/UserList")" formnovalidate><i class="glyphicon glyphicon-random"></i> Return to User List</button>
             </form>
         </div>
     </div>

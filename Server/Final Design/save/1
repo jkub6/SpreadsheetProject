@@ -1,0 +1,511 @@
+{
+  "cells": {
+    "A1": {
+      "history": [
+        ""
+      ],
+      "value": "5"
+    },
+    "A2": {
+      "history": [
+        "",
+        "=a1"
+      ],
+      "value": "=A1"
+    },
+    "C10": {
+      "history": [
+        ""
+      ],
+      "value": "as;fdj;lasj"
+    },
+    "C7": {
+      "history": [
+        ""
+      ],
+      "value": "asdf"
+    },
+    "C8": {
+      "history": [
+        ""
+      ],
+      "value": "as;fdlkj"
+    },
+    "C9": {
+      "history": [
+        ""
+      ],
+      "value": "as;dlkjl;asgjd;lkjslgj"
+    },
+    "E4": {
+      "history": [
+        ""
+      ],
+      "value": "asd;flj"
+    },
+    "F1": {
+      "history": [
+        ""
+      ],
+      "value": "asd;j"
+    },
+    "F10": {
+      "history": [
+        ""
+      ],
+      "value": "asd"
+    },
+    "F11": {
+      "history": [
+        ""
+      ],
+      "value": "g"
+    },
+    "F12": {
+      "history": [
+        ""
+      ],
+      "value": "asd"
+    },
+    "F13": {
+      "history": [
+        ""
+      ],
+      "value": "kjgajsdlhk"
+    },
+    "F14": {
+      "history": [
+        ""
+      ],
+      "value": "k"
+    },
+    "F2": {
+      "history": [
+        ""
+      ],
+      "value": "a;sldgkj"
+    },
+    "F3": {
+      "history": [
+        ""
+      ],
+      "value": "a"
+    },
+    "F4": {
+      "history": [
+        ""
+      ],
+      "value": "sdgjasjdgkas"
+    },
+    "F5": {
+      "history": [
+        ""
+      ],
+      "value": "kdg"
+    },
+    "F6": {
+      "history": [
+        ""
+      ],
+      "value": "as"
+    },
+    "F7": {
+      "history": [
+        ""
+      ],
+      "value": "dg"
+    },
+    "F8": {
+      "history": [
+        ""
+      ],
+      "value": "as"
+    },
+    "F9": {
+      "history": [
+        ""
+      ],
+      "value": "dg"
+    },
+    "G1": {
+      "history": [
+        ""
+      ],
+      "value": "lkdjafslkdfj"
+    },
+    "G10": {
+      "history": [
+        ""
+      ],
+      "value": "sfdg"
+    },
+    "G11": {
+      "history": [
+        ""
+      ],
+      "value": "sfdg"
+    },
+    "G12": {
+      "history": [
+        ""
+      ],
+      "value": "sdfg"
+    },
+    "G13": {
+      "history": [
+        ""
+      ],
+      "value": "sfdg"
+    },
+    "G14": {
+      "history": [
+        ""
+      ],
+      "value": "sdf"
+    },
+    "G15": {
+      "history": [
+        ""
+      ],
+      "value": "g"
+    },
+    "G16": {
+      "history": [
+        ""
+      ],
+      "value": "sdf"
+    },
+    "G17": {
+      "history": [
+        ""
+      ],
+      "value": "gsdfg"
+    },
+    "G18": {
+      "history": [
+        ""
+      ],
+      "value": "asdflkasdfjsakldf"
+    },
+    "G19": {
+      "history": [
+        ""
+      ],
+      "value": "gaslkdfjaslkdgf"
+    },
+    "G2": {
+      "history": [
+        ""
+      ],
+      "value": "ads;fjasdklfjasdf"
+    },
+    "G20": {
+      "history": [
+        ""
+      ],
+      "value": "zkcjvz,"
+    },
+    "G21": {
+      "history": [
+        ""
+      ],
+      "value": "zckslk"
+    },
+    "G22": {
+      "history": [
+        ""
+      ],
+      "value": "ad"
+    },
+    "G23": {
+      "history": [
+        ""
+      ],
+      "value": "fasfda"
+    },
+    "G24": {
+      "history": [
+        ""
+      ],
+      "value": "sdf"
+    },
+    "G25": {
+      "history": [
+        ""
+      ],
+      "value": "sadf"
+    },
+    "G26": {
+      "history": [
+        ""
+      ],
+      "value": "sadf"
+    },
+    "G27": {
+      "history": [
+        ""
+      ],
+      "value": "sadf"
+    },
+    "G28": {
+      "history": [
+        ""
+      ],
+      "value": "sad"
+    },
+    "G3": {
+      "history": [
+        ""
+      ],
+      "value": "asljd;fakdsljfaskdljf"
+    },
+    "G4": {
+      "history": [
+        ""
+      ],
+      "value": "adfljaskldj"
+    },
+    "G5": {
+      "history": [
+        ""
+      ],
+      "value": "h'g"
+    },
+    "G6": {
+      "history": [
+        ""
+      ],
+      "value": "h"
+    },
+    "G7": {
+      "history": [
+        ""
+      ],
+      "value": "fgsa"
+    },
+    "G8": {
+      "history": [
+        ""
+      ],
+      "value": "dgf"
+    },
+    "G9": {
+      "history": [
+        ""
+      ],
+      "value": "fdg"
+    }
+  },
+  "dee": {
+    "A1": [
+      "A2"
+    ]
+  },
+  "dep": {
+    "A2": [
+      "A1"
+    ]
+  },
+  "undo": [
+    [
+      "A1",
+      ""
+    ],
+    [
+      "A2",
+      ""
+    ],
+    [
+      "A2",
+      "=a1"
+    ],
+    [
+      "C7",
+      ""
+    ],
+    [
+      "C8",
+      ""
+    ],
+    [
+      "C9",
+      ""
+    ],
+    [
+      "C10",
+      ""
+    ],
+    [
+      "E4",
+      ""
+    ],
+    [
+      "F1",
+      ""
+    ],
+    [
+      "F2",
+      ""
+    ],
+    [
+      "F3",
+      ""
+    ],
+    [
+      "G1",
+      ""
+    ],
+    [
+      "F4",
+      ""
+    ],
+    [
+      "F5",
+      ""
+    ],
+    [
+      "G2",
+      ""
+    ],
+    [
+      "F6",
+      ""
+    ],
+    [
+      "F7",
+      ""
+    ],
+    [
+      "F8",
+      ""
+    ],
+    [
+      "F9",
+      ""
+    ],
+    [
+      "F10",
+      ""
+    ],
+    [
+      "G3",
+      ""
+    ],
+    [
+      "F11",
+      ""
+    ],
+    [
+      "F12",
+      ""
+    ],
+    [
+      "G4",
+      ""
+    ],
+    [
+      "F13",
+      ""
+    ],
+    [
+      "G5",
+      ""
+    ],
+    [
+      "G6",
+      ""
+    ],
+    [
+      "G7",
+      ""
+    ],
+    [
+      "G8",
+      ""
+    ],
+    [
+      "G9",
+      ""
+    ],
+    [
+      "G10",
+      ""
+    ],
+    [
+      "G11",
+      ""
+    ],
+    [
+      "G12",
+      ""
+    ],
+    [
+      "G13",
+      ""
+    ],
+    [
+      "G14",
+      ""
+    ],
+    [
+      "G15",
+      ""
+    ],
+    [
+      "G16",
+      ""
+    ],
+    [
+      "G17",
+      ""
+    ],
+    [
+      "G18",
+      ""
+    ],
+    [
+      "G19",
+      ""
+    ],
+    [
+      "G20",
+      ""
+    ],
+    [
+      "G21",
+      ""
+    ],
+    [
+      "G22",
+      ""
+    ],
+    [
+      "G23",
+      ""
+    ],
+    [
+      "G24",
+      ""
+    ],
+    [
+      "G25",
+      ""
+    ],
+    [
+      "G26",
+      ""
+    ],
+    [
+      "G27",
+      ""
+    ],
+    [
+      "G28",
+      ""
+    ],
+    [
+      "F14",
+      ""
+    ]
+  ]
+}

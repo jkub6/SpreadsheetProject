@@ -42,6 +42,8 @@ namespace ServerAdmin.Controllers
         [HttpPost]
         public IActionResult Index(String username, String password, String ipAddress)
         {
+            ViewData.Clear();
+            HttpContext.Session.Clear();
             User currentUser = new User
             {
                 Username = username,
@@ -52,20 +54,37 @@ namespace ServerAdmin.Controllers
             string json = "";
             //Checks that the ipAddress was enterred
             if (ipAddress != null && ipAddress != "")
+            {
                 json = ServerComm.ConnectToServer(tcpClient, ipAddress, username, password, "Login");
+                //If json is not empty, means that it can go to the spreadsheet list without issue
+                if (json.Length < 4 || (json.Length >= 4 && !json.Substring(0, 4).Contains("fail")))
+                {
+                    HttpContext.Session.SetString("CurrentUser", JsonConvert.SerializeObject(currentUser));
 
-            //If json is not empty, means that it can go to the spreadsheet list without issue
-            if (!json.Substring(0,5).Contains("Error"))
-            {
-                HttpContext.Session.SetString("CurrentUser", JsonConvert.SerializeObject(currentUser));
-                return RedirectToAction("SpreadsheetList", new { currentUser = currentUser });
+                    json = ServerComm.ConnectToServer(tcpClient, ipAddress, username, password, "SpreadsheetList");
+                    if (!json.Substring(0, 5).Contains("Error"))
+                    {
+                        HttpContext.Session.SetString("CurrentUser", JsonConvert.SerializeObject(currentUser));
+                        return RedirectToAction("SpreadsheetList", new { currentUser = currentUser });
+                    }
+                    //Must go back here
+                    else
+                    {
+                        ViewBag.ErrorMessage = json;
+                        return View();
+                    }
+                }
+                
+                //Password fails
+                else
+                {
+                    ViewBag.ErrorMessage = "Error: Invalid Password";
+                    return View();
+                }
             }
-            //Must go back here
-            else
-            {
-                ViewBag.ErrorMessage = json;
-                return View();
-            }
+
+            //Shouldn't be possible
+            return View();
         }
 
         /// <summary>
@@ -91,7 +110,7 @@ namespace ServerAdmin.Controllers
             string response = "";
             SpreadsheetList spreadsheetList;
             if (ipAddress != null && ipAddress != "")
-                response = ServerComm.ConnectToServer(tcpClient, ipAddress, username, password, "Login");
+                response = ServerComm.ConnectToServer(tcpClient, ipAddress, username, password, "SpreadsheetList");
             else
             {
                 HttpContext.Session.SetString("ErrorMessage", "Error Occured, Redirecting to Sign In");
@@ -162,12 +181,28 @@ namespace ServerAdmin.Controllers
                 return RedirectToAction("Index");
             }
 
+
             //If user just wants to cancel and return to spreadsheet list
             if (submitAction == "Return")
                 return RedirectToAction("SpreadsheetList", new { currentUser });
+
+
+            //Checks if the spreadsheet already exists
+            String response = ServerComm.ConnectToServer(tcpClient, currentUser.IpAddress, currentUser.Username, currentUser.Password, "SpreadsheetList");
+            SpreadsheetList list = ReadSpreadsheetList(response);
+            if (list == null)
+            {
+                HttpContext.Session.SetString("ErrorMessage", "Invalid Data from Server");
+                return RedirectToAction("Index");
+            }
+            else if (list.Sheets.Contains(spreadsheetName))
+            {
+                ViewBag.Message = "Error: Spreadsheet with name " + spreadsheetName + " already exists. Please choose another name or delete existing spreadsheet.";
+                return View();
+            }
             else
             {
-                String response = ServerComm.ConnectToServer(tcpClient, currentUser.IpAddress, spreadsheetName, null, "CreateSpread");
+                response = ServerComm.ConnectToServer(tcpClient, currentUser.IpAddress, spreadsheetName, null, "CreateSpread");
                 //If there is a bug
                 if (response.Substring(0, 5).Contains("Error"))
                 {
@@ -223,6 +258,7 @@ namespace ServerAdmin.Controllers
         public IActionResult Logout()
         {
             HttpContext.Session.Clear();
+            ViewData.Clear();
             return RedirectToAction("Index");
         }
 
@@ -230,13 +266,14 @@ namespace ServerAdmin.Controllers
         /// Parses the json string for the spreadsheet list
         /// </summary>
         /// <param name="json"></param>
+        /// <returns>Returns null if it fails or returns the spreadsheet list</returns>
         private SpreadsheetList ReadSpreadsheetList(String json)
         {
             try
             {
                 //Parses the json here
                 SpreadsheetList value = JsonConvert.DeserializeObject<SpreadsheetList>(json);
-                if (value.type == "list")
+                if (value.type == "spread")
                     return value;
                 else
                     throw new Exception();
