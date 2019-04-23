@@ -58,7 +58,9 @@ void SpreadsheetInstance::load()
 }
 
 void SpreadsheetInstance::saveToDisk()
-{}
+{
+
+}
 
 
 //MAster loop of spreadsheet instance
@@ -113,7 +115,15 @@ void SpreadsheetInstance::loop()
 		       response["type"]="full send";
 		       response["spreadsheet"][(std::string)echoMsg["cell"]]=echoMsg["value"];
 
-		       bool successfulEdit = edit((std::string)echoMsg["cell"],(std::string)echoMsg["value"],NULL);
+
+		       std::vector<std::string> * dep = new std::vector<std::string>();
+		       for(nlohmann::json::iterator di = echoMsg["dependencies"].begin();di!=echoMsg["dependencies"].end();di++)
+			 {
+			   dep->push_back(*di);
+			 }
+
+		       
+		       bool successfulEdit = edit((std::string)echoMsg["cell"],(std::string)echoMsg["value"],dep);
 
 		       //SEND TO ALL CLIENTS
 		       for(std::map<int,SocketState*>::iterator sendIter = connectedClients->begin();
@@ -228,10 +238,30 @@ bool SpreadsheetInstance::edit(std::string cell, std::string value, std::vector<
   std::cout<<"Old Value :" <<oldValue<<std::endl;
   
   (*spreadsheetData)[cell]=value;
+  //Add in all of the dependencies to the Dependency Graph
+  for(std::vector<std::string>::iterator it = dependencies->begin();it!=dependencies->end();it++)
+   {
+      std::string current = *it;
+      dependencyGraph->AddDependency(cell, current);
+   }
+  
+  //Check if Circular
+  if(dependencyGraph->IsCircular(cell))
+    {
+      for(std::vector<std::string>::iterator it = dependencies->begin();it!=dependencies->end();it++)
+	{
+	  std::string current = *it;
+	  dependencyGraph->RemoveDependency(cell, current);
+	}
+      (*spreadsheetData)[cell]=oldValue;
+      return false;
+    }
 
 
   if(!(*revertStack)[cell])
     (*revertStack)[cell]=new std::vector<CellState*>();
+  std::cout<<"AFTER CHECK";
+
   
   (*revertStack)[cell]->push_back(new CellState(cell,oldValue));
   undoStack->push_back(new CellState(cell,oldValue));
@@ -250,8 +280,8 @@ bool SpreadsheetInstance::edit(std::string cell, std::string value, std::vector<
 	}
       std::cout<<"]\n";
     }
-  
-  //TODO
+
+  delete dependencies;
   return true;
 }
 

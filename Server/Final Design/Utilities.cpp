@@ -23,6 +23,10 @@ std::mutex * Utilities::userListMtx;
 
 std::map<std::string,std::string> *Utilities::userList;
 
+void Utilities::disconnectSocket(int socketID)
+{
+  close(socketID);
+}
 
 void Utilities::shutdown()
 {
