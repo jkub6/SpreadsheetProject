@@ -23,7 +23,7 @@
     <div class="limiter">
         <div class="container-login100" style="background-image: url('@Url.Content("~/images/bg-01.jpg")');">
             <div class="custom-table">
-                <h1 class='page-title'>Spreadsheets</h1>
+                <h1 class='page-title'>Users</h1>
                 <table id="user-table" class="display" cellspacing="0">
                     <thead>
                         <tr>
@@ -37,7 +37,7 @@
                             <tr>
                                 <td>@Items</td>
                                 <td>
-                                    <button class="btn btn-danger deleteButton"><i class="glyphicon glyphicon-trash"></i></button>
+                                    <a class="btn btn-danger deleteButton" href="@Url.Content("~/UserList/DeleteUser?username=")@Items"><i class="glyphicon glyphicon-trash"></i></a>
                                 </td>
                             </tr>
                         }
@@ -49,7 +49,7 @@
                 <div class="form-group custom-form">
                     <div style="display: inline-block">
                         <form>
-                            <a class="btn btn-outline-success" href="@Url.Content("~/Home/CreateSpread")"><i class="glyphicon glyphicon-plus"></i> Add New Spreadsheet</a>
+                            <a class="btn btn-outline-success" href="@Url.Content("~/UserList/CreateUser")"><i class="glyphicon glyphicon-plus"></i> Add New User</a>
                             <a class="btn btn-outline-dark" href="@Url.Content("~/Home/SpreadsheetList")"><i class="glyphicon glyphicon-random"></i> Redirect to Spreadsheet List</a>
                             <a class="btn btn-outline-danger" href="@Url.Content("~/Home/Logout")"><i class="glyphicon glyphicon-user"></i> Sign out</a>
                         </form>

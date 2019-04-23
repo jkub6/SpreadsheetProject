@@ -4,6 +4,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Net.Sockets;
+using System.Threading;
 using System.Threading.Tasks;
 
 namespace ServerAdmin.Library
@@ -24,6 +25,8 @@ namespace ServerAdmin.Library
             try
             {
                 {
+                    tcpClient = new TcpClient();
+
                     //Port should always be 2112
                     var result = tcpClient.BeginConnect(ipAddress, 2112, null, null);
                     bool success = result.AsyncWaitHandle.WaitOne(TimeSpan.FromSeconds(5), false);
@@ -70,14 +73,29 @@ namespace ServerAdmin.Library
                         Int32 bytes = stream.Read(data, 0, data.Length); //(**This receives the data using the byte method**)
                         responseData = System.Text.Encoding.ASCII.GetString(data, 0, bytes); //(**This converts it to string**)
 
-                        // Read the first batch of the TcpServer response bytes.
-                        Int32 bytes2 = stream.Read(data, 0, data.Length); //(**This receives the data using the byte method**)
-                        secondData = System.Text.Encoding.ASCII.GetString(data, 0, bytes); //(**This converts it to string**)
-
-                        if (responseData != null && responseData != "")
-                            return responseData;
+                        if (request.Equals("DeleteSpread") || request.Equals("CreateSpread")) {
+                            if (responseData != null && responseData != "")
+                                return responseData; 
+                            else
+                                return "Error: Login Credentials not valid";
+                        }
                         else
-                            return "Error: Login Credentials not valid";
+                        {
+                            data = new byte[1024];
+                           
+                            // Read the second batch of the TcpServer response bytes.
+                            Int32 bytes2 = stream.Read(data, 0, data.Length); //(**This receives the data using the byte method**)
+                            secondData = System.Text.Encoding.ASCII.GetString(data, 0, bytes); //(**This converts it to string**)
+
+                            secondData = secondData.TrimStart('\n');
+                            secondData = secondData.TrimEnd('\n');
+
+                            tcpClient.Close();
+                            if (secondData != null && secondData != "")
+                                return secondData;
+                            else
+                                return "Error: Login Credentials not valid";
+                        }
                     }
                 }
             }
